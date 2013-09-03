@@ -4,7 +4,14 @@ basedir=$(pwd)
 QMAKE=qmake-qt4
 
 #update all
-echo "updating git submodules... please wait"
+echo "init & updating git submodules... please wait"
+
+git submodule init
+if [ $? -ne 0 ]; then
+  echo "git submodule init failed!"
+  exit
+fi
+
 git submodule update
 if [ $? -ne 0 ]; then
   echo "git submodule update failed!"
@@ -114,7 +121,7 @@ cd ../..
 
 echo "openEMS and all modules have been updated successfully..."
 echo ""
-echo "add the required pathes to Octave/Matlab:"
+echo "add the required paths to Octave/Matlab:"
 echo "addpath('$basedir/openEMS/matlab')"
 echo "addpath('$basedir/CSXCAD/matlab')"
 echo ""
