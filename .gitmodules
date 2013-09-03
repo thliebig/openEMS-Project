@@ -10,3 +10,6 @@
 [submodule "openEMS"]
 	path = openEMS
 	url = https://github.com/thliebig/openEMS.git
+[submodule "fparser"]
+	path = fparser
+	url = https://github.com/thliebig/fparser.git
