@@ -45,6 +45,6 @@ For more informations and other platforms see:
 **Note:** Changes you may have made (e.g. to the tutorials or examples) may be overwritten!<br />
 ```bash
 cd openEMS-Project
-git pull origin master
+git pull
 ./update_openEMS.sh
 ```
