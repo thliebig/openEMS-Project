@@ -16,24 +16,22 @@ openEMS is a free and open electromagnetic field solver using the FDTD method. M
 + and [many more](http://openems.de/index.php/OpenEMS#Features)
 
 ## Install Instruction:
-+ Install all necessary dependencies, e.g. on Ubuntu 12.04:
++ Install all necessary dependencies, e.g. on Ubuntu 12.04 or higher:
 ```bash
-sudo apt-get install build-essential git libhdf5-openmpi-dev libvtk5-dev libboost-all-dev libcgal-dev libtinyxml-dev libfparser-dev libqt4-dev libvtk5-qt4-dev
+sudo apt-get install build-essential git libhdf5-openmpi-dev libvtk5-dev libboost-all-dev libcgal-dev libtinyxml-dev libqt4-dev libvtk5-qt4-dev
 ```
-**Note:** On Ubuntu 12.10 or higher, the package _libfparser-dev_ is no longer available. Use it from here:
-[fparser](http://packages.debian.org/squeeze-backports/libfparser-4.3) and [fparser-dev](http://packages.debian.org/squeeze-backports/libfparser-dev)
 
-+ Clone this repository and build openEMS:
++ Clone this repository, build openEMS and install e.g. to "~/opt/openEMS":
 ```bash
 git clone git://openEMS.de/openEMS-Project.git
 cd openEMS-Project
-./update_openEMS.sh
+./update_openEMS.sh ~/opt/openEMS
 ```
 
 + Add the given paths to your Octave/Matlab environment (e.g.):
 ```Matlab
-addpath('<path-to-project/openEMS/matlab');
-addpath('<path-to-project/CSXCAD/matlab');
+addpath('~/opt/openEMS/share/openEMS/matlab');
+addpath('~/opt/openEMS/share/CSXCAD/matlab');
 ```
 
 For more informations and other platforms see:
@@ -46,5 +44,5 @@ For more informations and other platforms see:
 ```bash
 cd openEMS-Project
 git pull origin master
-./update_openEMS.sh
+./update_openEMS.sh  ~/opt/openEMS
 ```

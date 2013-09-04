@@ -1,7 +1,19 @@
 #!/bin/bash
 
 basedir=$(pwd)
+INSTALL_PATH=$basedir
 QMAKE=qmake-qt4
+
+if [ $# -ne 1 ]
+then
+  echo "Usage: `basename $0` <path-to-install>"
+  exit $E_BADARGS
+fi
+
+if [ $# -ne 2 ]; then
+  echo "setting install path to: $1"
+  INSTALL_PATH=$1
+fi
 
 #update all
 echo "init & updating git submodules... please wait"
@@ -18,111 +30,67 @@ if [ $? -ne 0 ]; then
   exit
 fi
 
-#build CSXCAD
-cd CSXCAD
+function build {
+cd $1
 make clean &> /dev/null
-$QMAKE PREFIX=. CSXCAD.pro
+$QMAKE ${@:2:$#} $1.pro
 if [ $? -ne 0 ]; then
-  echo "qmake for CSXCAD failed"
+  echo "qmake for $1 failed"
   cd ..
   exit
 fi
 
-echo "compiling CSXCAD ... please wait"
+echo "compiling $1 ... please wait"
 make -j4 > /dev/null
 if [ $? -ne 0 ]; then
-  echo "make for CSXCAD failed"
-  cd ..
-  exit
-fi
-make install > /dev/null
-if [ $? -ne 0 ]; then
-  echo "make install for CSXCAD failed"
+  echo "make for $1 failed"
   cd ..
   exit
 fi
 cd ..
+}
+
+function install {
+cd $1
+make install > /dev/null
+if [ $? -ne 0 ]; then
+  echo "make install for $1 failed"
+  cd ..
+  exit
+fi
+cd ..
+}
+
+#build fparser
+build fparser PREFIX=$INSTALL_PATH
+install fparser
+
+#build CSXCAD
+build CSXCAD PREFIX=$INSTALL_PATH FPARSER_ROOT=$INSTALL_PATH
+install CSXCAD
 
 #build QCSXCAD
-cd QCSXCAD
-make clean &> /dev/null
-$QMAKE PREFIX=. CSXCAD_ROOT=$basedir/CSXCAD QCSXCAD.pro
-if [ $? -ne 0 ]; then
-  echo "qmake for QCSXCAD failed"
-  cd ..
-  exit
-fi
-
-echo "compiling QCSXCAD ... please wait"
-make -j4 > /dev/null
-if [ $? -ne 0 ]; then
-  echo "make for QCSXCAD failed"
-  cd ..
-  exit
-fi
-make install > /dev/null
-if [ $? -ne 0 ]; then
-  echo "make install for QCSXCAD failed"
-  cd ..
-  exit
-fi
-cd ..
+build QCSXCAD PREFIX=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH
+install QCSXCAD
 
 #build AppCSXCAD
-cd AppCSXCAD
-make clean &> /dev/null
-$QMAKE PREFIX=. CSXCAD_ROOT=$basedir/CSXCAD QCSXCAD_ROOT=$basedir/QCSXCAD AppCSXCAD.pro
-if [ $? -ne 0 ]; then
-  echo "qmake for AppCSXCAD failed"
-  cd ..
-  exit
-fi
-
-echo "compiling AppCSXCAD ... please wait"
-make -j4 > /dev/null
-if [ $? -ne 0 ]; then
-  echo "make for AppCSXCAD failed"
-  cd ..
-  exit
-fi
-cd ..
+build AppCSXCAD PREFIX=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH QCSXCAD_ROOT=$INSTALL_PATH
+install AppCSXCAD
 
 #build openEMS
-cd openEMS
-make clean &> /dev/null
-$QMAKE PREFIX=. CSXCAD_ROOT=$basedir/CSXCAD openEMS.pro
-if [ $? -ne 0 ]; then
-  echo "qmake for openEMS failed"
-  cd ..
-  exit
-fi
-
-echo "compiling openEMS ... please wait"
-make -j4 > /dev/null
-if [ $? -ne 0 ]; then
-  echo "make for openEMS failed"
-  cd ..
-  exit
-fi
-cd ..
+build openEMS PREFIX=$INSTALL_PATH FPARSER_ROOT=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH
+install openEMS
 
 #build nf2ff
-cd openEMS/nf2ff
-make clean &> /dev/null
-$QMAKE
-echo "compiling nf2ff ... please wait"
-make -j4 > /dev/null
-if [ $? -ne 0 ]; then
-  echo "make for nf2ff failed"
-  cd ../..
-  exit
-fi
-cd ../..
+cd openEMS
+build nf2ff PREFIX=$INSTALL_PATH
+install nf2ff
+cd ..
 
 echo "openEMS and all modules have been updated successfully..."
 echo ""
 echo "add the required paths to Octave/Matlab:"
-echo "addpath('$basedir/openEMS/matlab')"
-echo "addpath('$basedir/CSXCAD/matlab')"
+echo "addpath('$INSTALL_PATH/share/openEMS/matlab')"
+echo "addpath('$INSTALL_PATH/share/CSXCAD/matlab')"
 echo ""
 echo "Have fun using openEMS"
