@@ -1,12 +1,12 @@
 [submodule "CSXCAD"]
 	path = CSXCAD
-	url = git://openEMS.de/CSXCAD.git
+	url = https://github.com/thliebig/CSXCAD.git
 [submodule "QCSXCAD"]
 	path = QCSXCAD
-	url = git://openEMS.de/QCSXCAD.git
+	url = https://github.com/thliebig/QCSXCAD.git
 [submodule "AppCSXCAD"]
 	path = AppCSXCAD
-	url = git://openEMS.de/AppCSXCAD.git
+	url = https://github.com/thliebig/AppCSXCAD.git
 [submodule "openEMS"]
 	path = openEMS
-	url = git://openEMS.de/openEMS.git
+	url = https://github.com/thliebig/openEMS.git
