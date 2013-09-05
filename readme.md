@@ -45,5 +45,28 @@ For more informations and other platforms see:
 ```bash
 cd openEMS-Project
 git pull
-./update_openEMS.sh
+./update_openEMS.sh ~/opt/openEMS
 ```
+
+### Switch to the latest development Version:
++ Fetch all remote trees
++ checkout and track the remote master branch (development branch)
++ update, build and install
+
+```bash
+cd openEMS-Project
+git fetch --all
+git checkout -b master origin/master
+./update_openEMS.sh ~/opt/openEMS
+```
+**Note:** Changes you may have made (e.g. to the tutorials or examples) may be overwritten!<br />
+
++ You may want to switch back to the release (stable) branch:
+
+```bash
+cd openEMS-Project
+git checkout stable
+./update_openEMS.sh ~/opt/openEMS
+```
+
+**Note:** Changes you may have made (e.g. to the tutorials or examples) may be overwritten!<br />
