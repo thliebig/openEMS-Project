@@ -22,6 +22,11 @@ openEMS is a free and open electromagnetic field solver using the FDTD method. M
 sudo apt-get install build-essential git libhdf5-openmpi-dev libvtk5-dev libboost-all-dev libcgal-dev libtinyxml-dev libqt4-dev libvtk5-qt4-dev
 ```
 
++ Optional: Install octave and octave devel packages:
+```bash
+sudo apt-get install octave liboctave-dev
+```
+
 + Clone this repository, build openEMS and install e.g. to "~/opt/openEMS":
 ```bash
 git clone https://github.com/thliebig/openEMS-Project.git
@@ -53,20 +58,19 @@ git pull
 + checkout and track the remote master branch (development branch)
 + update, build and install
 
+**Note:** Changes you may have made (e.g. to the tutorials or examples) may be overwritten!<br />
 ```bash
 cd openEMS-Project
 git fetch --all
 git checkout -b master origin/master
 ./update_openEMS.sh ~/opt/openEMS
 ```
-**Note:** Changes you may have made (e.g. to the tutorials or examples) may be overwritten!<br />
 
 + You may want to switch back to the release (stable) branch:
 
+**Note:** Changes you may have made (e.g. to the tutorials or examples) may be overwritten!<br />
 ```bash
 cd openEMS-Project
 git checkout stable
 ./update_openEMS.sh ~/opt/openEMS
 ```
-
-**Note:** Changes you may have made (e.g. to the tutorials or examples) may be overwritten!<br />
