@@ -13,3 +13,9 @@
 [submodule "fparser"]
 	path = fparser
 	url = https://github.com/thliebig/fparser.git
+[submodule "hyp2mat"]
+	path = hyp2mat
+	url = https://github.com/koendv/hyp2mat.git
+[submodule "CTB"]
+	path = CTB
+	url = https://github.com/thliebig/CTB.git

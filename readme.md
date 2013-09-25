@@ -22,9 +22,14 @@ openEMS is a free and open electromagnetic field solver using the FDTD method. M
 sudo apt-get install build-essential git libhdf5-openmpi-dev libvtk5-dev libboost-all-dev libcgal-dev libtinyxml-dev libqt4-dev libvtk5-qt4-dev
 ```
 
-+ Optional: Install octave and octave devel packages:
++ Optional: Install [octave](http://www.gnu.org/software/octave/) and octave devel packages:
 ```bash
 sudo apt-get install octave liboctave-dev
+```
+
++ Optional: For the package [hyp2mat](https://github.com/koendv/hyp2mat) you need additonal dependencies:<br />
+```bash
+sudo apt-get install gengetopt help2man groff pod2pdf bison flex libhpdf-dev libtool
 ```
 
 + Clone this repository, build openEMS and install e.g. to "~/opt/openEMS":
@@ -38,6 +43,12 @@ cd openEMS-Project
 ```Matlab
 addpath('~/opt/openEMS/share/openEMS/matlab');
 addpath('~/opt/openEMS/share/CSXCAD/matlab');
+```
+
++ Add the optional packages to your Octave/Matlab environment (e.g.):
+```Matlab
+addpath('~/opt/openEMS/share/hyp2mat/matlab'); % [hyp2mat](https://github.com/koendv/hyp2mat) package
+addpath('~/opt/openEMS/share/CTB/matlab');     % [circuit toolbox](https://github.com/thliebig/CTB)
 ```
 
 For more informations and other platforms see:
