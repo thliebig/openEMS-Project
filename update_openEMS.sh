@@ -18,6 +18,8 @@ then
   exit $E_BADARGS
 fi
 
+QMAKE=qmake-qt4
+
 # defaults
 BUILD_HYP2MAT=0
 BUILD_CTB=0
@@ -53,9 +55,13 @@ done
 basedir=$(pwd)
 INSTALL_PATH=${1%/}
 
-echo "setting install path to: $INSTALL_PATH"
+mkdir -p $INSTALL_PATH
+if [ $? -ne 0 ]; then
+  echo "unable to create install path: $INSTALL_PATH"
+  exit
+fi
 
-QMAKE=qmake-qt4
+echo "setting install path to: $INSTALL_PATH"
 
 if [ $GIT_UPDATE -eq 1 ]; then
   #update all
