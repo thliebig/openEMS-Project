@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 # Compiling OpenEMS may require installing the following packages:
@@ -5,40 +6,71 @@
 # Compiling hyp2mat may require installing the following packages:
 # apt-get install gengetopt help2man groff pod2pdf bison flex libhpdf-dev libtool
 
-read -r -p "Build & install hyp2mat? [y/n]: " -n 1 Q_BUILD_HYP2MAT
-echo ""
-
-read -r -p "Install circuit toolbox? [y/n]: " -n 1 Q_BUILD_CTB
-echo ""
-
-basedir=$(pwd)
-INSTALL_PATH=$basedir
-QMAKE=qmake-qt4
-
-if [ $# -ne 1 ]
+if [ $# -lt 1 ]
 then
-  echo "Usage: `basename $0` <path-to-install>"
+  echo "Usage: `basename $0` <path-to-install> [<options>]"
+  echo ""
+  echo "  options:"
+  echo "	--with-hyp2mat:		enable hyp2mat build"
+  echo "	--with-CTB		enable circuit toolbox"
+  echo "	--disable-GUI		disable GUI build (AppCSXCAD)"
+  echo "	--disable-update	disable git submodule update"
   exit $E_BADARGS
 fi
 
-if [ $# -ne 2 ]; then
-  INSTALL_PATH=${1%/}
-  echo "setting install path to: $INSTALL_PATH"
-fi
+# defaults
+BUILD_HYP2MAT=0
+BUILD_CTB=0
+BUILD_GUI=1
+GIT_UPDATE=1  # perform submodule inti & update
 
-#update all
-echo "init & updating git submodules... please wait"
+for varg in ${@:2:$#}
+do
+  case "$varg" in
+    "--with-hyp2mat")
+      echo "enabling hyp2mat build"
+      BUILD_HYP2MAT=1
+      ;;
+    "--with-CTB")
+      echo "enabling CTB build"
+      BUILD_CTB=1
+      ;;
+    "--disable-GUI")
+      echo "disabling CTB build"
+      BUILD_GUI=0
+      ;;
+    "--disable-update")
+      echo "disabling git submodule update"
+      GIT_UPDATE=0
+      ;;
+    *)
+      echo "error, unknown argumennt: $varg"
+      exit 1
+      ;;
+  esac
+done
 
-git submodule init
-if [ $? -ne 0 ]; then
-  echo "git submodule init failed!"
-  exit
-fi
+basedir=$(pwd)
+INSTALL_PATH=${1%/}
 
-git submodule update
-if [ $? -ne 0 ]; then
-  echo "git submodule update failed!"
-  exit
+echo "setting install path to: $INSTALL_PATH"
+
+QMAKE=qmake-qt4
+
+if [ $GIT_UPDATE -eq 1 ]; then
+  #update all
+  echo "init & updating git submodules... please wait"
+  git submodule init
+  if [ $? -ne 0 ]; then
+    echo "git submodule init failed!"
+    exit
+  fi
+
+  git submodule update
+  if [ $? -ne 0 ]; then
+    echo "git submodule update failed!"
+    exit
+  fi
 fi
 
 function build {
@@ -94,13 +126,15 @@ install fparser
 build CSXCAD PREFIX=$INSTALL_PATH FPARSER_ROOT=$INSTALL_PATH
 install CSXCAD
 
-#build QCSXCAD
-build QCSXCAD PREFIX=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH
-install QCSXCAD
+if [ $BUILD_GUI -eq 1 ]; then
+  #build QCSXCAD
+  build QCSXCAD PREFIX=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH
+  install QCSXCAD
 
-#build AppCSXCAD
-build AppCSXCAD PREFIX=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH QCSXCAD_ROOT=$INSTALL_PATH
-install AppCSXCAD
+  #build AppCSXCAD
+  build AppCSXCAD PREFIX=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH QCSXCAD_ROOT=$INSTALL_PATH
+  install AppCSXCAD
+fi
 
 #build openEMS
 build openEMS PREFIX=$INSTALL_PATH FPARSER_ROOT=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH
@@ -114,13 +148,13 @@ cd ..
 
 #####  addtional packages ####
 
-if [ $Q_BUILD_HYP2MAT = "y" ]; then
+if [ $BUILD_HYP2MAT -eq 1 ]; then
   #build hyp2mat
   build hyp2mat --prefix=$INSTALL_PATH
   install hyp2mat
 fi
 
-if [ $Q_BUILD_CTB = "y" ]; then
+if [ $BUILD_CTB -eq 1 ]; then
   #install circuit toolbox (CTB)
   install CTB PREFIX=$INSTALL_PATH
 fi
@@ -135,10 +169,10 @@ echo "addpath('$INSTALL_PATH/share/openEMS/matlab')"
 echo "addpath('$INSTALL_PATH/share/CSXCAD/matlab')"
 echo ""
 echo "% optional additional pckages:"
-if [ $Q_BUILD_HYP2MAT = "y" ]; then
+if [ $BUILD_HYP2MAT -eq 1 ]; then
   echo "addpath('$INSTALL_PATH/share/hyp2mat/matlab'); % hyp2mat package"
 fi
-if [ $Q_BUILD_CTB = "y" ]; then
+if [ $BUILD_CTB -eq 1 ]; then
   echo "addpath('$INSTALL_PATH/share/CTB/matlab'); % circuit toolbox"
 fi
 echo ""
