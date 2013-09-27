@@ -51,8 +51,8 @@ addpath('~/opt/openEMS/share/CSXCAD/matlab');
 
 + Add the optional packages to your Octave/Matlab environment (e.g.):
 ```Matlab
-addpath('~/opt/openEMS/share/hyp2mat/matlab'); % [hyp2mat](https://github.com/koendv/hyp2mat) package
-addpath('~/opt/openEMS/share/CTB/matlab');     % [circuit toolbox](https://github.com/thliebig/CTB)
+addpath('~/opt/openEMS/share/hyp2mat/matlab');
+addpath('~/opt/openEMS/share/CTB/matlab');
 ```
 
 For more informations and other platforms see:
