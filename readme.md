@@ -38,6 +38,10 @@ git clone https://github.com/thliebig/openEMS-Project.git
 cd openEMS-Project
 ./update_openEMS.sh ~/opt/openEMS
 ```
+or including [hyp2mat](https://github.com/koendv/hyp2mat) and [CTB](https://github.com/thliebig/CTB):<br />
+```bash
+./update_openEMS.sh ~/opt/openEMS --with-hyp2mat --with-CTB
+```
 
 + Add the given paths to your Octave/Matlab environment (e.g.):
 ```Matlab
