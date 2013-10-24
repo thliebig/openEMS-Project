@@ -68,24 +68,24 @@ git pull
 ./update_openEMS.sh ~/opt/openEMS
 ```
 
-### Switch to the latest development Version:
+### Switch to the stable version:
 + Fetch all remote trees
-+ checkout and track the remote master branch (development branch)
++ checkout and track the remote stable branch
 + update, build and install
 
 **Note:** Changes you may have made (e.g. to the tutorials or examples) may be overwritten!<br />
 ```bash
 cd openEMS-Project
 git fetch --all
-git checkout -b master origin/master
+git checkout -b stable origin/stable
 ./update_openEMS.sh ~/opt/openEMS
 ```
 
-+ You may want to switch back to the release (stable) branch:
++ You may want to switch back to the master branch:
 
 **Note:** Changes you may have made (e.g. to the tutorials or examples) may be overwritten!<br />
 ```bash
 cd openEMS-Project
-git checkout stable
+git checkout master
 ./update_openEMS.sh ~/opt/openEMS
 ```
