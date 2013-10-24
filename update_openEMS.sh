@@ -95,6 +95,16 @@ if [ -f $1.pro ]; then
   fi
 fi
 
+if [ -f bootstrap.sh ]; then
+  echo "bootstrapping $1 ... please wait"
+  sh ./bootstrap.sh > /dev/null
+  if [ $? -ne 0 ]; then
+    echo "bootstrap for $1 failed"
+    cd ..
+    exit
+  fi
+fi
+
 if [ -f configure ]; then
   echo "configuring $1 ... please wait"
   ./configure $2 > /dev/null
