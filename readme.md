@@ -7,7 +7,7 @@ openEMS is a free and open electromagnetic field solver using the FDTD method. M
 **Github**: [https://github.com/thliebig/openEMS-Project](https://github.com/thliebig/openEMS-Project)<br />
 **IRC**: #openEMS on freenode <br />
 
-## openEMS Features:
+# openEMS Features:
 + fully 3D Cartesian and cylindrical coordinates graded mesh.
 + Multi-threading, SIMD (SSE) and MPI support for high speed FDTD.
 + Octave and Matlab-Interface
@@ -16,13 +16,22 @@ openEMS is a free and open electromagnetic field solver using the FDTD method. M
 + Flexible post-processing routines in Octave/Matlab
 + and [many more](http://openems.de/index.php/OpenEMS#Features)
 
-## Install Instruction:
-+ Install all necessary dependencies, e.g. on Ubuntu 12.04 or higher:
+# Install Instruction
+
+## Requirements
+
+### Ubuntu
++ Install all necessary dependencies, e.g. on *Ubuntu 12.04*:<br />
 ```bash
 sudo apt-get install build-essential git libhdf5-openmpi-dev libvtk5-dev libboost-all-dev libcgal-dev libtinyxml-dev libqt4-dev libvtk5-qt4-dev
 ```
 
-+ Optional: Install [octave](http://www.gnu.org/software/octave/) and octave devel packages:
++ Install all necessary dependencies, e.g. on *Ubuntu 13.04 and above*:<br />
+```bash
+sudo apt-get install build-essential git libhdf5-dev libvtk5-dev libboost-all-dev libcgal-dev libtinyxml-dev libqt4-dev libvtk5-qt4-dev
+```
+
++ Optional: Install [octave](http://www.gnu.org/software/octave/) and octave devel packages:<br />
 ```bash
 sudo apt-get install octave liboctave-dev
 ```
@@ -32,7 +41,14 @@ sudo apt-get install octave liboctave-dev
 sudo apt-get install gengetopt help2man groff pod2pdf bison flex libhpdf-dev libtool
 ```
 
-+ Clone this repository, build openEMS and install e.g. to "~/opt/openEMS":
+### Fedora
++ Install all necessary dependencies, e.g. on *Fedora 19*:<br />
+```bash
+yum install make gcc gcc-c++ git hdf5-devel vtk-devel boost-devel CGAL-devel tinyxml-devel qt-devel vtk-qt
+```
+
+## Clone, build and install
++ Clone this repository, build openEMS and install e.g. to "~/opt/openEMS":<br />
 ```bash
 git clone https://github.com/thliebig/openEMS-Project.git
 cd openEMS-Project
@@ -43,13 +59,13 @@ or including [hyp2mat](https://github.com/koendv/hyp2mat) and [CTB](https://gith
 ./update_openEMS.sh ~/opt/openEMS --with-hyp2mat --with-CTB
 ```
 
-+ Add the given paths to your Octave/Matlab environment (e.g.):
++ Add the given paths to your Octave/Matlab environment (e.g.):<br />
 ```Matlab
 addpath('~/opt/openEMS/share/openEMS/matlab');
 addpath('~/opt/openEMS/share/CSXCAD/matlab');
 ```
 
-+ Add the optional packages to your Octave/Matlab environment (e.g.):
++ Add the optional packages to your Octave/Matlab environment (e.g.):<br />
 ```Matlab
 addpath('~/opt/openEMS/share/hyp2mat/matlab');
 addpath('~/opt/openEMS/share/CTB/matlab');
