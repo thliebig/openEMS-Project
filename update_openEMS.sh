@@ -19,6 +19,13 @@ then
 fi
 
 QMAKE=qmake-qt4
+#check if qmake-qt4 exists in path
+if which $QMAKE >/dev/null; then
+    echo "Using qmake from: $(which $QMAKE)"
+else # fallback to qmake and hope it is a qt4 qmake
+    QMAKE=qmake
+    echo "Using qmake from: $(which $QMAKE)"
+fi
 
 # defaults
 BUILD_HYP2MAT=0
