@@ -33,8 +33,22 @@ BUILD_CTB=0
 BUILD_GUI=1
 GIT_UPDATE=1  # perform submodule inti & update
 
-VTK_LIB_DIR=$(dirname $(find /usr/lib*  -name 'libvtkCommon.so' 2>/dev/null))
-echo "Detected vtk library path: $VTK_LIB_DIR"
+TMP=$(find /usr/lib* -maxdepth 1 -name 'libvtkCommonCore*.so' 2>/dev/null)
+VTK_LIB_DIR=
+VTK_6_VER=$(grep -o "6.[0-9]" <<< $TMP 2>/dev/null)
+if [ -n "$VTK_6_VER" ]; then
+  VTK_LIB_DIR=$(dirname $TMP 2>/dev/null)
+  if [ $? -ne 0 ]; then
+    echo "unable to determine vtk lib path, exit!"
+    exit
+  fi
+  echo "Detected vtk $VTK_6_VER library path: $VTK_LIB_DIR"
+else
+  VTK_LIB_DIR=$(dirname $(find /usr/lib* -maxdepth 1 -name 'libvtkCommon.so' 2>/dev/null))
+  echo "Detected vtk 5.x library path: $VTK_LIB_DIR"
+fi
+
+VTK_ARGS="VTK_6_VERSION=$VTK_6_VER VTK_LIBRARYPATH=$VTK_LIB_DIR"
 
 for varg in ${@:2:$#}
 do
@@ -154,16 +168,16 @@ install CSXCAD
 
 if [ $BUILD_GUI -eq 1 ]; then
   #build QCSXCAD
-  build QCSXCAD PREFIX=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH VTK_LIBRARYPATH=$VTK_LIB_DIR
+  build QCSXCAD PREFIX=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH $VTK_ARGS
   install QCSXCAD
 
   #build AppCSXCAD
-  build AppCSXCAD PREFIX=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH QCSXCAD_ROOT=$INSTALL_PATH VTK_LIBRARYPATH=$VTK_LIB_DIR
+  build AppCSXCAD PREFIX=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH QCSXCAD_ROOT=$INSTALL_PATH $VTK_ARGS
   install AppCSXCAD
 fi
 
 #build openEMS
-build openEMS PREFIX=$INSTALL_PATH FPARSER_ROOT=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH VTK_LIBRARYPATH=$VTK_LIB_DIR
+build openEMS PREFIX=$INSTALL_PATH FPARSER_ROOT=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH $VTK_ARGS
 install openEMS
 
 #build nf2ff
