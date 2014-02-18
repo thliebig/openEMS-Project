@@ -33,22 +33,21 @@ BUILD_CTB=0
 BUILD_GUI=1
 GIT_UPDATE=1  # perform submodule inti & update
 
-TMP=$(find /usr/lib* -maxdepth 1 -name 'libvtkCommonCore*.so' 2>/dev/null)
-VTK_LIB_DIR=
-VTK_6_VER=$(grep -o "6.[0-9]" <<< $TMP 2>/dev/null)
-if [ -n "$VTK_6_VER" ]; then
+# configre vtk 5.x or 6.x
+VTK_ARGS=
+TMP=$(find /usr/lib* -maxdepth 1 -name 'libvtkCommonCore.so' 2>/dev/null)
+if [ -n "$TMP" ]; then
+  VTK_ARGS="VTK_6=1"
   VTK_LIB_DIR=$(dirname $TMP 2>/dev/null)
-  if [ $? -ne 0 ]; then
+  if [ -ne "$VTK_LIB_DIR" ]; then
     echo "unable to determine vtk lib path, exit!"
-    exit
   fi
-  echo "Detected vtk $VTK_6_VER library path: $VTK_LIB_DIR"
+  echo "Detected vtk 6.x library path: $VTK_LIB_DIR"
 else
   VTK_LIB_DIR=$(dirname $(find /usr/lib* -maxdepth 1 -name 'libvtkCommon.so' 2>/dev/null))
   echo "Detected vtk 5.x library path: $VTK_LIB_DIR"
 fi
-
-VTK_ARGS="VTK_6_VERSION=$VTK_6_VER VTK_LIBRARYPATH=$VTK_LIB_DIR"
+VTK_ARGS="$VTK_ARGS VTK_LIBRARYPATH=$VTK_LIB_DIR"
 
 for varg in ${@:2:$#}
 do
