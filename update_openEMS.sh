@@ -35,7 +35,7 @@ GIT_UPDATE=1  # perform submodule inti & update
 
 # configre vtk 5.x or 6.x
 VTK_ARGS=
-TMP=$(find /usr/lib* -maxdepth 1 -name 'libvtkCommonCore.so' 2>/dev/null)
+TMP=$(find /usr/lib* -maxdepth 2  ! -path "*paraview*" -name 'libvtkCommonCore.so'  2>/dev/null)
 if [ -n "$TMP" ]; then
   VTK_ARGS="VTK_6=1"
   VTK_LIB_DIR=$(dirname $TMP 2>/dev/null)
@@ -44,7 +44,7 @@ if [ -n "$TMP" ]; then
   fi
   echo "Detected vtk 6.x library path: $VTK_LIB_DIR"
 else
-  VTK_LIB_DIR=$(dirname $(find /usr/lib* -maxdepth 1 -name 'libvtkCommon.so' 2>/dev/null))
+  VTK_LIB_DIR=$(dirname $(find /usr/lib* -maxdepth 2 ! -path "*paraview*"  -name 'libvtkCommon.so' 2>/dev/null))
   echo "Detected vtk 5.x library path: $VTK_LIB_DIR"
 fi
 VTK_ARGS="$VTK_ARGS VTK_LIBRARYPATH=$VTK_LIB_DIR"
