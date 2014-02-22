@@ -15,6 +15,7 @@ then
   echo "	--with-CTB		enable circuit toolbox"
   echo "	--disable-GUI		disable GUI build (AppCSXCAD)"
   echo "	--disable-update	disable git submodule update"
+  echo "	--enable-hdf5-mpi-fix 	enable a hdf5/mpi related fix"
   exit $E_BADARGS
 fi
 
@@ -49,6 +50,19 @@ else
 fi
 VTK_ARGS="$VTK_ARGS VTK_LIBRARYPATH=$VTK_LIB_DIR"
 
+HDF5_MPI_FIX=
+which lsb_release &> /dev/null
+if [ $? -eq 0 ]; then
+  UBUNTU_NAME=$(lsb_release -c)
+  UBUNTU_NAME=${UBUNTU_NAME#"Codename:"}    # remove "Release:" prefix
+  UBUNTU_NAME=${UBUNTU_NAME//[[:blank:]]/} # remove leading whitespaces
+
+  if [ $UBUNTU_NAME == 'precise' ]; then
+      echo "Ubuntu Precise detected, enabling HDF5_MPI_FIX ... "
+      HDF5_MPI_FIX="LIBS+=-lmpi LIBS+=-lmpi_cxx INCLUDEPATH+=/usr/include/mpi"
+  fi
+fi
+
 for varg in ${@:2:$#}
 do
   case "$varg" in
@@ -67,6 +81,10 @@ do
     "--disable-update")
       echo "disabling git submodule update"
       GIT_UPDATE=0
+      ;;
+    "--enable-hdf5-mpi-fix")
+      echo "enabling hdf5/mpi related fix"
+      HDF5_MPI_FIX="LIBS+=-lmpi LIBS+=-lmpi_cxx INCLUDEPATH+=/usr/include/mpi"
       ;;
     *)
       echo "error, unknown argumennt: $varg"
@@ -176,12 +194,12 @@ if [ $BUILD_GUI -eq 1 ]; then
 fi
 
 #build openEMS
-build openEMS PREFIX=$INSTALL_PATH FPARSER_ROOT=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH $VTK_ARGS
+build openEMS PREFIX=$INSTALL_PATH FPARSER_ROOT=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH $VTK_ARGS $HDF5_MPI_FIX
 install openEMS
 
 #build nf2ff
 cd openEMS
-build nf2ff PREFIX=$INSTALL_PATH
+build nf2ff PREFIX=$INSTALL_PATH $HDF5_MPI_FIX
 install nf2ff
 cd ..
 
