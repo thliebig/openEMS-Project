@@ -39,7 +39,7 @@ TMP=$(find /usr/lib* -maxdepth 2  ! -path "*paraview*" -name 'libvtkCommonCore.s
 if [ -n "$TMP" ]; then
   VTK_ARGS="VTK_6=1"
   VTK_LIB_DIR=$(dirname $TMP 2>/dev/null)
-  if [ -ne "$VTK_LIB_DIR" ]; then
+  if [ -z "$VTK_LIB_DIR" ]; then
     echo "unable to determine vtk lib path, exit!"
   fi
   echo "Detected vtk 6.x library path: $VTK_LIB_DIR"
