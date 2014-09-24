@@ -2,3 +2,5 @@ tmp*
 *~
 *.so*
 .directory
+build/
+localConfig.cmake
