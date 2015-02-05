@@ -8,5 +8,5 @@ How to install openEMS:
 
 You can install openEMS using this URL:
 ```bash
-  brew install https://raw.github.com/thliebig/openEMS-Project/master/brew/openEMS.rb
+  brew install --HEAD https://raw.github.com/thliebig/openEMS-Project/master/brew/openEMS.rb
 ```
