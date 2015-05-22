@@ -53,8 +53,10 @@ done
 
 basedir=$(pwd)
 INSTALL_PATH=${1%/}
+LOG_FILE=$basedir/build_$(date +%Y%m%d_%H%M%S).log
 
 echo "setting install path to: $INSTALL_PATH"
+echo "logging build output to: $LOG_FILE"
 
 if [ $GIT_UPDATE -eq 1 ]; then
   #update all
@@ -78,7 +80,7 @@ make clean &> /dev/null
 
 if [ -f bootstrap.sh ]; then
   echo "bootstrapping $1 ... please wait"
-  sh ./bootstrap.sh > /dev/null
+  sh ./bootstrap.sh >> $LOG_FILE
   if [ $? -ne 0 ]; then
     echo "bootstrap for $1 failed"
     cd ..
@@ -88,7 +90,7 @@ fi
 
 if [ -f configure ]; then
   echo "configuring $1 ... please wait"
-  ./configure $2 > /dev/null
+  ./configure $2 >> $LOG_FILE
   if [ $? -ne 0 ]; then
     echo "configure for $1 failed"
     cd ..
@@ -97,7 +99,7 @@ if [ -f configure ]; then
 fi
 
 echo "compiling $1 ... please wait"
-make -j4 > /dev/null
+make -j4 >> $LOG_FILE
 if [ $? -ne 0 ]; then
   echo "make for $1 failed"
   cd ..
@@ -109,7 +111,7 @@ cd ..
 function install {
 cd $1
 echo "installing $1 ... please wait"
-make ${@:2:$#} install > /dev/null
+make ${@:2:$#} install >> $LOG_FILE
 if [ $? -ne 0 ]; then
   echo "make install for $1 failed"
   cd ..
@@ -121,19 +123,24 @@ cd ..
 ##### build openEMS and dependencies ####
 tmpdir=`mktemp -d` && cd $tmpdir
 echo "running cmake in tmp dir: $tmpdir"
-cmake -DBUILD_APPCSXCAD=$BUILD_GUI -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $basedir
+cmake -DBUILD_APPCSXCAD=$BUILD_GUI -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $basedir >> $LOG_FILE
 if [ $? -ne 0 ]; then
   echo "cmake failed"
   cd $basedir
+  echo "build incomplete, cleaning up tmp dir ..."
+  rm -rf $tmpdir
   exit
 fi
-make
+echo "build openEMS and dependencies ... pleae wait"
+make >> $LOG_FILE 2>&1
 if [ $? -ne 0 ]; then
-  echo "make failed, build incomplete"
+  echo "make failed, build incomplete, please see logfile for more details..."
   cd $basedir
+  echo "build incomplete, cleaning up tmp dir ..."
+  rm -rf $tmpdir
   exit
 fi
-echo "build successful, remove tmp dir"
+echo "build successful, cleaning up tmp dir ..."
 rm -rf $tmpdir
 cd $basedir
 
