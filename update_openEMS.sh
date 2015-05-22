@@ -2,7 +2,7 @@
 #!/bin/bash
 
 # Compiling OpenEMS may require installing the following packages:
-# apt-get install qt4-qmake libtinyxml-dev libcgal-dev libvtk5-qt4-dev
+# apt-get install cmake qt4-qmake libtinyxml-dev libcgal-dev libvtk5-qt4-dev
 # Compiling hyp2mat may require installing the following packages:
 # apt-get install gengetopt help2man groff pod2pdf bison flex libhpdf-dev libtool
 
@@ -15,54 +15,16 @@ then
   echo "	--with-CTB		enable circuit toolbox"
   echo "	--disable-GUI		disable GUI build (AppCSXCAD)"
   echo "	--disable-update	disable git submodule update"
-  echo "	--enable-hdf5-mpi-fix 	enable a hdf5/mpi related fix"
   exit $E_BADARGS
-fi
-
-QMAKE=qmake-qt4
-#check if qmake-qt4 exists in path
-if which $QMAKE >/dev/null; then
-    echo "Using qmake from: $(which $QMAKE)"
-else # fallback to qmake and hope it is a qt4 qmake
-    QMAKE=qmake
-    echo "Using qmake from: $(which $QMAKE)"
 fi
 
 # defaults
 BUILD_HYP2MAT=0
 BUILD_CTB=0
-BUILD_GUI=1
+BUILD_GUI="YES"
 GIT_UPDATE=1  # perform submodule inti & update
 
-# configre vtk 5.x or 6.x
-VTK_ARGS=
-TMP=$(find /usr/lib* -maxdepth 2  ! -path "*paraview*" -name 'libvtkCommonCore.so'  2>/dev/null)
-if [ -n "$TMP" ]; then
-  VTK_ARGS="VTK_6=1"
-  VTK_LIB_DIR=$(dirname $TMP 2>/dev/null)
-  if [ -z "$VTK_LIB_DIR" ]; then
-    echo "unable to determine vtk lib path, exit!"
-  fi
-  echo "Detected vtk 6.x library path: $VTK_LIB_DIR"
-else
-  VTK_LIB_DIR=$(dirname $(find /usr/lib* -maxdepth 2 ! -path "*paraview*"  -name 'libvtkCommon.so' 2>/dev/null))
-  echo "Detected vtk 5.x library path: $VTK_LIB_DIR"
-fi
-VTK_ARGS="$VTK_ARGS VTK_LIBRARYPATH=$VTK_LIB_DIR"
-
-HDF5_MPI_FIX=
-which lsb_release &> /dev/null
-if [ $? -eq 0 ]; then
-  UBUNTU_NAME=$(lsb_release -c)
-  UBUNTU_NAME=${UBUNTU_NAME#"Codename:"}    # remove "Release:" prefix
-  UBUNTU_NAME=${UBUNTU_NAME//[[:blank:]]/} # remove leading whitespaces
-
-  if [ $UBUNTU_NAME == 'precise' ]; then
-      echo "Ubuntu Precise detected, enabling HDF5_MPI_FIX ... "
-      HDF5_MPI_FIX="LIBS+=-lmpi LIBS+=-lmpi_cxx INCLUDEPATH+=/usr/include/mpi"
-  fi
-fi
-
+# parse arguments
 for varg in ${@:2:$#}
 do
   case "$varg" in
@@ -75,16 +37,12 @@ do
       BUILD_CTB=1
       ;;
     "--disable-GUI")
-      echo "disabling CTB build"
-      BUILD_GUI=0
+      echo "disabling AppCSXCAD build"
+      BUILD_GUI="NO"
       ;;
     "--disable-update")
       echo "disabling git submodule update"
       GIT_UPDATE=0
-      ;;
-    "--enable-hdf5-mpi-fix")
-      echo "enabling hdf5/mpi related fix"
-      HDF5_MPI_FIX="LIBS+=-lmpi LIBS+=-lmpi_cxx INCLUDEPATH+=/usr/include/mpi"
       ;;
     *)
       echo "error, unknown argumennt: $varg"
@@ -95,12 +53,6 @@ done
 
 basedir=$(pwd)
 INSTALL_PATH=${1%/}
-
-mkdir -p $INSTALL_PATH
-if [ $? -ne 0 ]; then
-  echo "unable to create install path: $INSTALL_PATH"
-  exit
-fi
 
 echo "setting install path to: $INSTALL_PATH"
 
@@ -123,15 +75,6 @@ fi
 function build {
 cd $1
 make clean &> /dev/null
-
-if [ -f $1.pro ]; then
-  $QMAKE ${@:2:$#} $1.pro
-  if [ $? -ne 0 ]; then
-    echo "qmake for $1 failed"
-    cd ..
-    exit
-  fi
-fi
 
 if [ -f bootstrap.sh ]; then
   echo "bootstrapping $1 ... please wait"
@@ -175,33 +118,24 @@ fi
 cd ..
 }
 
-#build fparser
-build fparser PREFIX=$INSTALL_PATH
-install fparser
-
-#build CSXCAD
-build CSXCAD PREFIX=$INSTALL_PATH FPARSER_ROOT=$INSTALL_PATH
-install CSXCAD
-
-if [ $BUILD_GUI -eq 1 ]; then
-  #build QCSXCAD
-  build QCSXCAD PREFIX=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH $VTK_ARGS
-  install QCSXCAD
-
-  #build AppCSXCAD
-  build AppCSXCAD PREFIX=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH QCSXCAD_ROOT=$INSTALL_PATH $VTK_ARGS
-  install AppCSXCAD
+##### build openEMS and dependencies ####
+tmpdir=`mktemp -d` && cd $tmpdir
+echo "running cmake in tmp dir: $tmpdir"
+cmake -DBUILD_APPCSXCAD=$BUILD_GUI -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $basedir
+if [ $? -ne 0 ]; then
+  echo "cmake failed"
+  cd $basedir
+  exit
 fi
-
-#build openEMS
-build openEMS PREFIX=$INSTALL_PATH FPARSER_ROOT=$INSTALL_PATH CSXCAD_ROOT=$INSTALL_PATH $VTK_ARGS $HDF5_MPI_FIX
-install openEMS
-
-#build nf2ff
-cd openEMS
-build nf2ff PREFIX=$INSTALL_PATH $HDF5_MPI_FIX
-install nf2ff
-cd ..
+make
+if [ $? -ne 0 ]; then
+  echo "make failed, build incomplete"
+  cd $basedir
+  exit
+fi
+echo "build successful, remove tmp dir"
+rm -rf $tmpdir
+cd $basedir
 
 #####  addtional packages ####
 
