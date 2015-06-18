@@ -14,7 +14,6 @@ then
   echo "	--with-hyp2mat:		enable hyp2mat build"
   echo "	--with-CTB		enable circuit toolbox"
   echo "	--disable-GUI		disable GUI build (AppCSXCAD)"
-  echo "	--disable-update	disable git submodule update"
   exit $E_BADARGS
 fi
 
@@ -22,7 +21,6 @@ fi
 BUILD_HYP2MAT=0
 BUILD_CTB=0
 BUILD_GUI="YES"
-GIT_UPDATE=1  # perform submodule inti & update
 
 # parse arguments
 for varg in ${@:2:$#}
@@ -40,10 +38,6 @@ do
       echo "disabling AppCSXCAD build"
       BUILD_GUI="NO"
       ;;
-    "--disable-update")
-      echo "disabling git submodule update"
-      GIT_UPDATE=0
-      ;;
     *)
       echo "error, unknown argumennt: $varg"
       exit 1
@@ -57,22 +51,6 @@ LOG_FILE=$basedir/build_$(date +%Y%m%d_%H%M%S).log
 
 echo "setting install path to: $INSTALL_PATH"
 echo "logging build output to: $LOG_FILE"
-
-if [ $GIT_UPDATE -eq 1 ]; then
-  #update all
-  echo "init & updating git submodules... please wait"
-  git submodule init
-  if [ $? -ne 0 ]; then
-    echo "git submodule init failed!"
-    exit
-  fi
-
-  git submodule update
-  if [ $? -ne 0 ]; then
-    echo "git submodule update failed!"
-    exit
-  fi
-fi
 
 function build {
 cd $1
