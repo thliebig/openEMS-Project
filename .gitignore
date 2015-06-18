@@ -5,3 +5,4 @@ tmp*
 build/
 build_*.log
 localConfig.cmake
+*.tar.bz2
