@@ -3,7 +3,6 @@
 cd openEMS
 GITREV=`git describe --tags`
 cd ..
-echo $GITREV
 
 rm -f openEMS-$GITREV.tar
 rm -f openEMS-$GITREV.tar.bz2
