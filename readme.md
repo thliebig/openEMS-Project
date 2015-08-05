@@ -5,7 +5,6 @@ openEMS is a free and open electromagnetic field solver using the FDTD method. M
 **Forum**: [http://openEMS.de/forum](http://openEMS.de/forum)<br />
 **Wiki**: [http://openems.de/index.php](http://openems.de/index.php)<br />
 **Github**: [https://github.com/thliebig/openEMS-Project](https://github.com/thliebig/openEMS-Project)<br />
-**IRC**: #openEMS on freenode <br />
 
 # openEMS Features:
 + fully 3D Cartesian and cylindrical coordinates graded mesh.
@@ -21,14 +20,9 @@ openEMS is a free and open electromagnetic field solver using the FDTD method. M
 ## Requirements
 
 ### Ubuntu
-+ Install all necessary dependencies, e.g. on *Ubuntu 12.04*:<br />
++ Install all necessary dependencies, e.g. on *Ubuntu 14.04 and above*:<br />
 ```bash
-sudo apt-get install build-essential git libhdf5-openmpi-dev libvtk5-dev libboost-all-dev libcgal-dev libtinyxml-dev libqt4-dev libvtk5-qt4-dev
-```
-
-+ Install all necessary dependencies, e.g. on *Ubuntu 13.04 and above*:<br />
-```bash
-sudo apt-get install build-essential git libhdf5-dev libvtk5-dev libboost-all-dev libcgal-dev libtinyxml-dev libqt4-dev libvtk5-qt4-dev
+sudo apt-get install build-essential cmake git libhdf5-dev libvtk5-dev libboost-all-dev libcgal-dev libtinyxml-dev libqt4-dev libvtk5-qt4-dev
 ```
 
 + Optional: Install [octave](http://www.gnu.org/software/octave/) and octave devel packages:<br />
@@ -81,27 +75,5 @@ For more informations and other platforms see:
 ```bash
 cd openEMS-Project
 git pull
-./update_openEMS.sh ~/opt/openEMS
-```
-
-### Switch to the stable version:
-+ Fetch all remote trees
-+ checkout and track the remote stable branch
-+ update, build and install
-
-**Note:** Changes you may have made (e.g. to the tutorials or examples) may be overwritten!<br />
-```bash
-cd openEMS-Project
-git fetch --all
-git checkout -b stable origin/stable
-./update_openEMS.sh ~/opt/openEMS
-```
-
-+ You may want to switch back to the master branch:
-
-**Note:** Changes you may have made (e.g. to the tutorials or examples) may be overwritten!<br />
-```bash
-cd openEMS-Project
-git checkout master
 ./update_openEMS.sh ~/opt/openEMS
 ```
