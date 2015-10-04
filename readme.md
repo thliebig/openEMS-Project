@@ -44,7 +44,7 @@ sudo yum install make gcc gcc-c++ git hdf5-devel vtk-devel boost-devel CGAL-deve
 ## Clone, build and install
 + Clone this repository, build openEMS and install e.g. to "~/opt/openEMS":<br />
 ```bash
-git clone https://github.com/thliebig/openEMS-Project.git
+git clone --recursive https://github.com/thliebig/openEMS-Project.git
 cd openEMS-Project
 ./update_openEMS.sh ~/opt/openEMS
 ```
