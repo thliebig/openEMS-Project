@@ -35,12 +35,6 @@ sudo apt-get install octave liboctave-dev
 sudo apt-get install gengetopt help2man groff pod2pdf bison flex libhpdf-dev libtool
 ```
 
-### Fedora
-+ Install all necessary dependencies, e.g. on *Fedora 19*:<br />
-```bash
-sudo yum install make gcc gcc-c++ git hdf5-devel vtk-devel boost-devel CGAL-devel tinyxml-devel qt-devel vtk-qt
-```
-
 ## Clone, build and install
 + Clone this repository, build openEMS and install e.g. to "~/opt/openEMS":<br />
 ```bash
