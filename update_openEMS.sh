@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # Compiling OpenEMS may require installing the following packages:
