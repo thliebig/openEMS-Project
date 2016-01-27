@@ -35,6 +35,11 @@ sudo apt-get install octave liboctave-dev
 sudo apt-get install gengetopt help2man groff pod2pdf bison flex libhpdf-dev libtool
 ```
 
++ Optional: For MPI support:<br />
+```bash
+sudo apt-get install libopenmpi-dev
+```
+
 ## Clone, build and install
 + Clone this repository, build openEMS and install e.g. to "~/opt/openEMS":<br />
 ```bash
@@ -42,9 +47,9 @@ git clone --recursive https://github.com/thliebig/openEMS-Project.git
 cd openEMS-Project
 ./update_openEMS.sh ~/opt/openEMS
 ```
-or including [hyp2mat](https://github.com/koendv/hyp2mat) and [CTB](https://github.com/thliebig/CTB):<br />
+or including [hyp2mat](https://github.com/koendv/hyp2mat) and [CTB](https://github.com/thliebig/CTB) and MPI:<br />
 ```bash
-./update_openEMS.sh ~/opt/openEMS --with-hyp2mat --with-CTB
+./update_openEMS.sh ~/opt/openEMS --with-hyp2mat --with-CTB --with-MPI
 ```
 
 + Add the given paths to your Octave/Matlab environment (e.g.):<br />

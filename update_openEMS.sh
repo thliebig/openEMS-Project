@@ -13,6 +13,7 @@ then
   echo "	--with-hyp2mat:		enable hyp2mat build"
   echo "	--with-CTB		enable circuit toolbox"
   echo "	--disable-GUI		disable GUI build (AppCSXCAD)"
+  echo "	--with-MPI		enable MPI"
   exit $E_BADARGS
 fi
 
@@ -20,6 +21,7 @@ fi
 BUILD_HYP2MAT=0
 BUILD_CTB=0
 BUILD_GUI="YES"
+WITH_MPI=0
 
 # parse arguments
 for varg in ${@:2:$#}
@@ -36,6 +38,10 @@ do
     "--disable-GUI")
       echo "disabling AppCSXCAD build"
       BUILD_GUI="NO"
+      ;;
+    "--with-MPI")
+      echo "enabling MPI"
+      WITH_MPI=1
       ;;
     *)
       echo "error, unknown argumennt: $varg"
@@ -100,7 +106,7 @@ cd ..
 ##### build openEMS and dependencies ####
 tmpdir=`mktemp -d` && cd $tmpdir
 echo "running cmake in tmp dir: $tmpdir"
-cmake -DBUILD_APPCSXCAD=$BUILD_GUI -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $basedir >> $LOG_FILE
+cmake -DBUILD_APPCSXCAD=$BUILD_GUI -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH -DWITH_MPI=$WITH_MPI $basedir >> $LOG_FILE
 if [ $? -ne 0 ]; then
   echo "cmake failed"
   cd $basedir
