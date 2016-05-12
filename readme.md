@@ -24,6 +24,7 @@ openEMS is a free and open electromagnetic field solver using the FDTD method. M
 ```bash
 sudo apt-get install build-essential cmake git libhdf5-dev libvtk5-dev libboost-all-dev libcgal-dev libtinyxml-dev libqt4-dev libvtk5-qt4-dev
 ```
+**Note for Ubuntu 16.04:** Due to a bug in CGAL the package "libcgal-qt5-dev" may be required
 
 + Optional: Install [octave](http://www.gnu.org/software/octave/) and octave devel packages:<br />
 ```bash
