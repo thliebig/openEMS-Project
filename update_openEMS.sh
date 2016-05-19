@@ -67,7 +67,7 @@ if [ -f bootstrap.sh ]; then
   if [ $? -ne 0 ]; then
     echo "bootstrap for $1 failed"
     cd ..
-    exit
+    exit 1
   fi
 fi
 
@@ -77,7 +77,7 @@ if [ -f configure ]; then
   if [ $? -ne 0 ]; then
     echo "configure for $1 failed"
     cd ..
-    exit
+    exit 1
   fi
 fi
 
@@ -86,7 +86,7 @@ make -j4 >> $LOG_FILE
 if [ $? -ne 0 ]; then
   echo "make for $1 failed"
   cd ..
-  exit
+  exit 1
 fi
 cd ..
 }
@@ -98,7 +98,7 @@ make ${@:2:$#} install >> $LOG_FILE
 if [ $? -ne 0 ]; then
   echo "make install for $1 failed"
   cd ..
-  exit
+  exit 1
 fi
 cd ..
 }
@@ -112,16 +112,16 @@ if [ $? -ne 0 ]; then
   cd $basedir
   echo "build incomplete, cleaning up tmp dir ..."
   rm -rf $tmpdir
-  exit
+  exit 1
 fi
-echo "build openEMS and dependencies ... pleae wait"
+echo "build openEMS and dependencies ... please wait"
 make >> $LOG_FILE 2>&1
 if [ $? -ne 0 ]; then
   echo "make failed, build incomplete, please see logfile for more details..."
   cd $basedir
   echo "build incomplete, cleaning up tmp dir ..."
   rm -rf $tmpdir
-  exit
+  exit 1
 fi
 echo "build successful, cleaning up tmp dir ..."
 rm -rf $tmpdir
