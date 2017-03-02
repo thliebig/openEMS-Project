@@ -1,4 +1,4 @@
-.. _install:
+.. _install_src:
 
 =======
 Install

@@ -6,6 +6,6 @@ Python Interface
 .. toctree::
 
    install
-   CSXCAD/CSXCAD_PY/CSXCAD_PY
+   CSXCAD/CSXCAD_API
    openEMS/openEMS_API
    openEMS/Tutorials/index

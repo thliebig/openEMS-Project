@@ -8,7 +8,7 @@ Instructions how to install the **CSXCAD & openEMS python interface**.
 Linux
 -----
 
-* Make sure **CSXCAD** and **openEMS** was build and installed correctly. Read *readme.md* for detailed instructions.
+* Make sure **CSXCAD** and **openEMS** was build and installed correctly. See :ref:`Install from Source <install_src>`.
 
 .. code-block:: console
 
