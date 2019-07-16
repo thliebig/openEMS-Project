@@ -3,7 +3,7 @@ openEMS is a free and open electromagnetic field solver using the FDTD method. M
 
 **Website**: [http://openEMS.de](http://openEMS.de)<br />
 **Forum**: [http://openEMS.de/forum](http://openEMS.de/forum)<br />
-**Wiki**: [http://openems.de/index.php](http://openems.de/index.php)<br />
+**Wiki**: [http://openems.de/index.php/OpenEMS](http://openems.de/index.php/OpenEMS)<br />
 **Github**: [https://github.com/thliebig/openEMS-Project](https://github.com/thliebig/openEMS-Project)<br />
 
 # openEMS Features:
