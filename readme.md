@@ -40,6 +40,10 @@ sudo apt-get install gengetopt help2man groff pod2pdf bison flex libhpdf-dev lib
 ```bash
 sudo apt-get install libopenmpi-dev
 ```
+It is necessary for openmpi to be build with C++ bindings support:
+```
+--enable-mpi-cxx
+```
 
 ## Clone, build and install
 + Clone this repository, build openEMS and install e.g. to "~/opt/openEMS":<br />
