@@ -9,10 +9,10 @@ openEMS is a free and open electromagnetic field solver using the FDTD method. M
 # openEMS Features:
 + fully 3D Cartesian and cylindrical coordinates graded mesh.
 + Multi-threading, SIMD (SSE) and MPI support for high speed FDTD.
-+ Octave and Matlab-Interface
++ Octave/Matlab and Pyhon-Interface
 + Dispersive material (Drude/Lorentz/Debye type)
 + Field dumps in time and frequency domain as vtk or hdf5 file format
-+ Flexible post-processing routines in Octave/Matlab
++ Flexible post-processing routines in Octave/Matlab and Python
 + and [many more](http://openems.de/index.php/OpenEMS#Features)
 
 # Install Instruction
@@ -41,6 +41,8 @@ sudo apt-get install gengetopt help2man groff pod2pdf bison flex libhpdf-dev lib
 sudo apt-get install libopenmpi-dev
 ```
 
++ For the python interface, python3 with matplotlib, cython and h5py is requred
+
 ## Clone, build and install
 + Clone this repository, build openEMS and install e.g. to "~/opt/openEMS":<br />
 ```bash
@@ -51,6 +53,11 @@ cd openEMS-Project
 or including [hyp2mat](https://github.com/koendv/hyp2mat) and [CTB](https://github.com/thliebig/CTB) and MPI:<br />
 ```bash
 ./update_openEMS.sh ~/opt/openEMS --with-hyp2mat --with-CTB --with-MPI
+```
+
+or including the new python extensions:<br />
+```bash
+./update_openEMS.sh ~/opt/openEMS --python
 ```
 
 + Add the given paths to your Octave/Matlab environment (e.g.):<br />

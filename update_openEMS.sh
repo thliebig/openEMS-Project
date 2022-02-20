@@ -14,6 +14,7 @@ then
   echo "	--with-CTB		enable circuit toolbox"
   echo "	--disable-GUI		disable GUI build (AppCSXCAD)"
   echo "	--with-MPI		enable MPI"
+  echo "	--python		build python extentions"
   exit $E_BADARGS
 fi
 
@@ -22,6 +23,7 @@ BUILD_HYP2MAT=0
 BUILD_CTB=0
 BUILD_GUI="YES"
 WITH_MPI=0
+BUILD_PY_EXT=0
 
 # parse arguments
 for varg in ${@:2:$#}
@@ -42,6 +44,10 @@ do
     "--with-MPI")
       echo "enabling MPI"
       WITH_MPI=1
+      ;;
+    "--python")
+      echo "enabling Python Extension build"
+      BUILD_PY_EXT=1
       ;;
     *)
       echo "error, unknown argumennt: $varg"
@@ -138,6 +144,26 @@ fi
 if [ $BUILD_CTB -eq 1 ]; then
   #install circuit toolbox (CTB)
   install CTB PREFIX=$INSTALL_PATH
+fi
+
+#####  python extention build ####
+
+if [ $BUILD_PY_EXT -eq 1 ]; then
+    PY_INST_USER=''
+    if (( $EUID != 0 )); then
+        PY_INST_USER='--user'
+    fi
+    for PY_EXT in 'CSXCAD' 'openEMS'
+    do
+        echo "build $PY_EXT python module ... please wait"
+        cd $PY_EXT/python
+        python3 setup.py build_ext -I $INSTALL_PATH/include -L $INSTALL_PATH/lib -R $INSTALL_PATH/lib >> $LOG_FILE 2>&1
+        python3 setup.py install $PY_INST_USER >> $LOG_FILE 2>&1
+        if [ $? -ne 0 ]; then
+            echo "python module failed, please see logfile for more details..."
+        fi
+        cd $basedir
+    done
 fi
 
 #####
