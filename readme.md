@@ -41,7 +41,7 @@ sudo apt-get install gengetopt help2man groff pod2pdf bison flex libhpdf-dev lib
 sudo apt-get install libopenmpi-dev
 ```
 
-+ For the python interface, python3 with matplotlib, cython and h5py is required:<br />
++ Optional: For the python interface, python3 with matplotlib, cython and h5py is required:<br />
 ```bash
 sudo pip3 install matplotlib cython h5py
 ```
@@ -53,12 +53,12 @@ git clone --recursive https://github.com/thliebig/openEMS-Project.git
 cd openEMS-Project
 ./update_openEMS.sh ~/opt/openEMS
 ```
-or including [hyp2mat](https://github.com/koendv/hyp2mat) and [CTB](https://github.com/thliebig/CTB) and MPI:<br />
++ Optional: Build all including [hyp2mat](https://github.com/koendv/hyp2mat) and [CTB](https://github.com/thliebig/CTB) and MPI:<br />
 ```bash
 ./update_openEMS.sh ~/opt/openEMS --with-hyp2mat --with-CTB --with-MPI
 ```
 
-or including the new python extensions:<br />
++ Optional: Build all including the new python extensions:<br />
 ```bash
 ./update_openEMS.sh ~/opt/openEMS --python
 ```
@@ -69,7 +69,7 @@ addpath('~/opt/openEMS/share/openEMS/matlab');
 addpath('~/opt/openEMS/share/CSXCAD/matlab');
 ```
 
-+ Add the optional packages to your Octave/Matlab environment (e.g.):<br />
++ Optional: Add the optional packages to your Octave/Matlab environment (e.g.):<br />
 ```Matlab
 addpath('~/opt/openEMS/share/hyp2mat/matlab');
 addpath('~/opt/openEMS/share/CTB/matlab');
