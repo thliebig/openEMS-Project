@@ -41,7 +41,10 @@ sudo apt-get install gengetopt help2man groff pod2pdf bison flex libhpdf-dev lib
 sudo apt-get install libopenmpi-dev
 ```
 
-+ For the python interface, python3 with matplotlib, cython and h5py is requred
++ For the python interface, python3 with matplotlib, cython and h5py is required:<br />
+```bash
+sudo pip3 install matplotlib cython h5py
+```
 
 ## Clone, build and install
 + Clone this repository, build openEMS and install e.g. to "~/opt/openEMS":<br />
