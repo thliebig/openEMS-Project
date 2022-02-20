@@ -121,7 +121,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 echo "build openEMS and dependencies ... please wait"
-make >> $LOG_FILE 2>&1
+make -j5 >> $LOG_FILE 2>&1
 if [ $? -ne 0 ]; then
   echo "make failed, build incomplete, please see logfile for more details..."
   cd $basedir
