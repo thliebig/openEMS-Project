@@ -31,7 +31,7 @@ sudo apt-get install build-essential cmake git libhdf5-dev libvtk7-dev libboost-
 sudo apt-get install octave liboctave-dev
 ```
 
-+ Optional: For the package [hyp2mat](https://github.com/koendv/hyp2mat) you need additonal dependencies:<br />
++ Optional: For the package [hyp2mat](https://github.com/koendv/hyp2mat) you need additional dependencies:<br />
 ```bash
 sudo apt-get install gengetopt help2man groff pod2pdf bison flex libhpdf-dev libtool
 ```
@@ -75,7 +75,7 @@ addpath('~/opt/openEMS/share/hyp2mat/matlab');
 addpath('~/opt/openEMS/share/CTB/matlab');
 ```
 
-For more informations and other platforms see:
+For more information and other platforms see:
 [http://www.openems.de/index.php/OpenEMS#Installation](http://www.openems.de/index.php/OpenEMS#Installation)<br />
 
 ## Update Instruction:
