@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSPrimPolygon &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="CSPrimLinPoly" href="CSPrimLinPoly.html" />
+    <link rel="prev" title="CSPrimSphericalShell" href="CSPrimSphericalShell.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Install</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../python.html">Python Interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../CSXCAD_API.html">CSXCAD Python Interface</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../CSXCAD.html">CSXCAD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../CSProperties.html">CSProperties</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../CSPrimitives.html">CSPrimitives</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../CSPrimitives.html#notes">Notes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../CSPrimitives.html#examples">Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimitives.html">CSPrimitives (Base Class)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimPoint.html">CSPrimPoint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimBox.html">CSPrimBox</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimCylinder.html">CSPrimCylinder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimCylindricalShell.html">CSPrimCylindricalShell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimSphere.html">CSPrimSphere</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimSphericalShell.html">CSPrimSphericalShell</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">CSPrimPolygon</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimLinPoly.html">CSPrimLinPoly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimRotPoly.html">CSPrimRotPoly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimCurve.html">CSPrimCurve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimWire.html">CSPrimWire</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimPolyhedron.html">CSPrimPolyhedron</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimPolyhedronReader.html">CSPrimPolyhedronReader</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../CSTransform.html">CSTransform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../CSRectGrid.html">CSRectGrid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Mesh.html">Mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Utilities.html">Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../openEMS/openEMS_API.html">openEMS Python Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../openEMS/Tutorials/index.html">Tutorials</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../python.html">Python Interface</a></li>
+          <li class="breadcrumb-item"><a href="../CSXCAD_API.html">CSXCAD Python Interface</a></li>
+          <li class="breadcrumb-item"><a href="../CSPrimitives.html">CSPrimitives</a></li>
+      <li class="breadcrumb-item active">CSPrimPolygon</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/python/CSXCAD/CSPrimitives/CSPrimPolygon.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="csprimpolygon">
+<span id="id1"></span><h1>CSPrimPolygon<a class="headerlink" href="#csprimpolygon" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimPolygon">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CSXCAD.CSPrimitives.</span></span><span class="sig-name descname"><span class="pre">CSPrimPolygon</span></span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimPolygon" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives" title="CSXCAD.CSPrimitives.CSPrimitives"><code class="xref py py-class docutils literal notranslate"><span class="pre">CSPrimitives</span></code></a></p>
+<p>Polygon Primitive</p>
+<p>A polygon is a surface defined by a set of 2D points/coordinates.
+To place the polygon in a 3D space, a normal direction (x/y/z) and an
+elevation in this direction have to be specified.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>points</strong><span class="classifier">(N,2) array</span></dt><dd><p>Array of coordinates</p>
+</dd>
+<dt><strong>norm_dir</strong><span class="classifier">float or str</span></dt><dd><p>Normal direction, either 0,1,2 or x/y/z respectively</p>
+</dd>
+<dt><strong>elevation</strong><span class="classifier">float</span></dt><dd><p>Elevation in normal direciton</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Define a half circle as polygon</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">polygon</span> <span class="o">=</span> <span class="n">CSPrimitives</span><span class="o">.</span><span class="n">CSPrimBox</span><span class="p">(</span><span class="n">pset</span><span class="p">,</span> <span class="n">metal</span><span class="p">,</span> <span class="n">norm_dir</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">elevation</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ang</span>     <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">21</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">polygon</span><span class="o">.</span><span class="n">SetCoords</span><span class="p">(</span><span class="mi">5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ang</span><span class="p">),</span> <span class="mi">5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ang</span><span class="p">))</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimPolygon.ClearCoords">
+<span class="sig-name descname"><span class="pre">ClearCoords</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimPolygon.ClearCoords" title="Permalink to this definition"></a></dt>
+<dd><p>Remove all coordinates.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimPolygon.GetCoords">
+<span class="sig-name descname"><span class="pre">GetCoords</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimPolygon.GetCoords" title="Permalink to this definition"></a></dt>
+<dd><p>Get the coordinates for the polygon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return x0, x1<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(N,), (N,) Arrays for x0,x1 of the polygon coordinates</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimPolygon.GetElevation">
+<span class="sig-name descname"><span class="pre">GetElevation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimPolygon.GetElevation" title="Permalink to this definition"></a></dt>
+<dd><p>Get the elevation in normal direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return val<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float – Get the elevation in normal direction.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimPolygon.GetNormDir">
+<span class="sig-name descname"><span class="pre">GetNormDir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimPolygon.GetNormDir" title="Permalink to this definition"></a></dt>
+<dd><p>Get the normal direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return ny<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int – Normal direction as 0, 1 or 2 meaning x,y or z</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimPolygon.GetQtyCoords">
+<span class="sig-name descname"><span class="pre">GetQtyCoords</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimPolygon.GetQtyCoords" title="Permalink to this definition"></a></dt>
+<dd><p>Get the number of coordinates for the polygon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return val<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int – Number of polygon coordinates.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimPolygon.SetCoords">
+<span class="sig-name descname"><span class="pre">SetCoords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimPolygon.SetCoords" title="Permalink to this definition"></a></dt>
+<dd><p>Set the coordinates for the polygon. This will clear all previous coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x1</strong> (<em>x0</em><em>,</em>) – (N,), (N,) Two arrays for x0/x1 of the polygon coordinates.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimPolygon.SetElevation">
+<span class="sig-name descname"><span class="pre">SetElevation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimPolygon.SetElevation" title="Permalink to this definition"></a></dt>
+<dd><p>Set the elevation in normal direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> – float – Elevation in normal direction.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimPolygon.SetNormDir">
+<span class="sig-name descname"><span class="pre">SetNormDir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ny</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimPolygon.SetNormDir" title="Permalink to this definition"></a></dt>
+<dd><p>Set the normal direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ny</strong> – int or string – Normal direction, either 0/1/2 or ‘x’/’y’/’z’</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="CSPrimSphericalShell.html" class="btn btn-neutral float-left" title="CSPrimSphericalShell" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="CSPrimLinPoly.html" class="btn btn-neutral float-right" title="CSPrimLinPoly" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2016, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

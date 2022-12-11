@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSPrimitives &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="CSPrimitives (Base Class)" href="CSPrimitives/CSPrimitives.html" />
+    <link rel="prev" title="CSPropDumpBox" href="CSProperties/CSPropDumpBox.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../python.html">Python Interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../install.html">Install</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="CSXCAD_API.html">CSXCAD Python Interface</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="CSXCAD.html">CSXCAD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties.html">CSProperties</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">CSPrimitives</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#notes">Notes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimitives/CSPrimitives.html">CSPrimitives (Base Class)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimitives/CSPrimPoint.html">CSPrimPoint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimitives/CSPrimBox.html">CSPrimBox</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimitives/CSPrimCylinder.html">CSPrimCylinder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimitives/CSPrimCylindricalShell.html">CSPrimCylindricalShell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimitives/CSPrimSphere.html">CSPrimSphere</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimitives/CSPrimSphericalShell.html">CSPrimSphericalShell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimitives/CSPrimPolygon.html">CSPrimPolygon</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimitives/CSPrimLinPoly.html">CSPrimLinPoly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimitives/CSPrimRotPoly.html">CSPrimRotPoly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimitives/CSPrimCurve.html">CSPrimCurve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimitives/CSPrimWire.html">CSPrimWire</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimitives/CSPrimPolyhedron.html">CSPrimPolyhedron</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimitives/CSPrimPolyhedronReader.html">CSPrimPolyhedronReader</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="CSTransform.html">CSTransform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSRectGrid.html">CSRectGrid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Mesh.html">Mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Utilities.html">Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../openEMS/openEMS_API.html">openEMS Python Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../openEMS/Tutorials/index.html">Tutorials</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../python.html">Python Interface</a></li>
+          <li class="breadcrumb-item"><a href="CSXCAD_API.html">CSXCAD Python Interface</a></li>
+      <li class="breadcrumb-item active">CSPrimitives</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/python/CSXCAD/CSPrimitives.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="csprimitives">
+<span id="id1"></span><h1>CSPrimitives<a class="headerlink" href="#csprimitives" title="Permalink to this heading"></a></h1>
+<span class="target" id="module-CSXCAD.CSPrimitives"></span><p>CSXCAD.CSPrimitives
+Module for all Primitives</p>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this heading"></a></h2>
+<p>Usually it is not meant to create primitives manually, but instead
+use the ContinuousStructure object to create primives using the
+e.g. AddBox or AddCylinder methods.</p>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<p>Create a metal box:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pset</span>  <span class="o">=</span> <span class="n">ParameterObjects</span><span class="o">.</span><span class="n">ParameterSet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">metal</span> <span class="o">=</span> <span class="n">CSProperties</span><span class="o">.</span><span class="n">CSPropMetal</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">box</span>   <span class="o">=</span> <span class="n">CSPrimitives</span><span class="o">.</span><span class="n">CSPrimBox</span><span class="p">(</span><span class="n">pset</span><span class="p">,</span> <span class="n">metal</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<p><strong>List of Primitives:</strong></p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CSPrimitives/CSPrimitives.html">CSPrimitives (Base Class)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives"><code class="docutils literal notranslate"><span class="pre">CSPrimitives</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives.AddTransform"><code class="docutils literal notranslate"><span class="pre">CSPrimitives.AddTransform()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives.GetBoundBox"><code class="docutils literal notranslate"><span class="pre">CSPrimitives.GetBoundBox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives.GetCoordinateSystem"><code class="docutils literal notranslate"><span class="pre">CSPrimitives.GetCoordinateSystem()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives.GetDimension"><code class="docutils literal notranslate"><span class="pre">CSPrimitives.GetDimension()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives.GetID"><code class="docutils literal notranslate"><span class="pre">CSPrimitives.GetID()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives.GetPrimitiveUsed"><code class="docutils literal notranslate"><span class="pre">CSPrimitives.GetPrimitiveUsed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives.GetPriority"><code class="docutils literal notranslate"><span class="pre">CSPrimitives.GetPriority()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives.GetProperty"><code class="docutils literal notranslate"><span class="pre">CSPrimitives.GetProperty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives.GetTransform"><code class="docutils literal notranslate"><span class="pre">CSPrimitives.GetTransform()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives.GetType"><code class="docutils literal notranslate"><span class="pre">CSPrimitives.GetType()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives.GetTypeName"><code class="docutils literal notranslate"><span class="pre">CSPrimitives.GetTypeName()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives.HasTransform"><code class="docutils literal notranslate"><span class="pre">CSPrimitives.HasTransform()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives.IsInside"><code class="docutils literal notranslate"><span class="pre">CSPrimitives.IsInside()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives.SetCoordinateSystem"><code class="docutils literal notranslate"><span class="pre">CSPrimitives.SetCoordinateSystem()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives.SetPrimitiveUsed"><code class="docutils literal notranslate"><span class="pre">CSPrimitives.SetPrimitiveUsed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives.SetPriority"><code class="docutils literal notranslate"><span class="pre">CSPrimitives.SetPriority()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives.Update"><code class="docutils literal notranslate"><span class="pre">CSPrimitives.Update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives.fromType"><code class="docutils literal notranslate"><span class="pre">CSPrimitives.fromType()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSPrimitives/CSPrimPoint.html">CSPrimPoint</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSPrimitives/CSPrimPoint.html#CSXCAD.CSPrimitives.CSPrimPoint"><code class="docutils literal notranslate"><span class="pre">CSPrimPoint</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPoint.html#CSXCAD.CSPrimitives.CSPrimPoint.GetCoord"><code class="docutils literal notranslate"><span class="pre">CSPrimPoint.GetCoord()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPoint.html#CSXCAD.CSPrimitives.CSPrimPoint.SetCoord"><code class="docutils literal notranslate"><span class="pre">CSPrimPoint.SetCoord()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSPrimitives/CSPrimBox.html">CSPrimBox</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSPrimitives/CSPrimBox.html#CSXCAD.CSPrimitives.CSPrimBox"><code class="docutils literal notranslate"><span class="pre">CSPrimBox</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimBox.html#CSXCAD.CSPrimitives.CSPrimBox.GetStart"><code class="docutils literal notranslate"><span class="pre">CSPrimBox.GetStart()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimBox.html#CSXCAD.CSPrimitives.CSPrimBox.GetStop"><code class="docutils literal notranslate"><span class="pre">CSPrimBox.GetStop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimBox.html#CSXCAD.CSPrimitives.CSPrimBox.SetStart"><code class="docutils literal notranslate"><span class="pre">CSPrimBox.SetStart()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimBox.html#CSXCAD.CSPrimitives.CSPrimBox.SetStop"><code class="docutils literal notranslate"><span class="pre">CSPrimBox.SetStop()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSPrimitives/CSPrimCylinder.html">CSPrimCylinder</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSPrimitives/CSPrimCylinder.html#CSXCAD.CSPrimitives.CSPrimCylinder"><code class="docutils literal notranslate"><span class="pre">CSPrimCylinder</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimCylinder.html#CSXCAD.CSPrimitives.CSPrimCylinder.GetRadius"><code class="docutils literal notranslate"><span class="pre">CSPrimCylinder.GetRadius()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimCylinder.html#CSXCAD.CSPrimitives.CSPrimCylinder.GetStart"><code class="docutils literal notranslate"><span class="pre">CSPrimCylinder.GetStart()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimCylinder.html#CSXCAD.CSPrimitives.CSPrimCylinder.GetStop"><code class="docutils literal notranslate"><span class="pre">CSPrimCylinder.GetStop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimCylinder.html#CSXCAD.CSPrimitives.CSPrimCylinder.SetRadius"><code class="docutils literal notranslate"><span class="pre">CSPrimCylinder.SetRadius()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimCylinder.html#CSXCAD.CSPrimitives.CSPrimCylinder.SetStart"><code class="docutils literal notranslate"><span class="pre">CSPrimCylinder.SetStart()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimCylinder.html#CSXCAD.CSPrimitives.CSPrimCylinder.SetStop"><code class="docutils literal notranslate"><span class="pre">CSPrimCylinder.SetStop()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSPrimitives/CSPrimCylindricalShell.html">CSPrimCylindricalShell</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSPrimitives/CSPrimCylindricalShell.html#CSXCAD.CSPrimitives.CSPrimCylindricalShell"><code class="docutils literal notranslate"><span class="pre">CSPrimCylindricalShell</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimCylindricalShell.html#CSXCAD.CSPrimitives.CSPrimCylindricalShell.GetShellWidth"><code class="docutils literal notranslate"><span class="pre">CSPrimCylindricalShell.GetShellWidth()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimCylindricalShell.html#CSXCAD.CSPrimitives.CSPrimCylindricalShell.SetShellWidth"><code class="docutils literal notranslate"><span class="pre">CSPrimCylindricalShell.SetShellWidth()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSPrimitives/CSPrimSphere.html">CSPrimSphere</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSPrimitives/CSPrimSphere.html#CSXCAD.CSPrimitives.CSPrimSphere"><code class="docutils literal notranslate"><span class="pre">CSPrimSphere</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimSphere.html#CSXCAD.CSPrimitives.CSPrimSphere.GetCenter"><code class="docutils literal notranslate"><span class="pre">CSPrimSphere.GetCenter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimSphere.html#CSXCAD.CSPrimitives.CSPrimSphere.GetRadius"><code class="docutils literal notranslate"><span class="pre">CSPrimSphere.GetRadius()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimSphere.html#CSXCAD.CSPrimitives.CSPrimSphere.SetCenter"><code class="docutils literal notranslate"><span class="pre">CSPrimSphere.SetCenter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimSphere.html#CSXCAD.CSPrimitives.CSPrimSphere.SetRadius"><code class="docutils literal notranslate"><span class="pre">CSPrimSphere.SetRadius()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSPrimitives/CSPrimSphericalShell.html">CSPrimSphericalShell</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSPrimitives/CSPrimSphericalShell.html#CSXCAD.CSPrimitives.CSPrimSphericalShell"><code class="docutils literal notranslate"><span class="pre">CSPrimSphericalShell</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimSphericalShell.html#CSXCAD.CSPrimitives.CSPrimSphericalShell.GetShellWidth"><code class="docutils literal notranslate"><span class="pre">CSPrimSphericalShell.GetShellWidth()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimSphericalShell.html#CSXCAD.CSPrimitives.CSPrimSphericalShell.SetShellWidth"><code class="docutils literal notranslate"><span class="pre">CSPrimSphericalShell.SetShellWidth()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSPrimitives/CSPrimPolygon.html">CSPrimPolygon</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSPrimitives/CSPrimPolygon.html#CSXCAD.CSPrimitives.CSPrimPolygon"><code class="docutils literal notranslate"><span class="pre">CSPrimPolygon</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolygon.html#CSXCAD.CSPrimitives.CSPrimPolygon.ClearCoords"><code class="docutils literal notranslate"><span class="pre">CSPrimPolygon.ClearCoords()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolygon.html#CSXCAD.CSPrimitives.CSPrimPolygon.GetCoords"><code class="docutils literal notranslate"><span class="pre">CSPrimPolygon.GetCoords()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolygon.html#CSXCAD.CSPrimitives.CSPrimPolygon.GetElevation"><code class="docutils literal notranslate"><span class="pre">CSPrimPolygon.GetElevation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolygon.html#CSXCAD.CSPrimitives.CSPrimPolygon.GetNormDir"><code class="docutils literal notranslate"><span class="pre">CSPrimPolygon.GetNormDir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolygon.html#CSXCAD.CSPrimitives.CSPrimPolygon.GetQtyCoords"><code class="docutils literal notranslate"><span class="pre">CSPrimPolygon.GetQtyCoords()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolygon.html#CSXCAD.CSPrimitives.CSPrimPolygon.SetCoords"><code class="docutils literal notranslate"><span class="pre">CSPrimPolygon.SetCoords()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolygon.html#CSXCAD.CSPrimitives.CSPrimPolygon.SetElevation"><code class="docutils literal notranslate"><span class="pre">CSPrimPolygon.SetElevation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolygon.html#CSXCAD.CSPrimitives.CSPrimPolygon.SetNormDir"><code class="docutils literal notranslate"><span class="pre">CSPrimPolygon.SetNormDir()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSPrimitives/CSPrimLinPoly.html">CSPrimLinPoly</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSPrimitives/CSPrimLinPoly.html#CSXCAD.CSPrimitives.CSPrimLinPoly"><code class="docutils literal notranslate"><span class="pre">CSPrimLinPoly</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimLinPoly.html#CSXCAD.CSPrimitives.CSPrimLinPoly.GetLength"><code class="docutils literal notranslate"><span class="pre">CSPrimLinPoly.GetLength()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimLinPoly.html#CSXCAD.CSPrimitives.CSPrimLinPoly.SetLength"><code class="docutils literal notranslate"><span class="pre">CSPrimLinPoly.SetLength()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSPrimitives/CSPrimRotPoly.html">CSPrimRotPoly</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSPrimitives/CSPrimRotPoly.html#CSXCAD.CSPrimitives.CSPrimRotPoly"><code class="docutils literal notranslate"><span class="pre">CSPrimRotPoly</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimRotPoly.html#CSXCAD.CSPrimitives.CSPrimRotPoly.GetAngle"><code class="docutils literal notranslate"><span class="pre">CSPrimRotPoly.GetAngle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimRotPoly.html#CSXCAD.CSPrimitives.CSPrimRotPoly.GetRotAxisDir"><code class="docutils literal notranslate"><span class="pre">CSPrimRotPoly.GetRotAxisDir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimRotPoly.html#CSXCAD.CSPrimitives.CSPrimRotPoly.SetAngle"><code class="docutils literal notranslate"><span class="pre">CSPrimRotPoly.SetAngle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimRotPoly.html#CSXCAD.CSPrimitives.CSPrimRotPoly.SetRotAxisDir"><code class="docutils literal notranslate"><span class="pre">CSPrimRotPoly.SetRotAxisDir()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSPrimitives/CSPrimCurve.html">CSPrimCurve</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSPrimitives/CSPrimCurve.html#CSXCAD.CSPrimitives.CSPrimCurve"><code class="docutils literal notranslate"><span class="pre">CSPrimCurve</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimCurve.html#CSXCAD.CSPrimitives.CSPrimCurve.AddPoint"><code class="docutils literal notranslate"><span class="pre">CSPrimCurve.AddPoint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimCurve.html#CSXCAD.CSPrimitives.CSPrimCurve.ClearPoints"><code class="docutils literal notranslate"><span class="pre">CSPrimCurve.ClearPoints()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimCurve.html#CSXCAD.CSPrimitives.CSPrimCurve.GetNumberOfPoints"><code class="docutils literal notranslate"><span class="pre">CSPrimCurve.GetNumberOfPoints()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimCurve.html#CSXCAD.CSPrimitives.CSPrimCurve.GetPoint"><code class="docutils literal notranslate"><span class="pre">CSPrimCurve.GetPoint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimCurve.html#CSXCAD.CSPrimitives.CSPrimCurve.SetPoints"><code class="docutils literal notranslate"><span class="pre">CSPrimCurve.SetPoints()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSPrimitives/CSPrimWire.html">CSPrimWire</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSPrimitives/CSPrimWire.html#CSXCAD.CSPrimitives.CSPrimWire"><code class="docutils literal notranslate"><span class="pre">CSPrimWire</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimWire.html#CSXCAD.CSPrimitives.CSPrimWire.GetWireRadius"><code class="docutils literal notranslate"><span class="pre">CSPrimWire.GetWireRadius()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimWire.html#CSXCAD.CSPrimitives.CSPrimWire.SetWireRadius"><code class="docutils literal notranslate"><span class="pre">CSPrimWire.SetWireRadius()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSPrimitives/CSPrimPolyhedron.html">CSPrimPolyhedron</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSPrimitives/CSPrimPolyhedron.html#CSXCAD.CSPrimitives.CSPrimPolyhedron"><code class="docutils literal notranslate"><span class="pre">CSPrimPolyhedron</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolyhedron.html#CSXCAD.CSPrimitives.CSPrimPolyhedron.AddFace"><code class="docutils literal notranslate"><span class="pre">CSPrimPolyhedron.AddFace()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolyhedron.html#CSXCAD.CSPrimitives.CSPrimPolyhedron.AddVertex"><code class="docutils literal notranslate"><span class="pre">CSPrimPolyhedron.AddVertex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolyhedron.html#CSXCAD.CSPrimitives.CSPrimPolyhedron.GetFace"><code class="docutils literal notranslate"><span class="pre">CSPrimPolyhedron.GetFace()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolyhedron.html#CSXCAD.CSPrimitives.CSPrimPolyhedron.GetNumFaces"><code class="docutils literal notranslate"><span class="pre">CSPrimPolyhedron.GetNumFaces()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolyhedron.html#CSXCAD.CSPrimitives.CSPrimPolyhedron.GetNumVertices"><code class="docutils literal notranslate"><span class="pre">CSPrimPolyhedron.GetNumVertices()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolyhedron.html#CSXCAD.CSPrimitives.CSPrimPolyhedron.GetVertex"><code class="docutils literal notranslate"><span class="pre">CSPrimPolyhedron.GetVertex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolyhedron.html#CSXCAD.CSPrimitives.CSPrimPolyhedron.Reset"><code class="docutils literal notranslate"><span class="pre">CSPrimPolyhedron.Reset()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSPrimitives/CSPrimPolyhedronReader.html">CSPrimPolyhedronReader</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSPrimitives/CSPrimPolyhedronReader.html#CSXCAD.CSPrimitives.CSPrimPolyhedronReader"><code class="docutils literal notranslate"><span class="pre">CSPrimPolyhedronReader</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolyhedronReader.html#CSXCAD.CSPrimitives.CSPrimPolyhedronReader.GetFileType"><code class="docutils literal notranslate"><span class="pre">CSPrimPolyhedronReader.GetFileType()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolyhedronReader.html#CSXCAD.CSPrimitives.CSPrimPolyhedronReader.GetFilename"><code class="docutils literal notranslate"><span class="pre">CSPrimPolyhedronReader.GetFilename()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolyhedronReader.html#CSXCAD.CSPrimitives.CSPrimPolyhedronReader.ReadFile"><code class="docutils literal notranslate"><span class="pre">CSPrimPolyhedronReader.ReadFile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolyhedronReader.html#CSXCAD.CSPrimitives.CSPrimPolyhedronReader.SetFileType"><code class="docutils literal notranslate"><span class="pre">CSPrimPolyhedronReader.SetFileType()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives/CSPrimPolyhedronReader.html#CSXCAD.CSPrimitives.CSPrimPolyhedronReader.SetFilename"><code class="docutils literal notranslate"><span class="pre">CSPrimPolyhedronReader.SetFilename()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="CSProperties/CSPropDumpBox.html" class="btn btn-neutral float-left" title="CSPropDumpBox" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="CSPrimitives/CSPrimitives.html" class="btn btn-neutral float-right" title="CSPrimitives (Base Class)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2016, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>openEMS Python Interface &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="openEMS" href="openEMS.html" />
+    <link rel="prev" title="Utilities" href="../CSXCAD/Utilities.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../python.html">Python Interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../install.html">Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../CSXCAD/CSXCAD_API.html">CSXCAD Python Interface</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">openEMS Python Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html">openEMS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ports.html">Ports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nf2ff.html">NF2FF</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorials/index.html">Tutorials</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../python.html">Python Interface</a></li>
+      <li class="breadcrumb-item active">openEMS Python Interface</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/python/openEMS/openEMS_API.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="openems-python-interface">
+<span id="openems-api"></span><h1>openEMS Python Interface<a class="headerlink" href="#openems-python-interface" title="Permalink to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="openEMS.html">openEMS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="openEMS.html#openEMS.openEMS"><code class="docutils literal notranslate"><span class="pre">openEMS</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.AddEdges2Grid"><code class="docutils literal notranslate"><span class="pre">openEMS.AddEdges2Grid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.AddLumpedPort"><code class="docutils literal notranslate"><span class="pre">openEMS.AddLumpedPort()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.AddMSLPort"><code class="docutils literal notranslate"><span class="pre">openEMS.AddMSLPort()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.AddRectWaveGuidePort"><code class="docutils literal notranslate"><span class="pre">openEMS.AddRectWaveGuidePort()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.AddWaveGuidePort"><code class="docutils literal notranslate"><span class="pre">openEMS.AddWaveGuidePort()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.CreateNF2FFBox"><code class="docutils literal notranslate"><span class="pre">openEMS.CreateNF2FFBox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.GetCSX"><code class="docutils literal notranslate"><span class="pre">openEMS.GetCSX()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.Run"><code class="docutils literal notranslate"><span class="pre">openEMS.Run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.SetAbort"><code class="docutils literal notranslate"><span class="pre">openEMS.SetAbort()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.SetBoundaryCond"><code class="docutils literal notranslate"><span class="pre">openEMS.SetBoundaryCond()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.SetCSX"><code class="docutils literal notranslate"><span class="pre">openEMS.SetCSX()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.SetCellConstantMaterial"><code class="docutils literal notranslate"><span class="pre">openEMS.SetCellConstantMaterial()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.SetCoordSystem"><code class="docutils literal notranslate"><span class="pre">openEMS.SetCoordSystem()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.SetCylinderCoords"><code class="docutils literal notranslate"><span class="pre">openEMS.SetCylinderCoords()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.SetEndCriteria"><code class="docutils literal notranslate"><span class="pre">openEMS.SetEndCriteria()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.SetGaussExcite"><code class="docutils literal notranslate"><span class="pre">openEMS.SetGaussExcite()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.SetMaxTime"><code class="docutils literal notranslate"><span class="pre">openEMS.SetMaxTime()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.SetMultiGrid"><code class="docutils literal notranslate"><span class="pre">openEMS.SetMultiGrid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.SetNumberOfTimeSteps"><code class="docutils literal notranslate"><span class="pre">openEMS.SetNumberOfTimeSteps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.SetOverSampling"><code class="docutils literal notranslate"><span class="pre">openEMS.SetOverSampling()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.SetTimeStep"><code class="docutils literal notranslate"><span class="pre">openEMS.SetTimeStep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.SetTimeStepFactor"><code class="docutils literal notranslate"><span class="pre">openEMS.SetTimeStepFactor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.SetTimeStepMethod"><code class="docutils literal notranslate"><span class="pre">openEMS.SetTimeStepMethod()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html#openEMS.openEMS.WelcomeScreen"><code class="docutils literal notranslate"><span class="pre">openEMS.WelcomeScreen()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ports.html">Ports</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ports.html#port-base-class">Port (Base Class)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ports.html#openEMS.ports.Port"><code class="docutils literal notranslate"><span class="pre">Port</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ports.html#lumped-port">Lumped Port</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ports.html#openEMS.ports.LumpedPort"><code class="docutils literal notranslate"><span class="pre">LumpedPort</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ports.html#msl-port">MSL Port</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ports.html#openEMS.ports.MSLPort"><code class="docutils literal notranslate"><span class="pre">MSLPort</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ports.html#waveguide-port">Waveguide Port</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ports.html#openEMS.ports.WaveguidePort"><code class="docutils literal notranslate"><span class="pre">WaveguidePort</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ports.html#rect-waveguide-port">Rect Waveguide Port</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ports.html#openEMS.ports.RectWGPort"><code class="docutils literal notranslate"><span class="pre">RectWGPort</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nf2ff.html">NF2FF</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nf2ff.html#id2">NF2FF</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nf2ff.html#openEMS.nf2ff.nf2ff"><code class="docutils literal notranslate"><span class="pre">nf2ff</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nf2ff.html#openEMS.nf2ff.nf2ff.CalcNF2FF"><code class="docutils literal notranslate"><span class="pre">nf2ff.CalcNF2FF()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nf2ff.html#nf2ff-results">NF2FF Results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nf2ff.html#openEMS.nf2ff.nf2ff_results"><code class="docutils literal notranslate"><span class="pre">nf2ff_results</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../CSXCAD/Utilities.html" class="btn btn-neutral float-left" title="Utilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="openEMS.html" class="btn btn-neutral float-right" title="openEMS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2016, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ports &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="NF2FF" href="nf2ff.html" />
+    <link rel="prev" title="openEMS" href="openEMS.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../python.html">Python Interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../install.html">Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../CSXCAD/CSXCAD_API.html">CSXCAD Python Interface</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="openEMS_API.html">openEMS Python Interface</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="openEMS.html">openEMS</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Ports</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#port-base-class">Port (Base Class)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lumped-port">Lumped Port</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#msl-port">MSL Port</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#waveguide-port">Waveguide Port</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rect-waveguide-port">Rect Waveguide Port</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="nf2ff.html">NF2FF</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorials/index.html">Tutorials</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../python.html">Python Interface</a></li>
+          <li class="breadcrumb-item"><a href="openEMS_API.html">openEMS Python Interface</a></li>
+      <li class="breadcrumb-item active">Ports</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/python/openEMS/ports.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ports">
+<span id="id1"></span><h1>Ports<a class="headerlink" href="#ports" title="Permalink to this heading"></a></h1>
+<span class="target" id="module-openEMS.ports"></span><section id="port-base-class">
+<h2>Port (Base Class)<a class="headerlink" href="#port-base-class" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="openEMS.ports.Port">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openEMS.ports.</span></span><span class="sig-name descname"><span class="pre">Port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">CSX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port_nr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excite</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.ports.Port" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The port base class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>CSX</strong> – Continuous Structure</p></li>
+<li><p><strong>port_nr</strong> – int – port number</p></li>
+<li><p><strong>R</strong> – float – port reference impedance, e.g. 50 (Ohms)</p></li>
+<li><p><strong>stop</strong> (<em>start</em><em>,</em>) – (3,) array – Start/Stop box coordinates</p></li>
+<li><p><strong>p_dir</strong> – int – port direction</p></li>
+<li><p><strong>excite</strong> – float – port excitation amplitude</p></li>
+<li><p><strong>priority</strong> – int – priority of all contained primtives</p></li>
+<li><p><strong>PortNamePrefix</strong> – str – a prefix for all ports-names</p></li>
+<li><p><strong>delay</strong> – float – a positiv delay value to e.g. emulate a phase shift</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="lumped-port">
+<h2>Lumped Port<a class="headerlink" href="#lumped-port" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="openEMS.ports.LumpedPort">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openEMS.ports.</span></span><span class="sig-name descname"><span class="pre">LumpedPort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">CSX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port_nr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.ports.LumpedPort" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#openEMS.ports.Port" title="openEMS.ports.Port"><code class="xref py py-class docutils literal notranslate"><span class="pre">Port</span></code></a></p>
+<p>The lumped port.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#openEMS.ports.Port" title="openEMS.ports.Port"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Port</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+</section>
+<section id="msl-port">
+<h2>MSL Port<a class="headerlink" href="#msl-port" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="openEMS.ports.MSLPort">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openEMS.ports.</span></span><span class="sig-name descname"><span class="pre">MSLPort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">CSX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port_nr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metal_prop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.ports.MSLPort" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#openEMS.ports.Port" title="openEMS.ports.Port"><code class="xref py py-class docutils literal notranslate"><span class="pre">Port</span></code></a></p>
+<p>The microstrip transmission line port.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prop_dir</strong> – int/str – direction of propagation</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#openEMS.ports.Port" title="openEMS.ports.Port"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Port</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+</section>
+<section id="waveguide-port">
+<h2>Waveguide Port<a class="headerlink" href="#waveguide-port" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="openEMS.ports.WaveguidePort">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openEMS.ports.</span></span><span class="sig-name descname"><span class="pre">WaveguidePort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">CSX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port_nr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">E_WG_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H_WG_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.ports.WaveguidePort" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#openEMS.ports.Port" title="openEMS.ports.Port"><code class="xref py py-class docutils literal notranslate"><span class="pre">Port</span></code></a></p>
+<p>Base class for any waveguide port.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#openEMS.ports.Port" title="openEMS.ports.Port"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Port</span></code></a>, <a class="reference internal" href="#openEMS.ports.RectWGPort" title="openEMS.ports.RectWGPort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RectWGPort</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+</section>
+<section id="rect-waveguide-port">
+<h2>Rect Waveguide Port<a class="headerlink" href="#rect-waveguide-port" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="openEMS.ports.RectWGPort">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openEMS.ports.</span></span><span class="sig-name descname"><span class="pre">RectWGPort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">CSX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port_nr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.ports.RectWGPort" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#openEMS.ports.WaveguidePort" title="openEMS.ports.WaveguidePort"><code class="xref py py-class docutils literal notranslate"><span class="pre">WaveguidePort</span></code></a></p>
+<p>Rectangular waveguide port.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>a</strong><strong>,</strong><strong>b</strong> – float – Width/Height of rectangular waveguide port</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#openEMS.ports.Port" title="openEMS.ports.Port"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Port</span></code></a>, <a class="reference internal" href="#openEMS.ports.WaveguidePort" title="openEMS.ports.WaveguidePort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WaveguidePort</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="openEMS.html" class="btn btn-neutral float-left" title="openEMS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nf2ff.html" class="btn btn-neutral float-right" title="NF2FF" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2016, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

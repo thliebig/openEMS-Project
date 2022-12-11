@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Metal Sphere Radar Cross Section &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Micro Wave Tutorials" href="MicroWave_Tutorials.html" />
+    <link rel="prev" title="Rectangular Waveguide" href="Rect_Waveguide.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Install</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../python.html">Python Interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../CSXCAD/CSXCAD_API.html">CSXCAD Python Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../openEMS_API.html">openEMS Python Interface</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="Intro_Tutorials.html">Introductional Tutorials</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="Rect_Waveguide.html">Rectangular Waveguide</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Metal Sphere Radar Cross Section</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="MicroWave_Tutorials.html">Micro Wave Tutorials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Antenna_Tutorials.html">Antennas</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../python.html">Python Interface</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Tutorials</a></li>
+          <li class="breadcrumb-item"><a href="Intro_Tutorials.html">Introductional Tutorials</a></li>
+      <li class="breadcrumb-item active">Metal Sphere Radar Cross Section</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/python/openEMS/Tutorials/RCS_Sphere.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="metal-sphere-radar-cross-section">
+<h1>Metal Sphere Radar Cross Section<a class="headerlink" href="#metal-sphere-radar-cross-section" title="Permalink to this heading"></a></h1>
+<blockquote>
+<div><ul class="simple">
+<li><p>A 3D simulation demonstrating a the total-field/scattered-field approach on a metallic sphere with a RCS (radar cross section) calculation.</p></li>
+</ul>
+</div></blockquote>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<p><strong>This tutorial covers:</strong></p>
+<ul class="simple">
+<li><p>The total-field/scattered-field approach</p></li>
+<li><p>Calculation of a radar cross section (RCS)</p></li>
+</ul>
+</section>
+<section id="python-script">
+<h2>Python Script<a class="headerlink" href="#python-script" title="Permalink to this heading"></a></h2>
+<p>Get the latest version <a class="reference external" href="https://raw.githubusercontent.com/thliebig/openEMS/master/python/Tutorials/RCS_Sphere.py">from git</a>.</p>
+<p><strong>Import Libraries</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">tempfile</span>
+<span class="kn">from</span> <span class="nn">pylab</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">CSXCAD</span>  <span class="kn">import</span> <span class="n">ContinuousStructure</span>
+<span class="kn">from</span> <span class="nn">openEMS</span> <span class="kn">import</span> <span class="n">openEMS</span>
+<span class="kn">from</span> <span class="nn">openEMS.physical_constants</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">openEMS.ports</span>  <span class="kn">import</span> <span class="n">UI_data</span>
+</pre></div>
+</div>
+<p><strong>Setup the simulation</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Sim_Path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">(),</span> <span class="s1">&#39;RCS_Sphere&#39;</span><span class="p">)</span>
+<span class="n">post_proc_only</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">unit</span> <span class="o">=</span> <span class="mf">1e-3</span> <span class="c1"># all length in mm</span>
+
+<span class="n">sphere_rad</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="n">inc_angle</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#incident angle (to x-axis) in deg</span>
+
+<span class="c1"># size of the simulation box</span>
+<span class="n">SimBox</span> <span class="o">=</span> <span class="mi">1200</span>
+<span class="n">PW_Box</span> <span class="o">=</span> <span class="mi">750</span>
+</pre></div>
+</div>
+<p><strong>Setup FDTD parameters &amp; excitation function</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">FDTD</span> <span class="o">=</span> <span class="n">openEMS</span><span class="p">(</span><span class="n">EndCriteria</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
+
+<span class="n">f_start</span> <span class="o">=</span>  <span class="mf">50e6</span> <span class="c1"># start frequency</span>
+<span class="n">f_stop</span>  <span class="o">=</span> <span class="mf">1000e6</span> <span class="c1"># stop  frequency</span>
+<span class="n">f0</span>      <span class="o">=</span> <span class="mf">500e6</span>
+<span class="n">FDTD</span><span class="o">.</span><span class="n">SetGaussExcite</span><span class="p">(</span>  <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">f_start</span><span class="o">+</span><span class="n">f_stop</span><span class="p">),</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">f_stop</span><span class="o">-</span><span class="n">f_start</span><span class="p">)</span> <span class="p">)</span>
+
+<span class="n">FDTD</span><span class="o">.</span><span class="n">SetBoundaryCond</span><span class="p">(</span> <span class="p">[</span><span class="s1">&#39;PML_8&#39;</span><span class="p">,</span> <span class="s1">&#39;PML_8&#39;</span><span class="p">,</span> <span class="s1">&#39;PML_8&#39;</span><span class="p">,</span> <span class="s1">&#39;PML_8&#39;</span><span class="p">,</span> <span class="s1">&#39;PML_8&#39;</span><span class="p">,</span> <span class="s1">&#39;PML_8&#39;</span><span class="p">]</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Setup Geometry &amp; Mesh</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">ContinuousStructure</span><span class="p">()</span>
+<span class="n">FDTD</span><span class="o">.</span><span class="n">SetCSX</span><span class="p">(</span><span class="n">CSX</span><span class="p">)</span>
+<span class="n">mesh</span> <span class="o">=</span> <span class="n">CSX</span><span class="o">.</span><span class="n">GetGrid</span><span class="p">()</span>
+<span class="n">mesh</span><span class="o">.</span><span class="n">SetDeltaUnit</span><span class="p">(</span><span class="n">unit</span><span class="p">)</span>
+
+<span class="c1">#create mesh</span>
+<span class="n">mesh</span><span class="o">.</span><span class="n">SetLines</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="n">SimBox</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SimBox</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">mesh</span><span class="o">.</span><span class="n">SmoothMeshLines</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">C0</span> <span class="o">/</span> <span class="n">f_stop</span> <span class="o">/</span> <span class="n">unit</span> <span class="o">/</span> <span class="mi">20</span><span class="p">)</span> <span class="c1"># cell size: lambda/20</span>
+<span class="n">mesh</span><span class="o">.</span><span class="n">SetLines</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">GetLines</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">))</span>
+<span class="n">mesh</span><span class="o">.</span><span class="n">SetLines</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">GetLines</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><strong>Create a metal sphere and plane wave source</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sphere_metal</span> <span class="o">=</span> <span class="n">CSX</span><span class="o">.</span><span class="n">AddMetal</span><span class="p">(</span> <span class="s1">&#39;sphere&#39;</span> <span class="p">)</span> <span class="c1"># create a perfect electric conductor (PEC)</span>
+<span class="n">sphere_metal</span><span class="o">.</span><span class="n">AddSphere</span><span class="p">(</span><span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="n">sphere_rad</span><span class="p">)</span>
+
+<span class="c1"># plane wave excitation</span>
+<span class="n">k_dir</span> <span class="o">=</span> <span class="p">[</span><span class="n">cos</span><span class="p">(</span><span class="n">inc_angle</span><span class="p">),</span> <span class="n">sin</span><span class="p">(</span><span class="n">inc_angle</span><span class="p">),</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># plane wave direction</span>
+<span class="n">E_dir</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># plane wave polarization --&gt; E_z</span>
+
+<span class="n">pw_exc</span> <span class="o">=</span> <span class="n">CSX</span><span class="o">.</span><span class="n">AddExcitation</span><span class="p">(</span><span class="s1">&#39;plane_wave&#39;</span><span class="p">,</span> <span class="n">exc_type</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">exc_val</span><span class="o">=</span><span class="n">E_dir</span><span class="p">)</span>
+<span class="n">pw_exc</span><span class="o">.</span><span class="n">SetPropagationDir</span><span class="p">(</span><span class="n">k_dir</span><span class="p">)</span>
+<span class="n">pw_exc</span><span class="o">.</span><span class="n">SetFrequency</span><span class="p">(</span><span class="n">f0</span><span class="p">)</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">PW_Box</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">PW_Box</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">PW_Box</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">stop</span>  <span class="o">=</span> <span class="o">-</span><span class="n">start</span>
+<span class="n">pw_exc</span><span class="o">.</span><span class="n">AddBox</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">)</span>
+
+<span class="c1"># nf2ff calc</span>
+<span class="n">nf2ff</span> <span class="o">=</span> <span class="n">FDTD</span><span class="o">.</span><span class="n">CreateNF2FFBox</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Run the simulation</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># debugging only</span>
+    <span class="n">CSX_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">,</span> <span class="s1">&#39;RCS_Sphere.xml&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">)</span>
+    <span class="n">CSX</span><span class="o">.</span><span class="n">Write2XML</span><span class="p">(</span><span class="n">CSX_file</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;AppCSXCAD &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">CSX_file</span><span class="p">))</span>
+
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">post_proc_only</span><span class="p">:</span>
+    <span class="n">FDTD</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cleanup</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Postprocessing &amp; plotting</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># get Gaussian pulse stength at frequency f0</span>
+<span class="n">ef</span> <span class="o">=</span> <span class="n">UI_data</span><span class="p">(</span><span class="s1">&#39;et&#39;</span><span class="p">,</span> <span class="n">Sim_Path</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">f0</span><span class="p">)</span>
+
+<span class="n">Pin</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">norm</span><span class="p">(</span><span class="n">E_dir</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">Z0</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ef</span><span class="o">.</span><span class="n">ui_f_val</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span>
+<span class="c1">#</span>
+<span class="n">nf2ff_res</span> <span class="o">=</span> <span class="n">nf2ff</span><span class="o">.</span><span class="n">CalcNF2FF</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">,</span> <span class="n">f0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="mf">180.1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">RCS</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">pi</span><span class="o">/</span><span class="n">Pin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">nf2ff_res</span><span class="o">.</span><span class="n">P_rad</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span>  <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span> <span class="n">nf2ff_res</span><span class="o">.</span><span class="n">phi</span><span class="p">,</span> <span class="n">RCS</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;k-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span> <span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># calculate RCS over frequency</span>
+<span class="n">freq</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="n">f_start</span><span class="p">,</span><span class="n">f_stop</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">ef</span> <span class="o">=</span> <span class="n">UI_data</span><span class="p">(</span> <span class="s1">&#39;et&#39;</span><span class="p">,</span> <span class="n">Sim_Path</span><span class="p">,</span> <span class="n">freq</span> <span class="p">)</span> <span class="c1"># time domain/freq domain voltage</span>
+<span class="n">Pin</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">norm</span><span class="p">(</span><span class="n">E_dir</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">Z0</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ef</span><span class="o">.</span><span class="n">ui_f_val</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="n">nf2ff_res</span> <span class="o">=</span> <span class="n">nf2ff</span><span class="o">.</span><span class="n">CalcNF2FF</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="o">+</span><span class="n">inc_angle</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="s1">&#39;back_nf2ff.h5&#39;</span><span class="p">)</span>
+
+<span class="n">back_scat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="o">*</span><span class="n">pi</span><span class="o">/</span><span class="n">Pin</span><span class="p">[</span><span class="n">fn</span><span class="p">]</span><span class="o">*</span><span class="n">nf2ff_res</span><span class="o">.</span><span class="n">P_rad</span><span class="p">[</span><span class="n">fn</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">freq</span><span class="p">))])</span>
+
+<span class="n">figure</span><span class="p">()</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">freq</span><span class="o">/</span><span class="mf">1e6</span><span class="p">,</span><span class="n">back_scat</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">grid</span><span class="p">()</span>
+<span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;frequency (MHz)&#39;</span><span class="p">)</span>
+<span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;RCS ($m^2$)&#39;</span><span class="p">)</span>
+<span class="n">title</span><span class="p">(</span><span class="s1">&#39;radar cross section&#39;</span><span class="p">)</span>
+
+<span class="n">figure</span><span class="p">()</span>
+<span class="n">semilogy</span><span class="p">(</span><span class="n">sphere_rad</span><span class="o">*</span><span class="n">unit</span><span class="o">/</span><span class="n">C0</span><span class="o">*</span><span class="n">freq</span><span class="p">,</span><span class="n">back_scat</span><span class="o">/</span><span class="p">(</span><span class="n">pi</span><span class="o">*</span><span class="n">sphere_rad</span><span class="o">*</span><span class="n">unit</span><span class="o">*</span><span class="n">sphere_rad</span><span class="o">*</span><span class="n">unit</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ylim</span><span class="p">([</span><span class="mi">10</span><span class="o">^-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="o">^</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">grid</span><span class="p">()</span>
+<span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;sphere radius / wavelength&#39;</span><span class="p">)</span>
+<span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;RCS / ($\pi a^2$)&#39;</span><span class="p">)</span>
+<span class="n">title</span><span class="p">(</span><span class="s1">&#39;normalized radar cross section&#39;</span><span class="p">)</span>
+
+<span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="images">
+<h2>Images<a class="headerlink" href="#images" title="Permalink to this heading"></a></h2>
+<figure class="align-default" id="id1">
+<a class="reference internal image-reference" href="../../../_images/RCS_pattern.png"><img alt="Radar cross section pattern" src="../../../_images/RCS_pattern.png" style="width: 49%;" /></a>
+<figcaption>
+<p><span class="caption-text">Radar cross section pattern</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id2">
+<a class="reference internal image-reference" href="../../../_images/RCS_norm.png"><img alt="normalized radar cross section" src="../../../_images/RCS_norm.png" style="width: 49%;" /></a>
+<figcaption>
+<p><span class="caption-text">Normalized radar cross Section over normalized wavelength</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Rect_Waveguide.html" class="btn btn-neutral float-left" title="Rectangular Waveguide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="MicroWave_Tutorials.html" class="btn btn-neutral float-right" title="Micro Wave Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2016, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rectangular Waveguide &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Metal Sphere Radar Cross Section" href="RCS_Sphere.html" />
+    <link rel="prev" title="Introductional Tutorials" href="Intro_Tutorials.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Install</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../python.html">Python Interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../CSXCAD/CSXCAD_API.html">CSXCAD Python Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../openEMS_API.html">openEMS Python Interface</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="Intro_Tutorials.html">Introductional Tutorials</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Rectangular Waveguide</a></li>
+<li class="toctree-l4"><a class="reference internal" href="RCS_Sphere.html">Metal Sphere Radar Cross Section</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="MicroWave_Tutorials.html">Micro Wave Tutorials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Antenna_Tutorials.html">Antennas</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../python.html">Python Interface</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Tutorials</a></li>
+          <li class="breadcrumb-item"><a href="Intro_Tutorials.html">Introductional Tutorials</a></li>
+      <li class="breadcrumb-item active">Rectangular Waveguide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/python/openEMS/Tutorials/Rect_Waveguide.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rectangular-waveguide">
+<h1>Rectangular Waveguide<a class="headerlink" href="#rectangular-waveguide" title="Permalink to this heading"></a></h1>
+<blockquote>
+<div><ul class="simple">
+<li><p>A simple rectangular waveguide, showing the openEMS mode profile capabilities.</p></li>
+</ul>
+</div></blockquote>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<p><strong>This tutorial covers:</strong></p>
+<ul class="simple">
+<li><p>Setup a mode profile excitation</p></li>
+<li><p>Create voltage and current probes using the mode profile</p></li>
+<li><p>Calculate the waveguide impedance and S-Parameter</p></li>
+</ul>
+</section>
+<section id="python-script">
+<h2>Python Script<a class="headerlink" href="#python-script" title="Permalink to this heading"></a></h2>
+<p>Get the latest version <a class="reference external" href="http://openems.de/gitweb/?p=openEMS.git;a=blob_plain;f=matlab/Tutorials/Rect_Waveguide.m;hb=HEAD">from git</a>.</p>
+<p><strong>Import Libraries</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">tempfile</span>
+<span class="kn">from</span> <span class="nn">pylab</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">CSXCAD</span>  <span class="kn">import</span> <span class="n">ContinuousStructure</span>
+<span class="kn">from</span> <span class="nn">openEMS</span> <span class="kn">import</span> <span class="n">openEMS</span>
+<span class="kn">from</span> <span class="nn">openEMS.physical_constants</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p><strong>Setup the simulation</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Sim_Path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">(),</span> <span class="s1">&#39;Rect_WG&#39;</span><span class="p">)</span>
+
+<span class="n">post_proc_only</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">unit</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">;</span> <span class="c1">#drawing unit in um</span>
+
+<span class="c1"># waveguide dimensions</span>
+<span class="c1"># WR42</span>
+<span class="n">a</span> <span class="o">=</span> <span class="mi">10700</span><span class="p">;</span>   <span class="c1">#waveguide width</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mi">4300</span><span class="p">;</span>    <span class="c1">#waveguide heigth</span>
+<span class="n">length</span> <span class="o">=</span> <span class="mi">50000</span><span class="p">;</span>
+
+<span class="c1"># frequency range of interest</span>
+<span class="n">f_start</span> <span class="o">=</span> <span class="mf">20e9</span><span class="p">;</span>
+<span class="n">f_0</span>     <span class="o">=</span> <span class="mf">24e9</span><span class="p">;</span>
+<span class="n">f_stop</span>  <span class="o">=</span> <span class="mf">26e9</span><span class="p">;</span>
+<span class="n">lambda0</span> <span class="o">=</span> <span class="n">C0</span><span class="o">/</span><span class="n">f_0</span><span class="o">/</span><span class="n">unit</span><span class="p">;</span>
+
+<span class="c1">#waveguide TE-mode definition</span>
+<span class="n">TE_mode</span> <span class="o">=</span> <span class="s1">&#39;TE10&#39;</span><span class="p">;</span>
+
+<span class="c1">#targeted mesh resolution</span>
+<span class="n">mesh_res</span> <span class="o">=</span> <span class="n">lambda0</span><span class="o">/</span><span class="mi">30</span>
+</pre></div>
+</div>
+<p><strong>Setup FDTD parameter &amp; excitation function</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">FDTD</span> <span class="o">=</span> <span class="n">openEMS</span><span class="p">(</span><span class="n">NrTS</span><span class="o">=</span><span class="mf">1e4</span><span class="p">);</span>
+<span class="n">FDTD</span><span class="o">.</span><span class="n">SetGaussExcite</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">f_start</span><span class="o">+</span><span class="n">f_stop</span><span class="p">),</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">f_stop</span><span class="o">-</span><span class="n">f_start</span><span class="p">));</span>
+
+<span class="c1"># boundary conditions</span>
+<span class="n">FDTD</span><span class="o">.</span><span class="n">SetBoundaryCond</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]);</span>
+</pre></div>
+</div>
+<p><strong>Setup geometry &amp; mesh</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">CSX</span> <span class="o">=</span> <span class="n">ContinuousStructure</span><span class="p">()</span>
+<span class="n">FDTD</span><span class="o">.</span><span class="n">SetCSX</span><span class="p">(</span><span class="n">CSX</span><span class="p">)</span>
+<span class="n">mesh</span> <span class="o">=</span> <span class="n">CSX</span><span class="o">.</span><span class="n">GetGrid</span><span class="p">()</span>
+<span class="n">mesh</span><span class="o">.</span><span class="n">SetDeltaUnit</span><span class="p">(</span><span class="n">unit</span><span class="p">)</span>
+
+<span class="n">mesh</span><span class="o">.</span><span class="n">AddLine</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">a</span><span class="p">])</span>
+<span class="n">mesh</span><span class="o">.</span><span class="n">AddLine</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="p">])</span>
+<span class="n">mesh</span><span class="o">.</span><span class="n">AddLine</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">length</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Apply the waveguide port</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ports</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">start</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="o">*</span><span class="n">mesh_res</span><span class="p">];</span>
+<span class="n">stop</span> <span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">15</span><span class="o">*</span><span class="n">mesh_res</span><span class="p">];</span>
+<span class="n">mesh</span><span class="o">.</span><span class="n">AddLine</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">start</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">stop</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+<span class="n">ports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">FDTD</span><span class="o">.</span><span class="n">AddRectWaveGuidePort</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">a</span><span class="o">*</span><span class="n">unit</span><span class="p">,</span> <span class="n">b</span><span class="o">*</span><span class="n">unit</span><span class="p">,</span> <span class="n">TE_mode</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="n">start</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">length</span><span class="o">-</span><span class="mi">10</span><span class="o">*</span><span class="n">mesh_res</span><span class="p">];</span>
+<span class="n">stop</span> <span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">length</span><span class="o">-</span><span class="mi">15</span><span class="o">*</span><span class="n">mesh_res</span><span class="p">];</span>
+<span class="n">mesh</span><span class="o">.</span><span class="n">AddLine</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">start</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">stop</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+<span class="n">ports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">FDTD</span><span class="o">.</span><span class="n">AddRectWaveGuidePort</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">a</span><span class="o">*</span><span class="n">unit</span><span class="p">,</span> <span class="n">b</span><span class="o">*</span><span class="n">unit</span><span class="p">,</span> <span class="n">TE_mode</span><span class="p">))</span>
+
+<span class="n">mesh</span><span class="o">.</span><span class="n">SmoothMeshLines</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">mesh_res</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="mf">1.4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Define dump box…</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Et</span> <span class="o">=</span> <span class="n">CSX</span><span class="o">.</span><span class="n">AddDump</span><span class="p">(</span><span class="s1">&#39;Et&#39;</span><span class="p">,</span> <span class="n">file_type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sub_sampling</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">];</span>
+<span class="n">stop</span>  <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">length</span><span class="p">];</span>
+<span class="n">Et</span><span class="o">.</span><span class="n">AddBox</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><strong>Run the simulation</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># debugging only</span>
+    <span class="n">CSX_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">,</span> <span class="s1">&#39;rect_wg.xml&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">)</span>
+    <span class="n">CSX</span><span class="o">.</span><span class="n">Write2XML</span><span class="p">(</span><span class="n">CSX_file</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;AppCSXCAD &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">CSX_file</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">post_proc_only</span><span class="p">:</span>
+    <span class="n">FDTD</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cleanup</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Postprocessing &amp; plotting</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">freq</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="n">f_start</span><span class="p">,</span><span class="n">f_stop</span><span class="p">,</span><span class="mi">201</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">ports</span><span class="p">:</span>
+    <span class="n">port</span><span class="o">.</span><span class="n">CalcPort</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">,</span> <span class="n">freq</span><span class="p">)</span>
+
+<span class="n">s11</span> <span class="o">=</span> <span class="n">ports</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">uf_ref</span> <span class="o">/</span> <span class="n">ports</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">uf_inc</span>
+<span class="n">s21</span> <span class="o">=</span> <span class="n">ports</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">uf_ref</span> <span class="o">/</span> <span class="n">ports</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">uf_inc</span>
+<span class="n">ZL</span>  <span class="o">=</span> <span class="n">ports</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">uf_tot</span> <span class="o">/</span> <span class="n">ports</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">if_tot</span>
+<span class="n">ZL_a</span> <span class="o">=</span> <span class="n">ports</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ZL</span> <span class="c1"># analytic waveguide impedance</span>
+</pre></div>
+</div>
+<p>Plot s-parameter</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">freq</span><span class="o">*</span><span class="mf">1e-6</span><span class="p">,</span><span class="mi">20</span><span class="o">*</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">s11</span><span class="p">)),</span><span class="s1">&#39;k-&#39;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$S_</span><span class="si">{11}</span><span class="s1">$&#39;</span><span class="p">)</span>
+<span class="n">grid</span><span class="p">()</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">freq</span><span class="o">*</span><span class="mf">1e-6</span><span class="p">,</span><span class="mi">20</span><span class="o">*</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">s21</span><span class="p">)),</span><span class="s1">&#39;r--&#39;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$S_</span><span class="si">{21}</span><span class="s1">$&#39;</span><span class="p">)</span>
+<span class="n">legend</span><span class="p">();</span>
+<span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;S-Parameter (dB)&#39;</span><span class="p">)</span>
+<span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;frequency (MHz) $\rightarrow$&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Compare analytic and numerical wave-impedance</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">freq</span><span class="o">*</span><span class="mf">1e-6</span><span class="p">,</span><span class="n">real</span><span class="p">(</span><span class="n">ZL</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$\Re\{Z_L\}$&#39;</span><span class="p">)</span>
+<span class="n">grid</span><span class="p">()</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">freq</span><span class="o">*</span><span class="mf">1e-6</span><span class="p">,</span><span class="n">imag</span><span class="p">(</span><span class="n">ZL</span><span class="p">),</span><span class="s1">&#39;r--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$\Im\{Z_L\}$&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">freq</span><span class="o">*</span><span class="mf">1e-6</span><span class="p">,</span><span class="n">ZL_a</span><span class="p">,</span><span class="s1">&#39;g-.&#39;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$Z_{L, analytic}$&#39;</span><span class="p">)</span>
+<span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;ZL $(\Omega)$&#39;</span><span class="p">)</span>
+<span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;frequency (MHz) $\rightarrow$&#39;</span><span class="p">)</span>
+<span class="n">legend</span><span class="p">()</span>
+
+<span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="images">
+<h2>Images<a class="headerlink" href="#images" title="Permalink to this heading"></a></h2>
+<figure class="align-default" id="id1">
+<a class="reference internal image-reference" href="../../../_images/Rect_WG_SPara.png"><img alt="S-Parameter over Frequency" src="../../../_images/Rect_WG_SPara.png" style="width: 49%;" /></a>
+<figcaption>
+<p><span class="caption-text">S-Parameter over Frequency</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Intro_Tutorials.html" class="btn btn-neutral float-left" title="Introductional Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="RCS_Sphere.html" class="btn btn-neutral float-right" title="Metal Sphere Radar Cross Section" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2016, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

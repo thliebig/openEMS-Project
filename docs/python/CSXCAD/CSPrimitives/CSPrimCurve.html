@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSPrimCurve &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="CSPrimWire" href="CSPrimWire.html" />
+    <link rel="prev" title="CSPrimRotPoly" href="CSPrimRotPoly.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Install</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../python.html">Python Interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../CSXCAD_API.html">CSXCAD Python Interface</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../CSXCAD.html">CSXCAD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../CSProperties.html">CSProperties</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../CSPrimitives.html">CSPrimitives</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../CSPrimitives.html#notes">Notes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../CSPrimitives.html#examples">Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimitives.html">CSPrimitives (Base Class)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimPoint.html">CSPrimPoint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimBox.html">CSPrimBox</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimCylinder.html">CSPrimCylinder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimCylindricalShell.html">CSPrimCylindricalShell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimSphere.html">CSPrimSphere</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimSphericalShell.html">CSPrimSphericalShell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimPolygon.html">CSPrimPolygon</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimLinPoly.html">CSPrimLinPoly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimRotPoly.html">CSPrimRotPoly</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">CSPrimCurve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimWire.html">CSPrimWire</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimPolyhedron.html">CSPrimPolyhedron</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSPrimPolyhedronReader.html">CSPrimPolyhedronReader</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../CSTransform.html">CSTransform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../CSRectGrid.html">CSRectGrid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Mesh.html">Mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Utilities.html">Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../openEMS/openEMS_API.html">openEMS Python Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../openEMS/Tutorials/index.html">Tutorials</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../python.html">Python Interface</a></li>
+          <li class="breadcrumb-item"><a href="../CSXCAD_API.html">CSXCAD Python Interface</a></li>
+          <li class="breadcrumb-item"><a href="../CSPrimitives.html">CSPrimitives</a></li>
+      <li class="breadcrumb-item active">CSPrimCurve</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/python/CSXCAD/CSPrimitives/CSPrimCurve.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="csprimcurve">
+<span id="id1"></span><h1>CSPrimCurve<a class="headerlink" href="#csprimcurve" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimCurve">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CSXCAD.CSPrimitives.</span></span><span class="sig-name descname"><span class="pre">CSPrimCurve</span></span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimCurve" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="CSPrimitives.html#CSXCAD.CSPrimitives.CSPrimitives" title="CSXCAD.CSPrimitives.CSPrimitives"><code class="xref py py-class docutils literal notranslate"><span class="pre">CSPrimitives</span></code></a></p>
+<p>Curve Primitive</p>
+<p>A curve is a set of consequtive 3D coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>points</strong><span class="classifier">(3, N) array</span></dt><dd><p>Array of 3D coordinates.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mf">1.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="mf">2.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">curve</span> <span class="o">=</span> <span class="n">CSPrimitives</span><span class="o">.</span><span class="n">CSPrimCurve</span><span class="p">(</span><span class="n">pset</span><span class="p">,</span> <span class="n">metal</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">curve</span><span class="o">.</span><span class="n">AddPoint</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimCurve.AddPoint">
+<span class="sig-name descname"><span class="pre">AddPoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimCurve.AddPoint" title="Permalink to this definition"></a></dt>
+<dd><p>Add a single point to the list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>point</strong> – (3,) array – Add a single 3D point</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimCurve.ClearPoints">
+<span class="sig-name descname"><span class="pre">ClearPoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimCurve.ClearPoints" title="Permalink to this definition"></a></dt>
+<dd><p>Clear all points.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimCurve.GetNumberOfPoints">
+<span class="sig-name descname"><span class="pre">GetNumberOfPoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimCurve.GetNumberOfPoints" title="Permalink to this definition"></a></dt>
+<dd><p>Get the number of points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return num<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int – Get the number of points.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimCurve.GetPoint">
+<span class="sig-name descname"><span class="pre">GetPoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimCurve.GetPoint" title="Permalink to this definition"></a></dt>
+<dd><p>Get a point with a given index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>idx</strong> – int – Index of point requested.</p>
+</dd>
+<dt class="field-even">Return point<span class="colon">:</span></dt>
+<dd class="field-even"><p>(3,) array – Point coordinate at index <cite>idx</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.CSPrimitives.CSPrimCurve.SetPoints">
+<span class="sig-name descname"><span class="pre">SetPoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.CSPrimitives.CSPrimCurve.SetPoints" title="Permalink to this definition"></a></dt>
+<dd><p>Set an array of 3D coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong><strong>,</strong><strong>y</strong><strong>,</strong><strong>z</strong> – each (N,) array – Array of 3D point components</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="CSPrimRotPoly.html" class="btn btn-neutral float-left" title="CSPrimRotPoly" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="CSPrimWire.html" class="btn btn-neutral float-right" title="CSPrimWire" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2016, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRLH Parameter Extraction &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Antennas" href="Antenna_Tutorials.html" />
+    <link rel="prev" title="Microstrip Notch Filter" href="MSL_NotchFilter.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Install</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../python.html">Python Interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../CSXCAD/CSXCAD_API.html">CSXCAD Python Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../openEMS_API.html">openEMS Python Interface</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Intro_Tutorials.html">Introductional Tutorials</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="MicroWave_Tutorials.html">Micro Wave Tutorials</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="MSL_NotchFilter.html">Microstrip Notch Filter</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">CRLH Parameter Extraction</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Antenna_Tutorials.html">Antennas</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../python.html">Python Interface</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Tutorials</a></li>
+          <li class="breadcrumb-item"><a href="MicroWave_Tutorials.html">Micro Wave Tutorials</a></li>
+      <li class="breadcrumb-item active">CRLH Parameter Extraction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/python/openEMS/Tutorials/CRLH_Extraction.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="crlh-parameter-extraction">
+<h1>CRLH Parameter Extraction<a class="headerlink" href="#crlh-parameter-extraction" title="Permalink to this heading"></a></h1>
+<ul class="simple">
+<li><p>Setup a composite-right/left-handed (CRLH) unit cell and extract the equivalent circuit parameter.</p></li>
+</ul>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<p><strong>This tutorial covers:</strong></p>
+<ul class="simple">
+<li><p>Setup a feeding mircostrip line &amp; port</p></li>
+<li><p>Apply an inhomogeneous mesh used for improved accuracy and simulation speed</p></li>
+<li><p>Use an internal clss to setup a CRLH unit cell</p></li>
+<li><p>Use the port voltages and currents to extract the unit cell equivalent circuit parameter</p></li>
+</ul>
+<figure class="align-default" id="id1">
+<a class="reference internal image-reference" href="../../../_images/CRLH_cell.png"><img alt="CRLH unit cell with feeding MSL." src="../../../_images/CRLH_cell.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-text">CRLH unit cell with feeding MSL.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="python-script">
+<h2>Python Script<a class="headerlink" href="#python-script" title="Permalink to this heading"></a></h2>
+<p>Get the latest version <a class="reference external" href="http://www.openems.de/gitweb/?p=openEMS.git;a=blob_plain;f=matlab/Tutorials/Bent_Patch_Antenna.m;hb=refs/heads/master">from git</a>.</p>
+<p><strong>Import Libraries</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">tempfile</span>
+<span class="kn">from</span> <span class="nn">pylab</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">CSXCAD</span>  <span class="kn">import</span> <span class="n">ContinuousStructure</span>
+<span class="kn">from</span> <span class="nn">openEMS</span> <span class="kn">import</span> <span class="n">openEMS</span>
+<span class="kn">from</span> <span class="nn">openEMS.physical_constants</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p><strong>Class to represent single CRLH unit cells</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CRLH_Cells</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">LL</span><span class="p">,</span> <span class="n">LW</span><span class="p">,</span> <span class="n">Top</span><span class="p">,</span> <span class="n">Bot</span><span class="p">,</span> <span class="n">GLT</span><span class="p">,</span> <span class="n">GLB</span><span class="p">,</span> <span class="n">SL</span><span class="p">,</span> <span class="n">SW</span><span class="p">,</span> <span class="n">VR</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LL</span>  <span class="o">=</span> <span class="n">LL</span>   <span class="c1"># Line length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LW</span>  <span class="o">=</span> <span class="n">LW</span>   <span class="c1"># Line width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Top</span> <span class="o">=</span> <span class="n">Top</span>  <span class="c1"># top signal height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Bot</span> <span class="o">=</span> <span class="n">Bot</span>  <span class="c1"># bottom signal height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">GLT</span> <span class="o">=</span> <span class="n">GLT</span>  <span class="c1"># gap length top</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">GLB</span> <span class="o">=</span> <span class="n">GLB</span>  <span class="c1"># gap length bottom</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SL</span>  <span class="o">=</span> <span class="n">SL</span>   <span class="c1"># stub length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SW</span>  <span class="o">=</span> <span class="n">SW</span>   <span class="c1"># stub width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">VR</span>  <span class="o">=</span> <span class="n">VR</span>   <span class="c1"># via radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">props</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span> <span class="c1"># property dictionary</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edge_resolution</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">createProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">CSX</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;metal_top&#39;</span><span class="p">,</span> <span class="s1">&#39;metal_bot&#39;</span><span class="p">,</span> <span class="s1">&#39;via&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">props</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">CSX</span><span class="o">.</span><span class="n">AddMetal</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">setEdgeResolution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edge_resolution</span> <span class="o">=</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">createCell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">translate</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">def</span> <span class="nf">append_mesh</span><span class="p">(</span><span class="n">mesh1</span><span class="p">,</span> <span class="n">mesh2</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">mesh1</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">mesh1</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh2</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="n">mesh2</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">mesh1</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">+=</span> <span class="n">mesh2</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">mesh1</span>
+        <span class="n">translate</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">translate</span><span class="p">)</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">LL</span><span class="o">/</span><span class="mi">2</span> <span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">LW</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Top</span><span class="p">]</span> <span class="o">+</span> <span class="n">translate</span>
+        <span class="n">stop</span>  <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">GLT</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">LW</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Top</span><span class="p">]</span> <span class="o">+</span> <span class="n">translate</span>
+        <span class="n">box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">props</span><span class="p">[</span><span class="s1">&#39;metal_top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">AddBox</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">mesh</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">GetGridHint</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">metal_edge_res</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">edge_resolution</span><span class="p">,</span> <span class="n">down_dir</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">append_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">GetGridHint</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">metal_edge_res</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">edge_resolution</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">LL</span><span class="o">/</span><span class="mi">2</span> <span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">LW</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Top</span><span class="p">]</span> <span class="o">+</span> <span class="n">translate</span>
+        <span class="n">stop</span>  <span class="o">=</span> <span class="p">[</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">GLT</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">LW</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Top</span><span class="p">]</span> <span class="o">+</span> <span class="n">translate</span>
+        <span class="n">box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">props</span><span class="p">[</span><span class="s1">&#39;metal_top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">AddBox</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">append_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">GetGridHint</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">metal_edge_res</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">edge_resolution</span><span class="p">,</span> <span class="n">up_dir</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">LL</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">GLB</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">LW</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Bot</span><span class="p">]</span> <span class="o">+</span> <span class="n">translate</span>
+        <span class="n">stop</span>  <span class="o">=</span> <span class="p">[</span><span class="o">+</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">LL</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">GLB</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">LW</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Bot</span><span class="p">]</span> <span class="o">+</span> <span class="n">translate</span>
+        <span class="n">box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">props</span><span class="p">[</span><span class="s1">&#39;metal_bot&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">AddBox</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">append_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">GetGridHint</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">metal_edge_res</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">edge_resolution</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">SW</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">LW</span><span class="o">/</span><span class="mi">2</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">SL</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Bot</span><span class="p">]</span> <span class="o">+</span> <span class="n">translate</span>
+        <span class="n">stop</span>  <span class="o">=</span> <span class="p">[</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">SW</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">LW</span><span class="o">/</span><span class="mi">2</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">SL</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Bot</span><span class="p">]</span> <span class="o">+</span> <span class="n">translate</span>
+        <span class="n">box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">props</span><span class="p">[</span><span class="s1">&#39;metal_bot&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">AddBox</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">append_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">GetGridHint</span><span class="p">(</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">metal_edge_res</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">edge_resolution</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">LW</span><span class="o">/</span><span class="mi">2</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">SL</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">SW</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span>       <span class="p">]</span> <span class="o">+</span> <span class="n">translate</span>
+        <span class="n">stop</span>  <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">LW</span><span class="o">/</span><span class="mi">2</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">SL</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">SW</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Bot</span><span class="p">]</span> <span class="o">+</span> <span class="n">translate</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">props</span><span class="p">[</span><span class="s1">&#39;via&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">AddCylinder</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">VR</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+        <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">stop</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">props</span><span class="p">[</span><span class="s1">&#39;via&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">AddCylinder</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">VR</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">mesh</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1">### Setup the simulation</span>
+    <span class="n">Sim_Path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">(),</span> <span class="s1">&#39;CRLH_Extraction&#39;</span><span class="p">)</span>
+    <span class="n">post_proc_only</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">unit</span> <span class="o">=</span> <span class="mf">1e-6</span> <span class="c1"># specify everything in um</span>
+
+    <span class="n">feed_length</span> <span class="o">=</span> <span class="mi">30000</span>
+
+    <span class="n">substrate_thickness</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1524</span><span class="p">,</span> <span class="mi">101</span> <span class="p">,</span> <span class="mi">254</span> <span class="p">]</span>
+    <span class="n">substrate_epsr</span>      <span class="o">=</span> <span class="p">[</span><span class="mf">3.48</span><span class="p">,</span> <span class="mf">3.48</span><span class="p">,</span> <span class="mf">3.48</span><span class="p">]</span>
+
+    <span class="n">CRLH</span> <span class="o">=</span> <span class="n">CRLH_Cells</span><span class="p">(</span><span class="n">LL</span>  <span class="o">=</span> <span class="mf">14e3</span><span class="p">,</span> <span class="n">LW</span>  <span class="o">=</span> <span class="mf">4e3</span><span class="p">,</span> <span class="n">GLB</span> <span class="o">=</span> <span class="mi">1950</span><span class="p">,</span> <span class="n">GLT</span> <span class="o">=</span> <span class="mi">4700</span><span class="p">,</span> <span class="n">SL</span>  <span class="o">=</span> <span class="mi">7800</span><span class="p">,</span> <span class="n">SW</span>  <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">VR</span>  <span class="o">=</span> <span class="mi">250</span> <span class="p">,</span> \
+                      <span class="n">Top</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">substrate_thickness</span><span class="p">),</span> \
+                      <span class="n">Bot</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">substrate_thickness</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="c1"># frequency range of interest</span>
+    <span class="n">f_start</span> <span class="o">=</span> <span class="mf">0.8e9</span>
+    <span class="n">f_stop</span>  <span class="o">=</span> <span class="mf">6e9</span>
+
+    <span class="c1">### Setup FDTD parameters &amp; excitation function</span>
+    <span class="n">CSX</span>  <span class="o">=</span> <span class="n">ContinuousStructure</span><span class="p">()</span>
+    <span class="n">FDTD</span> <span class="o">=</span> <span class="n">openEMS</span><span class="p">(</span><span class="n">EndCriteria</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
+    <span class="n">FDTD</span><span class="o">.</span><span class="n">SetCSX</span><span class="p">(</span><span class="n">CSX</span><span class="p">)</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">CSX</span><span class="o">.</span><span class="n">GetGrid</span><span class="p">()</span>
+    <span class="n">mesh</span><span class="o">.</span><span class="n">SetDeltaUnit</span><span class="p">(</span><span class="n">unit</span><span class="p">)</span>
+
+    <span class="n">CRLH</span><span class="o">.</span><span class="n">createProperties</span><span class="p">(</span><span class="n">CSX</span><span class="p">)</span>
+
+    <span class="n">FDTD</span><span class="o">.</span><span class="n">SetGaussExcite</span><span class="p">((</span><span class="n">f_start</span><span class="o">+</span><span class="n">f_stop</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="n">f_stop</span><span class="o">-</span><span class="n">f_start</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="p">)</span>
+    <span class="n">BC</span>   <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;PML_8&#39;</span> <span class="s1">&#39;PML_8&#39;</span> <span class="s1">&#39;MUR&#39;</span> <span class="s1">&#39;MUR&#39;</span> <span class="s1">&#39;PEC&#39;</span> <span class="s1">&#39;PML_8&#39;</span><span class="p">}</span>
+    <span class="n">FDTD</span><span class="o">.</span><span class="n">SetBoundaryCond</span><span class="p">(</span> <span class="p">[</span><span class="s1">&#39;PML_8&#39;</span><span class="p">,</span> <span class="s1">&#39;PML_8&#39;</span><span class="p">,</span> <span class="s1">&#39;MUR&#39;</span><span class="p">,</span> <span class="s1">&#39;MUR&#39;</span><span class="p">,</span> <span class="s1">&#39;PEC&#39;</span><span class="p">,</span> <span class="s1">&#39;PML_8&#39;</span><span class="p">]</span> <span class="p">)</span>
+
+    <span class="c1">### Setup a basic mesh and create the CRLH unit cell</span>
+    <span class="n">resolution</span> <span class="o">=</span> <span class="n">C0</span><span class="o">/</span><span class="p">(</span><span class="n">f_stop</span><span class="o">*</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">substrate_epsr</span><span class="p">)))</span><span class="o">/</span><span class="n">unit</span> <span class="o">/</span><span class="mi">30</span> <span class="c1"># resolution of lambda/30</span>
+    <span class="n">CRLH</span><span class="o">.</span><span class="n">setEdgeResolution</span><span class="p">(</span><span class="n">resolution</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="n">mesh</span><span class="o">.</span><span class="n">SetLines</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="n">feed_length</span><span class="o">-</span><span class="n">CRLH</span><span class="o">.</span><span class="n">LL</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">feed_length</span><span class="o">+</span><span class="n">CRLH</span><span class="o">.</span><span class="n">LL</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">mesh</span><span class="o">.</span><span class="n">SetLines</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">30000</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">30000</span><span class="p">])</span>
+
+    <span class="n">substratelines</span> <span class="o">=</span> <span class="n">cumsum</span><span class="p">(</span><span class="n">substrate_thickness</span><span class="p">)</span>
+    <span class="n">mesh</span><span class="o">.</span><span class="n">SetLines</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20000</span><span class="p">])</span>
+    <span class="n">mesh</span><span class="o">.</span><span class="n">AddLine</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">cumsum</span><span class="p">(</span><span class="n">substrate_thickness</span><span class="p">))</span>
+    <span class="n">mesh</span><span class="o">.</span><span class="n">AddLine</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">linspace</span><span class="p">(</span><span class="n">substratelines</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span><span class="n">substratelines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="mi">4</span><span class="p">))</span>
+
+    <span class="c1"># create the CRLH unit cell (will define additional fixed mesh lines)</span>
+    <span class="n">mesh_hint</span> <span class="o">=</span> <span class="n">CRLH</span><span class="o">.</span><span class="n">createCell</span><span class="p">()</span>
+    <span class="n">mesh</span><span class="o">.</span><span class="n">AddLine</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">mesh_hint</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">mesh</span><span class="o">.</span><span class="n">AddLine</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">mesh_hint</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Smooth the given mesh</span>
+    <span class="n">mesh</span><span class="o">.</span><span class="n">SmoothMeshLines</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">)</span>
+
+    <span class="c1">### Setup the substrate layer</span>
+    <span class="n">substratelines</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">substratelines</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">start</span><span class="p">,</span> <span class="n">stop</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">GetSimArea</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">substrate_thickness</span><span class="p">)):</span>
+        <span class="n">sub</span> <span class="o">=</span> <span class="n">CSX</span><span class="o">.</span><span class="n">AddMaterial</span><span class="p">(</span> <span class="s1">&#39;substrate_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">epsilon</span><span class="o">=</span><span class="n">substrate_epsr</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="p">)</span>
+        <span class="n">start</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">substratelines</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+        <span class="n">stop</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">substratelines</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">sub</span><span class="o">.</span><span class="n">AddBox</span><span class="p">(</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span> <span class="p">)</span>
+
+    <span class="c1">### Add the feeding MSL ports</span>
+    <span class="n">pec</span> <span class="o">=</span> <span class="n">CSX</span><span class="o">.</span><span class="n">AddMetal</span><span class="p">(</span> <span class="s1">&#39;PEC&#39;</span> <span class="p">)</span>
+    <span class="n">port</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="n">x_lines</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">GetLines</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+    <span class="n">portstart</span> <span class="o">=</span> <span class="p">[</span> <span class="n">x_lines</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">CRLH</span><span class="o">.</span><span class="n">LW</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">substratelines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">portstop</span>  <span class="o">=</span> <span class="p">[</span> <span class="o">-</span><span class="n">CRLH</span><span class="o">.</span><span class="n">LL</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>  <span class="n">CRLH</span><span class="o">.</span><span class="n">LW</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">port</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">FDTD</span><span class="o">.</span><span class="n">AddMSLPort</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span>  <span class="n">pec</span><span class="p">,</span> <span class="n">portstart</span><span class="p">,</span> <span class="n">portstop</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">excite</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">FeedShift</span><span class="o">=</span><span class="mi">10</span><span class="o">*</span><span class="n">resolution</span><span class="p">,</span> <span class="n">MeasPlaneShift</span><span class="o">=</span><span class="n">feed_length</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+
+    <span class="n">portstart</span> <span class="o">=</span> <span class="p">[</span> <span class="n">x_lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="n">CRLH</span><span class="o">.</span><span class="n">LW</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">substratelines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">portstop</span>  <span class="o">=</span> <span class="p">[</span> <span class="o">+</span><span class="n">CRLH</span><span class="o">.</span><span class="n">LL</span><span class="o">/</span><span class="mi">2</span> <span class="p">,</span>  <span class="n">CRLH</span><span class="o">.</span><span class="n">LW</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">port</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">FDTD</span><span class="o">.</span><span class="n">AddMSLPort</span><span class="p">(</span> <span class="mi">2</span><span class="p">,</span>  <span class="n">pec</span><span class="p">,</span> <span class="n">portstart</span><span class="p">,</span> <span class="n">portstop</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">MeasPlaneShift</span><span class="o">=</span><span class="n">feed_length</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="c1">### Run the simulation</span>
+    <span class="k">if</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># debugging only</span>
+        <span class="n">CSX_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">,</span> <span class="s1">&#39;CRLH_Extraction.xml&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">)</span>
+        <span class="n">CSX</span><span class="o">.</span><span class="n">Write2XML</span><span class="p">(</span><span class="n">CSX_file</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;AppCSXCAD &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">CSX_file</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">post_proc_only</span><span class="p">:</span>
+        <span class="n">FDTD</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cleanup</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1">### Post-Processing</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span> <span class="n">f_start</span><span class="p">,</span> <span class="n">f_stop</span><span class="p">,</span> <span class="mi">1601</span> <span class="p">)</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">port</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">CalcPort</span><span class="p">(</span> <span class="n">Sim_Path</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">ref_impedance</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">ref_plane_shift</span> <span class="o">=</span> <span class="n">feed_length</span><span class="p">)</span>
+
+    <span class="c1"># calculate and plot scattering parameter</span>
+    <span class="n">s11</span> <span class="o">=</span> <span class="n">port</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">uf_ref</span> <span class="o">/</span> <span class="n">port</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">uf_inc</span>
+    <span class="n">s21</span> <span class="o">=</span> <span class="n">port</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">uf_ref</span> <span class="o">/</span> <span class="n">port</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">uf_inc</span>
+
+    <span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="o">/</span><span class="mf">1e9</span><span class="p">,</span><span class="mi">20</span><span class="o">*</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">s11</span><span class="p">)),</span><span class="s1">&#39;k-&#39;</span> <span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$S_</span><span class="si">{11}</span><span class="s1">$&#39;</span><span class="p">)</span>
+    <span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="o">/</span><span class="mf">1e9</span><span class="p">,</span><span class="mi">20</span><span class="o">*</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">s21</span><span class="p">)),</span><span class="s1">&#39;r--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$S_</span><span class="si">{21}</span><span class="s1">$&#39;</span><span class="p">)</span>
+    <span class="n">grid</span><span class="p">()</span>
+    <span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;S-Parameter (dB)&#39;</span><span class="p">)</span>
+    <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;frequency (GHz)&#39;</span><span class="p">)</span>
+    <span class="n">ylim</span><span class="p">([</span><span class="o">-</span><span class="mi">40</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+
+    <span class="c1">### Extract CRLH parameter form ABCD matrix</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="n">s11</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">s11</span><span class="p">)</span> <span class="o">+</span> <span class="n">s21</span><span class="o">*</span><span class="n">s21</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">s21</span><span class="p">)</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="n">s11</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">s11</span><span class="p">)</span> <span class="o">-</span> <span class="n">s21</span><span class="o">*</span><span class="n">s21</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">s21</span><span class="p">)</span> <span class="o">/</span> <span class="n">port</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">Z_ref</span>
+
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">C</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">A</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">C</span>
+
+    <span class="n">iZ</span> <span class="o">=</span> <span class="n">imag</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+    <span class="n">iY</span> <span class="o">=</span> <span class="n">imag</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+
+    <span class="n">fse</span> <span class="o">=</span> <span class="n">interp</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">iZ</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+    <span class="n">fsh</span> <span class="o">=</span> <span class="n">interp</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">iY</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">fse_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">f</span><span class="o">&gt;</span><span class="n">fse</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">fsh_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">f</span><span class="o">&gt;</span><span class="n">fsh</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">LR</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">iZ</span><span class="p">[</span><span class="n">fse_idx</span><span class="p">]</span><span class="o">-</span><span class="n">iZ</span><span class="p">[</span><span class="n">fse_idx</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">CL</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">fse</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">LR</span>
+
+    <span class="n">CR</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">iY</span><span class="p">[</span><span class="n">fsh_idx</span><span class="p">]</span><span class="o">-</span><span class="n">iY</span><span class="p">[</span><span class="n">fsh_idx</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">LL</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">fsh</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">CR</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; Series tank: CL = </span><span class="si">{:.2f}</span><span class="s1"> pF,  LR = </span><span class="si">{:.2f}</span><span class="s1"> nH -&gt; f_se = </span><span class="si">{:.2f}</span><span class="s1"> GHz &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">CL</span><span class="o">*</span><span class="mf">1e12</span><span class="p">,</span> <span class="n">LR</span><span class="o">*</span><span class="mf">1e9</span><span class="p">,</span> <span class="n">fse</span><span class="o">*</span><span class="mf">1e-9</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; Shunt  tank: CR = </span><span class="si">{:.2f}</span><span class="s1"> pF,  LL = </span><span class="si">{:.2f}</span><span class="s1"> nH -&gt; f_sh = </span><span class="si">{:.2f}</span><span class="s1"> GHz &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">CR</span><span class="o">*</span><span class="mf">1e12</span><span class="p">,</span> <span class="n">LL</span><span class="o">*</span><span class="mf">1e9</span><span class="p">,</span> <span class="n">fsh</span><span class="o">*</span><span class="mf">1e-9</span><span class="p">))</span>
+
+    <span class="c1">### Calculate analytical wave-number of an inf-array of cells</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">f</span>
+    <span class="n">wse</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">fse</span>
+    <span class="n">wsh</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">fsh</span>
+    <span class="n">beta_calc</span> <span class="o">=</span> <span class="n">real</span><span class="p">(</span><span class="n">arccos</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="n">w</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">wse</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">w</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">wsh</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">w</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">CR</span><span class="o">/</span><span class="n">LR</span><span class="p">)))</span>
+
+    <span class="c1"># plot</span>
+    <span class="n">figure</span><span class="p">()</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="o">-</span><span class="n">angle</span><span class="p">(</span><span class="n">s21</span><span class="p">)</span><span class="o">/</span><span class="n">CRLH</span><span class="o">.</span><span class="n">LL</span><span class="o">/</span><span class="n">unit</span>
+    <span class="n">plot</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span><span class="o">*</span><span class="n">CRLH</span><span class="o">.</span><span class="n">LL</span><span class="o">*</span><span class="n">unit</span><span class="o">/</span><span class="n">pi</span><span class="p">,</span><span class="n">f</span><span class="o">*</span><span class="mf">1e-9</span><span class="p">,</span><span class="s1">&#39;k-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\beta_{CRLH,\ 1\ cell}$&#39;</span> <span class="p">)</span>
+    <span class="n">grid</span><span class="p">()</span>
+    <span class="n">plot</span><span class="p">(</span><span class="n">beta_calc</span><span class="o">/</span><span class="n">pi</span><span class="p">,</span><span class="n">f</span><span class="o">*</span><span class="mf">1e-9</span><span class="p">,</span><span class="s1">&#39;c--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\beta_{CRLH,\ \infty\ cells}$&#39;</span><span class="p">)</span>
+    <span class="n">plot</span><span class="p">(</span><span class="n">real</span><span class="p">(</span><span class="n">port</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">beta</span><span class="p">)</span><span class="o">*</span><span class="n">CRLH</span><span class="o">.</span><span class="n">LL</span><span class="o">*</span><span class="n">unit</span><span class="o">/</span><span class="n">pi</span><span class="p">,</span><span class="n">f</span><span class="o">*</span><span class="mf">1e-9</span><span class="p">,</span><span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\beta_</span><span class="si">{MSL}</span><span class="s1">$&#39;</span><span class="p">)</span>
+    <span class="n">ylim</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+    <span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$|\beta| p / \pi$&#39;</span><span class="p">)</span>
+    <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;frequency (GHz)&#39;</span><span class="p">)</span>
+    <span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="images">
+<h2>Images<a class="headerlink" href="#images" title="Permalink to this heading"></a></h2>
+<figure class="align-default" id="id2">
+<a class="reference internal image-reference" href="../../../_images/CRLH_Spara.png"><img alt="CRLH cell S-parameter" src="../../../_images/CRLH_Spara.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-text">CRLH cell S-parameter</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id3">
+<a class="reference internal image-reference" href="../../../_images/CRLH_dispersion.png"><img alt="CRLH unit cell dispersion diagram" src="../../../_images/CRLH_dispersion.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-text">CRLH unit cell dispersion diagram</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="MSL_NotchFilter.html" class="btn btn-neutral float-left" title="Microstrip Notch Filter" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Antenna_Tutorials.html" class="btn btn-neutral float-right" title="Antennas" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2016, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

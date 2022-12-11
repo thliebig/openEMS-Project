@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSProperties &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="CSProperties (Base Class)" href="CSProperties/CSProperties.html" />
+    <link rel="prev" title="CSXCAD" href="CSXCAD.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../python.html">Python Interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../install.html">Install</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="CSXCAD_API.html">CSXCAD Python Interface</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="CSXCAD.html">CSXCAD</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">CSProperties</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#notes">Notes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSProperties/CSProperties.html">CSProperties (Base Class)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSProperties/CSPropMaterial.html">CSPropMaterial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSProperties/CSPropLumpedElement.html">CSPropLumpedElement</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSProperties/CSPropMetal.html">CSPropMetal</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSProperties/CSPropConductingSheet.html">CSPropConductingSheet</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSProperties/CSPropExcitation.html">CSPropExcitation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSProperties/CSPropProbeBox.html">CSPropProbeBox</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CSProperties/CSPropDumpBox.html">CSPropDumpBox</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives.html">CSPrimitives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSTransform.html">CSTransform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSRectGrid.html">CSRectGrid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Mesh.html">Mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Utilities.html">Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../openEMS/openEMS_API.html">openEMS Python Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../openEMS/Tutorials/index.html">Tutorials</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../python.html">Python Interface</a></li>
+          <li class="breadcrumb-item"><a href="CSXCAD_API.html">CSXCAD Python Interface</a></li>
+      <li class="breadcrumb-item active">CSProperties</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/python/CSXCAD/CSProperties.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="csproperties">
+<span id="id1"></span><h1>CSProperties<a class="headerlink" href="#csproperties" title="Permalink to this heading"></a></h1>
+<span class="target" id="module-CSXCAD.CSProperties"></span><p>Module for all Properties like metal, material, propes and dumps</p>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this heading"></a></h2>
+<p>Usually it is not meant to create properties manually, but instead
+use the ContinuousStructure object to create properties using the
+e.g. AddMaterial or AddMetal methods.</p>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<p>Create a metal property:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pset</span>  <span class="o">=</span> <span class="n">ParameterObjects</span><span class="o">.</span><span class="n">ParameterSet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">metal</span> <span class="o">=</span> <span class="n">CSProperties</span><span class="o">.</span><span class="n">CSPropMetal</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<p><strong>List of Properties:</strong></p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CSProperties/CSProperties.html">CSProperties (Base Class)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties"><code class="docutils literal notranslate"><span class="pre">CSProperties</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.AddAttribute"><code class="docutils literal notranslate"><span class="pre">CSProperties.AddAttribute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.AddBox"><code class="docutils literal notranslate"><span class="pre">CSProperties.AddBox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.AddCurve"><code class="docutils literal notranslate"><span class="pre">CSProperties.AddCurve()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.AddCylinder"><code class="docutils literal notranslate"><span class="pre">CSProperties.AddCylinder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.AddCylindricalShell"><code class="docutils literal notranslate"><span class="pre">CSProperties.AddCylindricalShell()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.AddLinPoly"><code class="docutils literal notranslate"><span class="pre">CSProperties.AddLinPoly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.AddPoint"><code class="docutils literal notranslate"><span class="pre">CSProperties.AddPoint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.AddPolygon"><code class="docutils literal notranslate"><span class="pre">CSProperties.AddPolygon()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.AddPolyhedron"><code class="docutils literal notranslate"><span class="pre">CSProperties.AddPolyhedron()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.AddPolyhedronReader"><code class="docutils literal notranslate"><span class="pre">CSProperties.AddPolyhedronReader()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.AddRotPoly"><code class="docutils literal notranslate"><span class="pre">CSProperties.AddRotPoly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.AddSphere"><code class="docutils literal notranslate"><span class="pre">CSProperties.AddSphere()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.AddSphericalShell"><code class="docutils literal notranslate"><span class="pre">CSProperties.AddSphericalShell()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.AddWire"><code class="docutils literal notranslate"><span class="pre">CSProperties.AddWire()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.ExistAttribute"><code class="docutils literal notranslate"><span class="pre">CSProperties.ExistAttribute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.GetAttributeValue"><code class="docutils literal notranslate"><span class="pre">CSProperties.GetAttributeValue()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.GetName"><code class="docutils literal notranslate"><span class="pre">CSProperties.GetName()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.GetParameterSet"><code class="docutils literal notranslate"><span class="pre">CSProperties.GetParameterSet()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.GetQtyPrimitives"><code class="docutils literal notranslate"><span class="pre">CSProperties.GetQtyPrimitives()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.GetType"><code class="docutils literal notranslate"><span class="pre">CSProperties.GetType()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.GetTypeString"><code class="docutils literal notranslate"><span class="pre">CSProperties.GetTypeString()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.SetColor"><code class="docutils literal notranslate"><span class="pre">CSProperties.SetColor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.SetEdgeColor"><code class="docutils literal notranslate"><span class="pre">CSProperties.SetEdgeColor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.SetFillColor"><code class="docutils literal notranslate"><span class="pre">CSProperties.SetFillColor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.SetName"><code class="docutils literal notranslate"><span class="pre">CSProperties.SetName()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.fromType"><code class="docutils literal notranslate"><span class="pre">CSProperties.fromType()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSProperties.html#CSXCAD.CSProperties.CSProperties.fromTypeName"><code class="docutils literal notranslate"><span class="pre">CSProperties.fromTypeName()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSProperties/CSPropMaterial.html">CSPropMaterial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSProperties/CSPropMaterial.html#CSXCAD.CSProperties.CSPropMaterial"><code class="docutils literal notranslate"><span class="pre">CSPropMaterial</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropMaterial.html#CSXCAD.CSProperties.CSPropMaterial.GetIsotropy"><code class="docutils literal notranslate"><span class="pre">CSPropMaterial.GetIsotropy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropMaterial.html#CSXCAD.CSProperties.CSPropMaterial.GetMaterialProperty"><code class="docutils literal notranslate"><span class="pre">CSPropMaterial.GetMaterialProperty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropMaterial.html#CSXCAD.CSProperties.CSPropMaterial.GetMaterialWeight"><code class="docutils literal notranslate"><span class="pre">CSPropMaterial.GetMaterialWeight()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropMaterial.html#CSXCAD.CSProperties.CSPropMaterial.SetIsotropy"><code class="docutils literal notranslate"><span class="pre">CSPropMaterial.SetIsotropy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropMaterial.html#CSXCAD.CSProperties.CSPropMaterial.SetMaterialProperty"><code class="docutils literal notranslate"><span class="pre">CSPropMaterial.SetMaterialProperty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropMaterial.html#CSXCAD.CSProperties.CSPropMaterial.SetMaterialWeight"><code class="docutils literal notranslate"><span class="pre">CSPropMaterial.SetMaterialWeight()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSProperties/CSPropLumpedElement.html">CSPropLumpedElement</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSProperties/CSPropLumpedElement.html#CSXCAD.CSProperties.CSPropLumpedElement"><code class="docutils literal notranslate"><span class="pre">CSPropLumpedElement</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropLumpedElement.html#CSXCAD.CSProperties.CSPropLumpedElement.GetCapacity"><code class="docutils literal notranslate"><span class="pre">CSPropLumpedElement.GetCapacity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropLumpedElement.html#CSXCAD.CSProperties.CSPropLumpedElement.GetCaps"><code class="docutils literal notranslate"><span class="pre">CSPropLumpedElement.GetCaps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropLumpedElement.html#CSXCAD.CSProperties.CSPropLumpedElement.GetDirection"><code class="docutils literal notranslate"><span class="pre">CSPropLumpedElement.GetDirection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropLumpedElement.html#CSXCAD.CSProperties.CSPropLumpedElement.GetInductance"><code class="docutils literal notranslate"><span class="pre">CSPropLumpedElement.GetInductance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropLumpedElement.html#CSXCAD.CSProperties.CSPropLumpedElement.GetResistance"><code class="docutils literal notranslate"><span class="pre">CSPropLumpedElement.GetResistance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropLumpedElement.html#CSXCAD.CSProperties.CSPropLumpedElement.SetCapacity"><code class="docutils literal notranslate"><span class="pre">CSPropLumpedElement.SetCapacity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropLumpedElement.html#CSXCAD.CSProperties.CSPropLumpedElement.SetCaps"><code class="docutils literal notranslate"><span class="pre">CSPropLumpedElement.SetCaps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropLumpedElement.html#CSXCAD.CSProperties.CSPropLumpedElement.SetDirection"><code class="docutils literal notranslate"><span class="pre">CSPropLumpedElement.SetDirection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropLumpedElement.html#CSXCAD.CSProperties.CSPropLumpedElement.SetInductance"><code class="docutils literal notranslate"><span class="pre">CSPropLumpedElement.SetInductance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropLumpedElement.html#CSXCAD.CSProperties.CSPropLumpedElement.SetResistance"><code class="docutils literal notranslate"><span class="pre">CSPropLumpedElement.SetResistance()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSProperties/CSPropMetal.html">CSPropMetal</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSProperties/CSPropMetal.html#CSXCAD.CSProperties.CSPropMetal"><code class="docutils literal notranslate"><span class="pre">CSPropMetal</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSProperties/CSPropConductingSheet.html">CSPropConductingSheet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSProperties/CSPropConductingSheet.html#CSXCAD.CSProperties.CSPropConductingSheet"><code class="docutils literal notranslate"><span class="pre">CSPropConductingSheet</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropConductingSheet.html#CSXCAD.CSProperties.CSPropConductingSheet.GetConductivity"><code class="docutils literal notranslate"><span class="pre">CSPropConductingSheet.GetConductivity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropConductingSheet.html#CSXCAD.CSProperties.CSPropConductingSheet.GetThickness"><code class="docutils literal notranslate"><span class="pre">CSPropConductingSheet.GetThickness()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropConductingSheet.html#CSXCAD.CSProperties.CSPropConductingSheet.SetConductivity"><code class="docutils literal notranslate"><span class="pre">CSPropConductingSheet.SetConductivity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropConductingSheet.html#CSXCAD.CSProperties.CSPropConductingSheet.SetThickness"><code class="docutils literal notranslate"><span class="pre">CSPropConductingSheet.SetThickness()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSProperties/CSPropExcitation.html">CSPropExcitation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSProperties/CSPropExcitation.html#CSXCAD.CSProperties.CSPropExcitation"><code class="docutils literal notranslate"><span class="pre">CSPropExcitation</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropExcitation.html#CSXCAD.CSProperties.CSPropExcitation.GetDelay"><code class="docutils literal notranslate"><span class="pre">CSPropExcitation.GetDelay()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropExcitation.html#CSXCAD.CSProperties.CSPropExcitation.GetExcitType"><code class="docutils literal notranslate"><span class="pre">CSPropExcitation.GetExcitType()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropExcitation.html#CSXCAD.CSProperties.CSPropExcitation.GetExcitation"><code class="docutils literal notranslate"><span class="pre">CSPropExcitation.GetExcitation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropExcitation.html#CSXCAD.CSProperties.CSPropExcitation.GetFrequency"><code class="docutils literal notranslate"><span class="pre">CSPropExcitation.GetFrequency()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropExcitation.html#CSXCAD.CSProperties.CSPropExcitation.GetPropagationDir"><code class="docutils literal notranslate"><span class="pre">CSPropExcitation.GetPropagationDir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropExcitation.html#CSXCAD.CSProperties.CSPropExcitation.GetWeightFunction"><code class="docutils literal notranslate"><span class="pre">CSPropExcitation.GetWeightFunction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropExcitation.html#CSXCAD.CSProperties.CSPropExcitation.SetDelay"><code class="docutils literal notranslate"><span class="pre">CSPropExcitation.SetDelay()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropExcitation.html#CSXCAD.CSProperties.CSPropExcitation.SetExcitType"><code class="docutils literal notranslate"><span class="pre">CSPropExcitation.SetExcitType()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropExcitation.html#CSXCAD.CSProperties.CSPropExcitation.SetExcitation"><code class="docutils literal notranslate"><span class="pre">CSPropExcitation.SetExcitation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropExcitation.html#CSXCAD.CSProperties.CSPropExcitation.SetFrequency"><code class="docutils literal notranslate"><span class="pre">CSPropExcitation.SetFrequency()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropExcitation.html#CSXCAD.CSProperties.CSPropExcitation.SetPropagationDir"><code class="docutils literal notranslate"><span class="pre">CSPropExcitation.SetPropagationDir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropExcitation.html#CSXCAD.CSProperties.CSPropExcitation.SetWeightFunction"><code class="docutils literal notranslate"><span class="pre">CSPropExcitation.SetWeightFunction()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSProperties/CSPropProbeBox.html">CSPropProbeBox</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSProperties/CSPropProbeBox.html#CSXCAD.CSProperties.CSPropProbeBox"><code class="docutils literal notranslate"><span class="pre">CSPropProbeBox</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropProbeBox.html#CSXCAD.CSProperties.CSPropProbeBox.AddFrequency"><code class="docutils literal notranslate"><span class="pre">CSPropProbeBox.AddFrequency()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropProbeBox.html#CSXCAD.CSProperties.CSPropProbeBox.ClearFrequency"><code class="docutils literal notranslate"><span class="pre">CSPropProbeBox.ClearFrequency()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropProbeBox.html#CSXCAD.CSProperties.CSPropProbeBox.GetFrequency"><code class="docutils literal notranslate"><span class="pre">CSPropProbeBox.GetFrequency()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropProbeBox.html#CSXCAD.CSProperties.CSPropProbeBox.GetFrequencyCount"><code class="docutils literal notranslate"><span class="pre">CSPropProbeBox.GetFrequencyCount()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropProbeBox.html#CSXCAD.CSProperties.CSPropProbeBox.GetNormalDir"><code class="docutils literal notranslate"><span class="pre">CSPropProbeBox.GetNormalDir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropProbeBox.html#CSXCAD.CSProperties.CSPropProbeBox.GetProbeType"><code class="docutils literal notranslate"><span class="pre">CSPropProbeBox.GetProbeType()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropProbeBox.html#CSXCAD.CSProperties.CSPropProbeBox.GetWeighting"><code class="docutils literal notranslate"><span class="pre">CSPropProbeBox.GetWeighting()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropProbeBox.html#CSXCAD.CSProperties.CSPropProbeBox.SetFrequency"><code class="docutils literal notranslate"><span class="pre">CSPropProbeBox.SetFrequency()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropProbeBox.html#CSXCAD.CSProperties.CSPropProbeBox.SetModeFunction"><code class="docutils literal notranslate"><span class="pre">CSPropProbeBox.SetModeFunction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropProbeBox.html#CSXCAD.CSProperties.CSPropProbeBox.SetNormalDir"><code class="docutils literal notranslate"><span class="pre">CSPropProbeBox.SetNormalDir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropProbeBox.html#CSXCAD.CSProperties.CSPropProbeBox.SetProbeType"><code class="docutils literal notranslate"><span class="pre">CSPropProbeBox.SetProbeType()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropProbeBox.html#CSXCAD.CSProperties.CSPropProbeBox.SetWeighting"><code class="docutils literal notranslate"><span class="pre">CSPropProbeBox.SetWeighting()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CSProperties/CSPropDumpBox.html">CSPropDumpBox</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CSProperties/CSPropDumpBox.html#CSXCAD.CSProperties.CSPropDumpBox"><code class="docutils literal notranslate"><span class="pre">CSPropDumpBox</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropDumpBox.html#CSXCAD.CSProperties.CSPropDumpBox.GetDumpMode"><code class="docutils literal notranslate"><span class="pre">CSPropDumpBox.GetDumpMode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropDumpBox.html#CSXCAD.CSProperties.CSPropDumpBox.GetDumpType"><code class="docutils literal notranslate"><span class="pre">CSPropDumpBox.GetDumpType()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropDumpBox.html#CSXCAD.CSProperties.CSPropDumpBox.GetFileType"><code class="docutils literal notranslate"><span class="pre">CSPropDumpBox.GetFileType()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropDumpBox.html#CSXCAD.CSProperties.CSPropDumpBox.GetOptResolution"><code class="docutils literal notranslate"><span class="pre">CSPropDumpBox.GetOptResolution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropDumpBox.html#CSXCAD.CSProperties.CSPropDumpBox.GetSubSampling"><code class="docutils literal notranslate"><span class="pre">CSPropDumpBox.GetSubSampling()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropDumpBox.html#CSXCAD.CSProperties.CSPropDumpBox.SetDumpMode"><code class="docutils literal notranslate"><span class="pre">CSPropDumpBox.SetDumpMode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropDumpBox.html#CSXCAD.CSProperties.CSPropDumpBox.SetDumpType"><code class="docutils literal notranslate"><span class="pre">CSPropDumpBox.SetDumpType()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropDumpBox.html#CSXCAD.CSProperties.CSPropDumpBox.SetFileType"><code class="docutils literal notranslate"><span class="pre">CSPropDumpBox.SetFileType()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropDumpBox.html#CSXCAD.CSProperties.CSPropDumpBox.SetOptResolution"><code class="docutils literal notranslate"><span class="pre">CSPropDumpBox.SetOptResolution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties/CSPropDumpBox.html#CSXCAD.CSProperties.CSPropDumpBox.SetSubSampling"><code class="docutils literal notranslate"><span class="pre">CSPropDumpBox.SetSubSampling()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="CSXCAD.html" class="btn btn-neutral float-left" title="CSXCAD" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="CSProperties/CSProperties.html" class="btn btn-neutral float-right" title="CSProperties (Base Class)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2016, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

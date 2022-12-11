@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSXCAD &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="CSProperties" href="CSProperties.html" />
+    <link rel="prev" title="CSXCAD Python Interface" href="CSXCAD_API.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../python.html">Python Interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../install.html">Install</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="CSXCAD_API.html">CSXCAD Python Interface</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">CSXCAD</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#CSXCAD.ContinuousStructure"><code class="docutils literal notranslate"><span class="pre">ContinuousStructure</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="CSProperties.html">CSProperties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSPrimitives.html">CSPrimitives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSTransform.html">CSTransform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CSRectGrid.html">CSRectGrid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Mesh.html">Mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Utilities.html">Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../openEMS/openEMS_API.html">openEMS Python Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../openEMS/Tutorials/index.html">Tutorials</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../python.html">Python Interface</a></li>
+          <li class="breadcrumb-item"><a href="CSXCAD_API.html">CSXCAD Python Interface</a></li>
+      <li class="breadcrumb-item active">CSXCAD</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/python/CSXCAD/CSXCAD.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="csxcad">
+<span id="id1"></span><h1>CSXCAD<a class="headerlink" href="#csxcad" title="Permalink to this heading"></a></h1>
+<span class="target" id="module-CSXCAD"></span><dl class="py class">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CSXCAD.</span></span><span class="sig-name descname"><span class="pre">ContinuousStructure</span></span><a class="headerlink" href="#CSXCAD.ContinuousStructure" title="Permalink to this definition"></a></dt>
+<dd><p>With this class different properties and primitives can be created and a
+rectengular grid assigned.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="CSProperties.html#module-CSXCAD.CSProperties" title="CSXCAD.CSProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSXCAD.CSProperties</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="CSPrimitives.html#module-CSXCAD.CSPrimitives" title="CSXCAD.CSPrimitives"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSXCAD.CSPrimitives</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="CSRectGrid.html#module-CSXCAD.CSRectGrid" title="CSXCAD.CSRectGrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSXCAD.CSRectGrid</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<p>Create a metal box:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">CSX</span>   <span class="o">=</span> <span class="n">CSXCAD</span><span class="o">.</span><span class="n">ContinuousStructure</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">metal</span> <span class="o">=</span> <span class="n">CSX</span><span class="o">.</span><span class="n">AddMetal</span><span class="p">(</span><span class="s1">&#39;metal&#39;</span><span class="p">)</span> <span class="c1"># create a metal property with name &quot;metal&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stop</span>  <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">box</span>   <span class="o">=</span> <span class="n">CSX</span><span class="o">.</span><span class="n">AddBox</span><span class="p">(</span><span class="n">metal</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">)</span> <span class="c1"># Assign a box to propety &quot;metal&quot;</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.AddConductingSheet">
+<span class="sig-name descname"><span class="pre">AddConductingSheet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.AddConductingSheet" title="Permalink to this definition"></a></dt>
+<dd><p>Add a conducting sheet with name <cite>name</cite>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="CSProperties/CSPropConductingSheet.html#CSXCAD.CSProperties.CSPropConductingSheet" title="CSXCAD.CSProperties.CSPropConductingSheet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSXCAD.CSProperties.CSPropConductingSheet</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.AddDump">
+<span class="sig-name descname"><span class="pre">AddDump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.AddDump" title="Permalink to this definition"></a></dt>
+<dd><p>Add a dump property with name <cite>name</cite>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="CSProperties/CSPropDumpBox.html#CSXCAD.CSProperties.CSPropDumpBox" title="CSXCAD.CSProperties.CSPropDumpBox"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSXCAD.CSProperties.CSPropDumpBox</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.AddExcitation">
+<span class="sig-name descname"><span class="pre">AddExcitation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_val</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.AddExcitation" title="Permalink to this definition"></a></dt>
+<dd><p>Add an excitation property with name <cite>name</cite>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="CSProperties/CSPropExcitation.html#CSXCAD.CSProperties.CSPropExcitation" title="CSXCAD.CSProperties.CSPropExcitation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSXCAD.CSProperties.CSPropExcitation</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.AddLumpedElement">
+<span class="sig-name descname"><span class="pre">AddLumpedElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.AddLumpedElement" title="Permalink to this definition"></a></dt>
+<dd><p>Add a lumped element with name <cite>name</cite>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="CSProperties/CSPropLumpedElement.html#CSXCAD.CSProperties.CSPropLumpedElement" title="CSXCAD.CSProperties.CSPropLumpedElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSXCAD.CSProperties.CSPropLumpedElement</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.AddMaterial">
+<span class="sig-name descname"><span class="pre">AddMaterial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.AddMaterial" title="Permalink to this definition"></a></dt>
+<dd><p>Add a material property with name <cite>name</cite>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="CSProperties/CSPropMaterial.html#CSXCAD.CSProperties.CSPropMaterial" title="CSXCAD.CSProperties.CSPropMaterial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSXCAD.CSProperties.CSPropMaterial</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.AddMetal">
+<span class="sig-name descname"><span class="pre">AddMetal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.AddMetal" title="Permalink to this definition"></a></dt>
+<dd><p>Add a metal property with name <cite>name</cite>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="CSProperties/CSPropMetal.html#CSXCAD.CSProperties.CSPropMetal" title="CSXCAD.CSProperties.CSPropMetal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSXCAD.CSProperties.CSPropMetal</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.AddProbe">
+<span class="sig-name descname"><span class="pre">AddProbe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_type</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.AddProbe" title="Permalink to this definition"></a></dt>
+<dd><p>Add a probe property with name <cite>name</cite>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="CSProperties/CSPropProbeBox.html#CSXCAD.CSProperties.CSPropProbeBox" title="CSXCAD.CSProperties.CSPropProbeBox"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSXCAD.CSProperties.CSPropProbeBox</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.AddProperty">
+<span class="sig-name descname"><span class="pre">AddProperty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.AddProperty" title="Permalink to this definition"></a></dt>
+<dd><p>Add an already created property (<cite>prop</cite>) to this class.</p>
+<p class="rubric">Notes</p>
+<p>This class will take ownership of the property.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.DefineGrid">
+<span class="sig-name descname"><span class="pre">DefineGrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth_mesh_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.DefineGrid" title="Permalink to this definition"></a></dt>
+<dd><p>Assign a mesh lines to the grid assigned to this property.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> – (3,) list of mesh lines</p></li>
+<li><p><strong>unit</strong> – float – drawing unit</p></li>
+<li><p><strong>smooth_mesh_res</strong> – an optional mesh smoothing</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="CSRectGrid.html#module-CSXCAD.CSRectGrid" title="CSXCAD.CSRectGrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSXCAD.CSRectGrid</span></code></a>, <a class="reference internal" href="#CSXCAD.ContinuousStructure.GetGrid" title="CSXCAD.ContinuousStructure.GetGrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetGrid</span></code></a>, <a class="reference internal" href="Mesh.html#CSXCAD.SmoothMeshLines.SmoothMeshLines" title="CSXCAD.SmoothMeshLines.SmoothMeshLines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSXCAD.SmoothMeshLines.SmoothMeshLines</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.GetAllPrimitives">
+<span class="sig-name descname"><span class="pre">GetAllPrimitives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sort</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.GetAllPrimitives" title="Permalink to this definition"></a></dt>
+<dd><p>Get a list of all primitives.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.GetAllProperties">
+<span class="sig-name descname"><span class="pre">GetAllProperties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.GetAllProperties" title="Permalink to this definition"></a></dt>
+<dd><p>Get a list of all properties</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.GetGrid">
+<span class="sig-name descname"><span class="pre">GetGrid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.GetGrid" title="Permalink to this definition"></a></dt>
+<dd><p>Get the CSRectGrid assigned to this class.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="CSRectGrid.html#module-CSXCAD.CSRectGrid" title="CSXCAD.CSRectGrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSXCAD.CSRectGrid</span></code></a>, <a class="reference internal" href="#CSXCAD.ContinuousStructure.DefineGrid" title="CSXCAD.ContinuousStructure.DefineGrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefineGrid</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.GetParameterSet">
+<span class="sig-name descname"><span class="pre">GetParameterSet</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.GetParameterSet" title="Permalink to this definition"></a></dt>
+<dd><p>Get the parameter set assigned to this class</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.GetPropertiesByName">
+<span class="sig-name descname"><span class="pre">GetPropertiesByName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.GetPropertiesByName" title="Permalink to this definition"></a></dt>
+<dd><p>Get all the property specifed by their name</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.GetProperty">
+<span class="sig-name descname"><span class="pre">GetProperty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.GetProperty" title="Permalink to this definition"></a></dt>
+<dd><p>Get the property at the given index</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSXCAD.GetQtyProperties</span></code></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.GetPropertyByCoordPriority">
+<span class="sig-name descname"><span class="pre">GetPropertyByCoordPriority</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coord</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markFoundAsUsed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.GetPropertyByCoordPriority" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.GetPropertyByType">
+<span class="sig-name descname"><span class="pre">GetPropertyByType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.GetPropertyByType" title="Permalink to this definition"></a></dt>
+<dd><p>Get a list of properties specified by their type</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.GetQtyPrimitives">
+<span class="sig-name descname"><span class="pre">GetQtyPrimitives</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.GetQtyPrimitives" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.GetQtyProperties">
+<span class="sig-name descname"><span class="pre">GetQtyProperties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.GetQtyProperties" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.ReadFromXML">
+<span class="sig-name descname"><span class="pre">ReadFromXML</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.ReadFromXML" title="Permalink to this definition"></a></dt>
+<dd><p>Read geometry from xml-file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fn</strong> – str – file name</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.SetMeshType">
+<span class="sig-name descname"><span class="pre">SetMeshType</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.SetMeshType" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.Update">
+<span class="sig-name descname"><span class="pre">Update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.Update" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CSXCAD.ContinuousStructure.Write2XML">
+<span class="sig-name descname"><span class="pre">Write2XML</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CSXCAD.ContinuousStructure.Write2XML" title="Permalink to this definition"></a></dt>
+<dd><p>Write geometry to an xml-file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fn</strong> – str – file name</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="CSXCAD_API.html" class="btn btn-neutral float-left" title="CSXCAD Python Interface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="CSProperties.html" class="btn btn-neutral float-right" title="CSProperties" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2016, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

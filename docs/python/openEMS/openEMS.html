@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>openEMS &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Ports" href="ports.html" />
+    <link rel="prev" title="openEMS Python Interface" href="openEMS_API.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../python.html">Python Interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../install.html">Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../CSXCAD/CSXCAD_API.html">CSXCAD Python Interface</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="openEMS_API.html">openEMS Python Interface</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">openEMS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#openEMS.openEMS"><code class="docutils literal notranslate"><span class="pre">openEMS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ports.html">Ports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nf2ff.html">NF2FF</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorials/index.html">Tutorials</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../python.html">Python Interface</a></li>
+          <li class="breadcrumb-item"><a href="openEMS_API.html">openEMS Python Interface</a></li>
+      <li class="breadcrumb-item active">openEMS</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/python/openEMS/openEMS.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="openems">
+<span id="id1"></span><h1>openEMS<a class="headerlink" href="#openems" title="Permalink to this heading"></a></h1>
+<span class="target" id="module-openEMS"></span><dl class="py class">
+<dt class="sig sig-object py" id="openEMS.openEMS">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">openEMS.</span></span><span class="sig-name descname"><span class="pre">openEMS</span></span><a class="headerlink" href="#openEMS.openEMS" title="Permalink to this definition"></a></dt>
+<dd><p>This class is the main control class for the FDTD options and setup and
+to run the final simulation.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">CSX</span> <span class="o">=</span> <span class="n">CSXCAD</span><span class="o">.</span><span class="n">ContinuousStructure</span><span class="p">()</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grid</span> <span class="o">=</span> <span class="n">CSX</span><span class="o">.</span><span class="n">GetGrid</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grid</span><span class="o">.</span><span class="n">SetLines</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grid</span><span class="o">.</span><span class="n">SetLines</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grid</span><span class="o">.</span><span class="n">SetLines</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mf">2.1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grid</span><span class="o">.</span><span class="n">SetDeltaUnit</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">FDTD</span> <span class="o">=</span> <span class="n">openEMS</span><span class="p">(</span><span class="n">NrTS</span><span class="o">=</span><span class="mf">1e4</span><span class="p">,</span> <span class="n">EndCriteria</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">FDTD</span><span class="o">.</span><span class="n">SetCSX</span><span class="p">(</span><span class="n">CSX</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">FDTD</span><span class="o">.</span><span class="n">SetBoundaryCond</span><span class="p">([</span><span class="s1">&#39;PML_8&#39;</span><span class="p">,</span> <span class="s1">&#39;PML_8&#39;</span><span class="p">,</span> <span class="s1">&#39;PML_8&#39;</span><span class="p">,</span> <span class="s1">&#39;PML_8&#39;</span><span class="p">,</span> <span class="s1">&#39;PEC&#39;</span><span class="p">,</span> <span class="s1">&#39;PEC&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">FDTD</span><span class="o">.</span><span class="n">SetGaussExcite</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">10e9</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">FDTD</span><span class="o">.</span><span class="n">AddLumpedPort</span><span class="p">(</span><span class="n">port_nr</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">stop</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">p_dir</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">excite</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">FDTD</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">sim_path</span><span class="o">=</span><span class="s1">&#39;/tmp/test&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>NrTS</strong> – max. number of timesteps to simulate (e.g. default=1e9)</p></li>
+<li><p><strong>EndCriteria</strong> – end criteria, e.g. 1e-5, simulations stops if energy has decayed by this value (&lt;1e-4 is recommended, default=1e-5)</p></li>
+<li><p><strong>MaxTime</strong> – max. real time in seconds to simulate</p></li>
+<li><p><strong>OverSampling</strong> – nyquist oversampling of time domain dumps</p></li>
+<li><p><strong>CoordSystem</strong> – choose coordinate system (0 Cartesian, 1 Cylindrical)</p></li>
+<li><p><strong>MultiGrid</strong> – define a cylindrical sub-grid radius</p></li>
+<li><p><strong>TimeStep</strong> – force to use a given timestep (dangerous!)</p></li>
+<li><p><strong>TimeStepFactor</strong> – reduce the timestep by a given factor (&gt;0 to &lt;=1)</p></li>
+<li><p><strong>TimeStepMethod</strong> – 1 or 3 chose timestep method (1=CFL, 3=Rennigs (default))</p></li>
+<li><p><strong>CellConstantMaterial</strong> – set to 1 to assume a material is constant inside a cell (material probing in cell center)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.AddEdges2Grid">
+<span class="sig-name descname"><span class="pre">AddEdges2Grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primitives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.AddEdges2Grid" title="Permalink to this definition"></a></dt>
+<dd><p>Add the edges of the given primitives to the FDTD grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dirs</strong> – primitives – one or more primitives</p></li>
+<li><p><strong>dirs</strong> – str – ‘x’,’y’,’z’ or ‘xy’, ‘yz’ or ‘xyz’ or ‘all’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.AddLumpedPort">
+<span class="sig-name descname"><span class="pre">AddLumpedPort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port_nr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.AddLumpedPort" title="Permalink to this definition"></a></dt>
+<dd><p>Add a lumped port wit the given values and location.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="ports.html#openEMS.ports.LumpedPort" title="openEMS.ports.LumpedPort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">openEMS.ports.LumpedPort</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.AddMSLPort">
+<span class="sig-name descname"><span class="pre">AddMSLPort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port_nr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metal_prop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.AddMSLPort" title="Permalink to this definition"></a></dt>
+<dd><p>Add a microstrip transmission line port.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="ports.html#openEMS.ports.MSLPort" title="openEMS.ports.MSLPort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">openEMS.ports.MSLPort</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.AddRectWaveGuidePort">
+<span class="sig-name descname"><span class="pre">AddRectWaveGuidePort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port_nr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.AddRectWaveGuidePort" title="Permalink to this definition"></a></dt>
+<dd><p>Add a rectilinear waveguide port.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="ports.html#openEMS.ports.RectWGPort" title="openEMS.ports.RectWGPort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">openEMS.ports.RectWGPort</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.AddWaveGuidePort">
+<span class="sig-name descname"><span class="pre">AddWaveGuidePort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port_nr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">E_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.AddWaveGuidePort" title="Permalink to this definition"></a></dt>
+<dd><p>Add a arbitrary waveguide port.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="ports.html#openEMS.ports.WaveguidePort" title="openEMS.ports.WaveguidePort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">openEMS.ports.WaveguidePort</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.CreateNF2FFBox">
+<span class="sig-name descname"><span class="pre">CreateNF2FFBox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nf2ff'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.CreateNF2FFBox" title="Permalink to this definition"></a></dt>
+<dd><p>Create a near-field to far-field box.</p>
+<p>This method will automatically adept the recording box to the current
+FDTD grid and boundary conditions.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="nf2ff.html#openEMS.nf2ff.nf2ff" title="openEMS.nf2ff.nf2ff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">openEMS.nf2ff.nf2ff</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Make sure the mesh grid and all boundary conditions are finially defined.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.GetCSX">
+<span class="sig-name descname"><span class="pre">GetCSX</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.GetCSX" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.Run">
+<span class="sig-name descname"><span class="pre">Run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleanup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setup_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.Run" title="Permalink to this definition"></a></dt>
+<dd><p>Run the openEMS FDTD simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim_path</strong> – str – path to run in and create result data</p></li>
+<li><p><strong>cleanup</strong> – bool – remove exisiting sim_path to cleanup old results</p></li>
+<li><p><strong>setup_only</strong> – bool – only perform FDTD setup, do not run simulation</p></li>
+<li><p><strong>verbose</strong> – int – set the openEMS verbosity level 0..3</p></li>
+</ul>
+</dd>
+</dl>
+<p>Additional keyword parameter:
+:param numThreads: int – set the number of threads (default 0 –&gt; max)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.SetAbort">
+<span class="sig-name descname"><span class="pre">SetAbort</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetAbort" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.SetBoundaryCond">
+<span class="sig-name descname"><span class="pre">SetBoundaryCond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">BC</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetBoundaryCond" title="Permalink to this definition"></a></dt>
+<dd><p>Set the boundary conditions for all six FDTD directions.</p>
+<p>Options:</p>
+<ul class="simple">
+<li><p>0 or ‘PEC’ : perfect electric conductor (default)</p></li>
+<li><p>1 or ‘PMC’ : perfect magnetic conductor, useful for symmetries</p></li>
+<li><p>2 or ‘MUR’ : simple MUR absorbing boundary conditions</p></li>
+<li><p>3 or ‘PML-8’ : PML absorbing boundary conditions</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>BC</strong> – (8,) array or list – see options above</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.SetCSX">
+<span class="sig-name descname"><span class="pre">SetCSX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">CSX</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetCSX" title="Permalink to this definition"></a></dt>
+<dd><p>Set the CSXCAD Continuous Structure for CAD data handling.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="../CSXCAD/CSXCAD.html#CSXCAD.ContinuousStructure" title="CSXCAD.ContinuousStructure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSXCAD.ContinuousStructure</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.SetCellConstantMaterial">
+<span class="sig-name descname"><span class="pre">SetCellConstantMaterial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetCellConstantMaterial" title="Permalink to this definition"></a></dt>
+<dd><p>Set cell material averaging to assume constant material inside each primary cell. (Advanced option)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> – bool – Enable or Disable (default disabled)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.SetCoordSystem">
+<span class="sig-name descname"><span class="pre">SetCoordSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetCoordSystem" title="Permalink to this definition"></a></dt>
+<dd><p>Set the coordinate system. 0 –&gt; Cartesian (default), 1 –&gt; cylindrical</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.SetCylinderCoords">
+<span class="sig-name descname"><span class="pre">SetCylinderCoords</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetCylinderCoords" title="Permalink to this definition"></a></dt>
+<dd><p>Enable use of cylindircal coordinates.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#openEMS.openEMS.SetMultiGrid" title="openEMS.openEMS.SetMultiGrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">openEMS.SetMultiGrid</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.SetEndCriteria">
+<span class="sig-name descname"><span class="pre">SetEndCriteria</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetEndCriteria" title="Permalink to this definition"></a></dt>
+<dd><p>Set the end critera value. E.g. 1e-6 for -60dB</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.SetGaussExcite">
+<span class="sig-name descname"><span class="pre">SetGaussExcite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetGaussExcite" title="Permalink to this definition"></a></dt>
+<dd><p>Set a Gaussian pulse as excitation signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f0</strong> – float – Center frequency in Hz.</p></li>
+<li><p><strong>fc</strong> – float – -20dB bandwidth in Hz.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.SetMaxTime">
+<span class="sig-name descname"><span class="pre">SetMaxTime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetMaxTime" title="Permalink to this definition"></a></dt>
+<dd><p>Set max simulation time for a max. number of timesteps.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.SetMultiGrid">
+<span class="sig-name descname"><span class="pre">SetMultiGrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radii</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetMultiGrid" title="Permalink to this definition"></a></dt>
+<dd><p>Define radii at which a cylindrical multi grid should be defined.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>radii</strong> – array like, multigrid radii</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#openEMS.openEMS.SetCylinderCoords" title="openEMS.openEMS.SetCylinderCoords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">openEMS.SetCylinderCoords</span></code></a></dt><dd></dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.SetNumberOfTimeSteps">
+<span class="sig-name descname"><span class="pre">SetNumberOfTimeSteps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetNumberOfTimeSteps" title="Permalink to this definition"></a></dt>
+<dd><p>Set the number of timesteps. E.g. 5e4 (default is 1e9)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.SetOverSampling">
+<span class="sig-name descname"><span class="pre">SetOverSampling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetOverSampling" title="Permalink to this definition"></a></dt>
+<dd><p>Set the time domain signal oversampling as multiple of the Nyquist-rate.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.SetTimeStep">
+<span class="sig-name descname"><span class="pre">SetTimeStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetTimeStep" title="Permalink to this definition"></a></dt>
+<dd><p>Set/force the timestep. (Advanced option)</p>
+<p>It is highly recommended to not use this method! You may use the
+SetTimeStepFactor instead to reduce the time step if necessary!</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.SetTimeStepFactor">
+<span class="sig-name descname"><span class="pre">SetTimeStepFactor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetTimeStepFactor" title="Permalink to this definition"></a></dt>
+<dd><p>Set a time step factor (&gt;0..1) to increase FDTD stability.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> – float – &gt;0..1</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.SetTimeStepMethod">
+<span class="sig-name descname"><span class="pre">SetTimeStepMethod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetTimeStepMethod" title="Permalink to this definition"></a></dt>
+<dd><p>Set the time step calculation method. (Advanced option)</p>
+<p>Options:</p>
+<ul class="simple">
+<li><p>1: CFL criteria</p></li>
+<li><p>3: Advanced Rennings criteria (default)</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> – int – 1 or 3 (See above)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.WelcomeScreen">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">WelcomeScreen</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.WelcomeScreen" title="Permalink to this definition"></a></dt>
+<dd><p>Show the openEMS welcome screen.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="openEMS_API.html" class="btn btn-neutral float-left" title="openEMS Python Interface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ports.html" class="btn btn-neutral float-right" title="Ports" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2016, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
