@@ -46,7 +46,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Install</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#linux">Linux</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#requirements">Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#build-and-install">Build and Install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clone-build-and-install">Clone, build and install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#update-instruction">Update Instruction:</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#windows">Windows</a></li>
@@ -87,37 +88,71 @@
 <section id="requirements">
 <h3>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h3>
 <ul class="simple">
-<li><p>Install all necessary packages and libraries: <code class="docutils literal notranslate"><span class="pre">git,</span> <span class="pre">qt4,</span> <span class="pre">tinyxml,</span> <span class="pre">hdf5</span></code> and <code class="docutils literal notranslate"><span class="pre">boost</span></code>. For example on ‘’’Ubuntu 14.04 LTS or above’’’:</p></li>
+<li><p>Install all necessary dependencies, e.g. on <em>Ubuntu 18.04 and above</em>:</p></li>
 </ul>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo apt-get install build-essential git cmake libhdf5-dev libvtk5-dev libboost-all-dev libcgal-dev libtinyxml-dev libqt4-dev libvtk5-qt4-dev</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo apt-get install build-essential cmake git libhdf5-dev libvtk7-dev libboost-all-dev libcgal-dev libtinyxml-dev qtbase5-dev libvtk7-qt-dev</span>
 </pre></div>
 </div>
-<p><em>Note for Ubuntu 16.04:</em> Due to a bug in CGAL the package <code class="docutils literal notranslate"><span class="pre">libcgal-qt5-dev</span></code> may be required.</p>
+<p><strong>Note:</strong> For later versions of Ubuntu you may have to choose a later version of vtk.</p>
 <ul class="simple">
-<li><p>Optional: Additional packages for <em>hyp2mat</em>:</p></li>
+<li><p><strong>Optional</strong>: Install <a class="reference external" href="https://octave.org/">octave</a> and octave devel packages:</p></li>
 </ul>
-<p>For example on <em>Ubuntu 14.04 or above</em>:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo apt-get install gengetopt help2man groff pod2pdf bison flex libhpdf-dev libtool autoconf</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo apt-get install octave liboctave-dev</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Optional: Install octave and octave devel packages:</p></li>
+<li><p><strong>Optional</strong>: For the package <a class="reference external" href="https://github.com/koendv/hyp2mat">hyp2mat</a> you need additonal dependencies:</p></li>
 </ul>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo apt-get install octave liboctave-dev epstool transfig</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo apt-get install gengetopt help2man groff pod2pdf bison flex libhpdf-dev libtool</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Optional</strong>: For the <a class="reference external" href="https://www.python.org/">python</a> interface, python3 with matplotlib, cython and h5py is required:</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo pip3 install matplotlib cython h5py</span>
 </pre></div>
 </div>
 </section>
-<section id="build-and-install">
-<h3>Build and Install<a class="headerlink" href="#build-and-install" title="Permalink to this heading"></a></h3>
-<p>This instructions assume that you will install openEMS to <code class="docutils literal notranslate"><span class="pre">~/opt/openEMS</span></code></p>
+<section id="clone-build-and-install">
+<h3>Clone, build and install<a class="headerlink" href="#clone-build-and-install" title="Permalink to this heading"></a></h3>
 <ul class="simple">
-<li><p>Get the openEMS source code, extract, build and install:</p></li>
+<li><p>Clone this repository, build openEMS and install e.g. to “~/opt/openEMS”:</p></li>
 </ul>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd /tmp</span>
-<span class="go">wget http://openems.de/download/src/openEMS-v0.0.35.tar.bz2</span>
-<span class="go">tar jxf openEMS-v0.0.35.tar.bz2</span>
-<span class="go">cd openEMS</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone --recursive https://github.com/thliebig/openEMS-Project.git</span>
+<span class="go">cd openEMS-Project</span>
 <span class="go">./update_openEMS.sh ~/opt/openEMS</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Optional: Build all including hyp2mat, CTB and <a class="reference external" href="https://www.python.org/">python</a>:</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./update_openEMS.sh ~/opt/openEMS --with-hyp2mat --with-CTB --python</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Add the given paths to your Octave/Matlab environment (e.g.):</p></li>
+</ul>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">addpath</span><span class="p">(</span><span class="s">&#39;~/opt/openEMS/share/openEMS/matlab&#39;</span><span class="p">);</span><span class="w"></span>
+<span class="nb">addpath</span><span class="p">(</span><span class="s">&#39;~/opt/openEMS/share/CSXCAD/matlab&#39;</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Optional: Add the optional packages to your Octave/Matlab environment (e.g.):</p></li>
+</ul>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">addpath</span><span class="p">(</span><span class="s">&#39;~/opt/openEMS/share/hyp2mat/matlab&#39;</span><span class="p">);</span><span class="w"></span>
+<span class="nb">addpath</span><span class="p">(</span><span class="s">&#39;~/opt/openEMS/share/CTB/matlab&#39;</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="update-instruction">
+<h3>Update Instruction:<a class="headerlink" href="#update-instruction" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>Perform an update in case of a new release</p></li>
+</ul>
+<p><strong>Note:</strong> Changes you may have made (e.g. to the tutorials or examples) may be overwritten!</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd openEMS-Project</span>
+<span class="go">git pull --recurse-submodules</span>
+<span class="go">./update_openEMS.sh ~/opt/openEMS --python</span>
 </pre></div>
 </div>
 </section>
@@ -125,7 +160,7 @@
 <section id="windows">
 <h2>Windows<a class="headerlink" href="#windows" title="Permalink to this heading"></a></h2>
 <ul class="simple">
-<li><p>Download the latest 64bit <a class="reference external" href="http://openems.de/download/win64/openEMS_x64_current.zip">openEMS</a></p></li>
+<li><p>Download the latest 64bit <a class="reference external" href="https://github.com/thliebig/openEMS-Project/releases">openEMS_win</a></p></li>
 <li><p>Unzip to a folder of your choice e.g. <code class="docutils literal notranslate"><span class="pre">C:/</span></code> (zip contains an openEMS folder)</p></li>
 </ul>
 </section>
