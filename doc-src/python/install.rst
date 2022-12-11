@@ -1,4 +1,4 @@
-.. _install_py:
+.. _pyinstall:
 
 Install
 =======
