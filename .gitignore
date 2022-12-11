@@ -7,6 +7,6 @@ build_*.log
 localConfig.cmake
 *.tar.bz2
 
-!doc
-doc/_build
-doc/**/__*
+!doc-src
+doc-src/_build
+doc-src/**/__*
