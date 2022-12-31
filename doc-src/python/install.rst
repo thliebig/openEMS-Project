@@ -44,18 +44,19 @@ Download the latest windows build with the "msvc" label: openEMS_win_
 Install Pre-build Modules
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-For some python versions a pre-build egg files can be found in the python sub-directory. E.g. for python 3.9:
+For some python versions, pre-build egg files can be found in the python sub-directory. E.g. for python 3.9:
 
 .. code-block:: console
 
+    cd C:\opt\openEMS\python
     python -m easy_install CSXCAD-0.6.2-py3.9-win-amd64.egg
     python -m easy_install openEMS-0.0.33-py3.9-win-amd64.egg
 
 Build Modules From Source
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Download the sources using git and assuming the MSVC build openEMS is install at "C:\opt\openEMS"
-and running from a working python command prompt (e.g. using WinPython_):
+Download the sources using git. Assuming the MSVC binary build of openEMS is install at "C:\\opt\\openEMS",
+run from a working python command prompt (e.g. using WinPython_):
 
 .. code-block:: console
 
@@ -72,7 +73,7 @@ and running from a working python command prompt (e.g. using WinPython_):
 Setup
 ^^^^^
 
-**Important Note:** Python needs to find the dependent libraries (dll's) during module.
+**Important Note:** Python needs to find the dependent libraries (dll's) during module import.
 To allow this, it is necessary to set an environment variable (permantently):
 
 .. code-block:: console
