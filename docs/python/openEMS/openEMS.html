@@ -147,7 +147,7 @@ to run the final simulation.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="openEMS.openEMS.AddLumpedPort">
 <span class="sig-name descname"><span class="pre">AddLumpedPort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port_nr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.AddLumpedPort" title="Permalink to this definition"></a></dt>
-<dd><p>Add a lumped port wit the given values and location.</p>
+<dd><p>Add a lumped port with the given values and location.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
@@ -223,7 +223,7 @@ FDTD grid and boundary conditions.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sim_path</strong> – str – path to run in and create result data</p></li>
-<li><p><strong>cleanup</strong> – bool – remove exisiting sim_path to cleanup old results</p></li>
+<li><p><strong>cleanup</strong> – bool – remove existing sim_path to cleanup old results</p></li>
 <li><p><strong>setup_only</strong> – bool – only perform FDTD setup, do not run simulation</p></li>
 <li><p><strong>verbose</strong> – int – set the openEMS verbosity level 0..3</p></li>
 </ul>
@@ -298,9 +298,20 @@ FDTD grid and boundary conditions.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.SetDiracExcite">
+<span class="sig-name descname"><span class="pre">SetDiracExcite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_max</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetDiracExcite" title="Permalink to this definition"></a></dt>
+<dd><p>Set a dirac pulse as excitation signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>f_max</strong> – float – maximum simulated frequency in Hz.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="openEMS.openEMS.SetEndCriteria">
 <span class="sig-name descname"><span class="pre">SetEndCriteria</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetEndCriteria" title="Permalink to this definition"></a></dt>
-<dd><p>Set the end critera value. E.g. 1e-6 for -60dB</p>
+<dd><p>Set the end criteria value. E.g. 1e-6 for -60dB</p>
 </dd></dl>
 
 <dl class="py method">
@@ -350,6 +361,28 @@ FDTD grid and boundary conditions.</p>
 <dt class="sig sig-object py" id="openEMS.openEMS.SetOverSampling">
 <span class="sig-name descname"><span class="pre">SetOverSampling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetOverSampling" title="Permalink to this definition"></a></dt>
 <dd><p>Set the time domain signal oversampling as multiple of the Nyquist-rate.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.SetSinusExcite">
+<span class="sig-name descname"><span class="pre">SetSinusExcite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetSinusExcite" title="Permalink to this definition"></a></dt>
+<dd><p>Set a sinusoidal signal as excitation signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>f0</strong> – float – frequency in Hz.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openEMS.openEMS.SetStepExcite">
+<span class="sig-name descname"><span class="pre">SetStepExcite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_max</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openEMS.openEMS.SetStepExcite" title="Permalink to this definition"></a></dt>
+<dd><p>Set a step function as excitation signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>f_max</strong> – float – maximum simulated frequency in Hz.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -408,7 +441,7 @@ SetTimeStepFactor instead to reduce the time step if necessary!</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2016, Thorsten Liebig.</p>
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

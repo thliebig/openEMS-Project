@@ -161,7 +161,7 @@
 <span class="n">sphere_metal</span><span class="o">.</span><span class="n">AddSphere</span><span class="p">(</span><span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="n">sphere_rad</span><span class="p">)</span>
 
 <span class="c1"># plane wave excitation</span>
-<span class="n">k_dir</span> <span class="o">=</span> <span class="p">[</span><span class="n">cos</span><span class="p">(</span><span class="n">inc_angle</span><span class="p">),</span> <span class="n">sin</span><span class="p">(</span><span class="n">inc_angle</span><span class="p">),</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># plane wave direction</span>
+<span class="n">k_dir</span> <span class="o">=</span> <span class="p">[</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">inc_angle</span><span class="p">)),</span> <span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">inc_angle</span><span class="p">)),</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># plane wave direction</span>
 <span class="n">E_dir</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># plane wave polarization --&gt; E_z</span>
 
 <span class="n">pw_exc</span> <span class="o">=</span> <span class="n">CSX</span><span class="o">.</span><span class="n">AddExcitation</span><span class="p">(</span><span class="s1">&#39;plane_wave&#39;</span><span class="p">,</span> <span class="n">exc_type</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">exc_val</span><span class="o">=</span><span class="n">E_dir</span><span class="p">)</span>
@@ -190,7 +190,7 @@
 </pre></div>
 </div>
 <p><strong>Postprocessing &amp; plotting</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># get Gaussian pulse stength at frequency f0</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># get Gaussian pulse strength at frequency f0</span>
 <span class="n">ef</span> <span class="o">=</span> <span class="n">UI_data</span><span class="p">(</span><span class="s1">&#39;et&#39;</span><span class="p">,</span> <span class="n">Sim_Path</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">f0</span><span class="p">)</span>
 
 <span class="n">Pin</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">norm</span><span class="p">(</span><span class="n">E_dir</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">Z0</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ef</span><span class="o">.</span><span class="n">ui_f_val</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span>
@@ -259,7 +259,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2016, Thorsten Liebig.</p>
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
