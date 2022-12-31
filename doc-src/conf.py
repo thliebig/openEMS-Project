@@ -55,7 +55,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'openEMS'
-copyright = '2016, Thorsten Liebig'
+copyright = '2023, Thorsten Liebig'
 author = 'Thorsten Liebig'
 
 # The version info for the project you're documenting, acts as replacement for
