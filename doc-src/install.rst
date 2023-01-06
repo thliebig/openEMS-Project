@@ -90,7 +90,39 @@ Windows
 - Download the latest 64bit openEMS_win_
 - Unzip to a folder of your choice e.g. ``C:/`` (zip contains an openEMS folder)
 
+
+macOS
+=====
+
+- Install Homebrew_
+- Tap the openEMS-Project repository and build from source
+
+.. code-block:: console
+
+    brew tap thliebig/openems https://github.com/thliebig/openEMS-Project.git
+    brew install --HEAD openems
+
+- **Optional**: Install Octave
+
+.. code-block:: console
+
+    brew install octave
+
+- **Optional**: Add openEMS Matlab files to your Octave/Matlab environment
+
+.. code-block:: console
+
+    echo "addpath('$(brew --prefix)/share/openEMS/matlab:$(brew --prefix)/share/CSXCAD/matlab');" >> ~/.octaverc
+
+Updating
+--------
+
+.. code-block:: console
+
+    brew upgrade --fetch-HEAD openems
+
 .. _python: https://www.python.org/
 .. _openEMS_win: https://github.com/thliebig/openEMS-Project/releases
 .. _octave: https://octave.org/
 .. _hyp2mat: https://github.com/koendv/hyp2mat
+.. _Homebrew: https://brew.sh

@@ -1,8 +1,10 @@
+# Homebrew formula for installing on macOS
+
 require "formula"
 
 class Openems < Formula
   desc "Electromagnetic field solver using the FDTD method"
-  homepage "http://openems.de"
+  homepage "https://www.openems.de"
 
   head do
     url "https://github.com/thliebig/openEMS-Project.git"
@@ -10,13 +12,13 @@ class Openems < Formula
 
   depends_on "cmake" => :build
   depends_on "qt@5"
-  depends_on "vtk@8.2" => ["with-qt", "c++11"]
+  depends_on "vtk"
   depends_on "tinyxml"
   depends_on "hdf5"
   depends_on "gmp"
   depends_on "mpfr"
-  depends_on "cgal" => "c++11"
-  depends_on "boost" => "c++11"
+  depends_on "cgal"
+  depends_on "boost"
 
   def install
     system "cmake", ".", *std_cmake_args
