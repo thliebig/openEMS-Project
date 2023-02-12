@@ -8,6 +8,7 @@ Contents:
 
    install
    python/python
+   octave/octave
 
 
 Indices and tables

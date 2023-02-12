@@ -4,6 +4,22 @@
 Tutorials
 #########
 
+How to run the tutorials
+------------------------
+
+* Make sure openEMS and the python interface is installed correctly.
+* Simply open a python enabled command line and navigate to the tutorial folder and run the tutorial (e.g. on Windows):
+
+.. code-block:: console
+
+    cd C:\openEMS\python\Tutorials
+    python Simple_Patch_Antenna.py
+
+Of course you can open and edit any tutorial in your favority python IDE and run it direcly from there.
+
+Tutorials
+---------
+
 .. toctree::
     :maxdepth: 2
 

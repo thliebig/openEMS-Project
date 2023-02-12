@@ -49,17 +49,18 @@
 <li class="toctree-l2"><a class="reference internal" href="../../CSXCAD/CSXCAD_API.html">CSXCAD Python Interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../openEMS_API.html">openEMS Python Interface</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="Intro_Tutorials.html">Introductional Tutorials</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="Rect_Waveguide.html">Rectangular Waveguide</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Metal Sphere Radar Cross Section</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#how-to-run-the-tutorials">How to run the tutorials</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#id2">Tutorials</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="Intro_Tutorials.html">Introductional Tutorials</a></li>
+<li class="toctree-l4"><a class="reference internal" href="MicroWave_Tutorials.html">Micro Wave Tutorials</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Antenna_Tutorials.html">Antennas</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="MicroWave_Tutorials.html">Micro Wave Tutorials</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Antenna_Tutorials.html">Antennas</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../octave/octave.html">Octave/Matlab Interface</a></li>
 </ul>
 
         </div>
@@ -182,11 +183,12 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">)</span>
     <span class="n">CSX</span><span class="o">.</span><span class="n">Write2XML</span><span class="p">(</span><span class="n">CSX_file</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;AppCSXCAD &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">CSX_file</span><span class="p">))</span>
+    <span class="kn">from</span> <span class="nn">CSXCAD</span> <span class="kn">import</span> <span class="n">AppCSXCAD_BIN</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">AppCSXCAD_BIN</span> <span class="o">+</span> <span class="s1">&#39; &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">CSX_file</span><span class="p">))</span>
 
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">post_proc_only</span><span class="p">:</span>
-    <span class="n">FDTD</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cleanup</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">FDTD</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">Sim_Path</span><span class="p">,</span> <span class="n">cleanup</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Postprocessing &amp; plotting</strong></p>

@@ -47,13 +47,22 @@
 <li class="toctree-l2"><a class="reference internal" href="#linux">Linux</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#requirements">Requirements</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#clone-build-and-install">Clone, build and install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-the-octave-matlab-or-python-interfaces">Setup the Octave/Matlab or Python Interfaces</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#update-instruction">Update Instruction:</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#windows">Windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#windows">Windows</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Setup the Octave/Matlab or Python Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#macos">macOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#updating">Updating</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="python/python.html">Python Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="octave/octave.html">Octave/Matlab Interface</a></li>
 </ul>
 
         </div>
@@ -107,9 +116,9 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><strong>Optional</strong>: For the <a class="reference external" href="https://www.python.org/">python</a> interface, python3 with matplotlib, cython and h5py is required:</p></li>
+<li><p><strong>Optional</strong>: For the <a class="reference external" href="https://www.python.org/">python</a> interface, python with numpy, matplotlib, cython and h5py is required:</p></li>
 </ul>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo pip3 install matplotlib cython h5py</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo pip install numpy matplotlib cython h5py</span>
 </pre></div>
 </div>
 </section>
@@ -124,25 +133,18 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Optional: Build all including hyp2mat, CTB and <a class="reference external" href="https://www.python.org/">python</a>:</p></li>
+<li><p><strong>Optional:</strong> Build all including hyp2mat, CTB and <a class="reference external" href="https://www.python.org/">python</a>:</p></li>
 </ul>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./update_openEMS.sh ~/opt/openEMS --with-hyp2mat --with-CTB --python</span>
 </pre></div>
 </div>
+</section>
+<section id="setup-the-octave-matlab-or-python-interfaces">
+<h3>Setup the Octave/Matlab or Python Interfaces<a class="headerlink" href="#setup-the-octave-matlab-or-python-interfaces" title="Permalink to this heading"></a></h3>
 <ul class="simple">
-<li><p>Add the given paths to your Octave/Matlab environment (e.g.):</p></li>
+<li><p><strong>Optional:</strong> Setup the Octave/Matlab environment, see <a class="reference internal" href="octave/install.html#octave-linux-install"><span class="std std-ref">Octave Interface Install</span></a></p></li>
+<li><p><strong>Optional:</strong> Install the Python modules, see <a class="reference internal" href="python/install.html#python-linux-install"><span class="std std-ref">Python Interface Install</span></a></p></li>
 </ul>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">addpath</span><span class="p">(</span><span class="s">&#39;~/opt/openEMS/share/openEMS/matlab&#39;</span><span class="p">);</span><span class="w"></span>
-<span class="nb">addpath</span><span class="p">(</span><span class="s">&#39;~/opt/openEMS/share/CSXCAD/matlab&#39;</span><span class="p">);</span><span class="w"></span>
-</pre></div>
-</div>
-<ul class="simple">
-<li><p>Optional: Add the optional packages to your Octave/Matlab environment (e.g.):</p></li>
-</ul>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">addpath</span><span class="p">(</span><span class="s">&#39;~/opt/openEMS/share/hyp2mat/matlab&#39;</span><span class="p">);</span><span class="w"></span>
-<span class="nb">addpath</span><span class="p">(</span><span class="s">&#39;~/opt/openEMS/share/CTB/matlab&#39;</span><span class="p">);</span><span class="w"></span>
-</pre></div>
-</div>
 </section>
 <section id="update-instruction">
 <h3>Update Instruction:<a class="headerlink" href="#update-instruction" title="Permalink to this heading"></a></h3>
@@ -163,6 +165,42 @@
 <li><p>Download the latest 64bit <a class="reference external" href="https://github.com/thliebig/openEMS-Project/releases">openEMS_win</a></p></li>
 <li><p>Unzip to a folder of your choice e.g. <code class="docutils literal notranslate"><span class="pre">C:/</span></code> (zip contains an openEMS folder)</p></li>
 </ul>
+<section id="id1">
+<h3>Setup the Octave/Matlab or Python Interfaces<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Optional:</strong> Setup the Octave/Matlab environment, see <a class="reference internal" href="octave/install.html#octave-windows-install"><span class="std std-ref">Octave Interface Install</span></a></p></li>
+<li><p><strong>Optional:</strong> Install the Python modules, see <a class="reference internal" href="python/install.html#python-windows-install"><span class="std std-ref">Python Interface Install</span></a></p></li>
+</ul>
+</section>
+</section>
+<section id="macos">
+<h2>macOS<a class="headerlink" href="#macos" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Install <a class="reference external" href="https://brew.sh">Homebrew</a></p></li>
+<li><p>Tap the openEMS-Project repository and build from source</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">brew tap thliebig/openems https://github.com/thliebig/openEMS-Project.git</span>
+<span class="go">brew install --HEAD openems</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Optional</strong>: Install Octave</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">brew install octave</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Optional</strong>: Add openEMS Matlab files to your Octave/Matlab environment</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">echo &quot;addpath(&#39;$(brew --prefix)/share/openEMS/matlab:$(brew --prefix)/share/CSXCAD/matlab&#39;);&quot; &gt;&gt; ~/.octaverc</span>
+</pre></div>
+</div>
+<section id="updating">
+<h3>Updating<a class="headerlink" href="#updating" title="Permalink to this heading"></a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">brew upgrade --fetch-HEAD openems</span>
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 
