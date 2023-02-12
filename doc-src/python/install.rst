@@ -20,6 +20,8 @@ Additionally Cython is required to compile CSXCAD and openEMS e.g. on Linux.
 
     pip install cython
 
+.. _Python Linux Install:
+
 Linux
 -----
 
@@ -55,6 +57,8 @@ Build Modules From Source Manually
     pyhton setup.py install
 
 **Note:** The install command may require root on Linux, or add ``--user`` to install to *~/.local*
+
+.. _Python Windows Install:
 
 Windows
 -------
