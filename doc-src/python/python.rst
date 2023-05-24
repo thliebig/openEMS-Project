@@ -8,4 +8,3 @@ Python Interface
    install
    CSXCAD/CSXCAD_API
    openEMS/openEMS_API
-   openEMS/Tutorials/index

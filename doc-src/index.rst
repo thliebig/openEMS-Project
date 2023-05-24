@@ -6,9 +6,16 @@ Contents:
 .. toctree::
    :maxdepth: 5
 
-   install
+   intro
+
+   install/index
+   python/openEMS/Tutorials/index
+
    python/python
    octave/octave
+
+   more
+   publications
 
 
 Indices and tables
