@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manual Build and Install &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Check Installation" href="check.html" />
+    <link rel="prev" title="Installing Ready-Made Packages" href="package.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Install</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="requirements.html">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clone-build-install.html">Clone, Build and Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="package.html">Installing Ready-Made Packages</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Manual Build and Install</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#install-dependencies">Install Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-basic-programs">Install Basic Programs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-python-bindings-optional">Install Python bindings (optional)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-appcsxcad-gui-optional">Install AppCSXCAD GUI (optional)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#openems-search-path">openEMS search path</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#setup-the-octave-matlab-or-python-interfaces">Setup the Octave/Matlab or Python Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="check.html">Check Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../python/openEMS/Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/python.html">Python Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../octave/octave.html">Octave/Matlab Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Install</a></li>
+      <li class="breadcrumb-item active">Manual Build and Install</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/install/manual.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="manual-build-and-install">
+<h1>Manual Build and Install<a class="headerlink" href="#manual-build-and-install" title="Permalink to this heading"></a></h1>
+<p>During development and testing, it’s often necessary to build and
+install openEMS manually. Such cases are encountered when creating
+a package of openEMS for a new system (especially with non-standard
+library paths, like certain servers or HPC environments). It’s also
+useful when modifying the source code of openEMS without rebuilding
+all the git submodules.</p>
+<p>If you are an end-user, please refer to <a class="reference internal" href="clone-build-install.html#clone-build-install-src"><span class="std std-ref">Clone, Build and Install</span></a>
+and <a class="reference internal" href="package.html#install-readymade-package-src"><span class="std std-ref">Installing Ready-Made Packages</span></a> instead.</p>
+<section id="install-dependencies">
+<h2>Install Dependencies<a class="headerlink" href="#install-dependencies" title="Permalink to this heading"></a></h2>
+<p>Refer to <a class="reference internal" href="requirements.html#install-requirements-src"><span class="std std-ref">Requirements</span></a> for a list of dependencies.</p>
+</section>
+<section id="install-basic-programs">
+<h2>Install Basic Programs<a class="headerlink" href="#install-basic-programs" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Build fparser:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd fparser</span>
+<span class="go">mkdir build</span>
+<span class="go">cd build</span>
+<span class="go">cmake ../ -DCMAKE_INSTALL_PREFIX=/home/user/openEMS</span>
+<span class="go">make</span>
+<span class="go">make install</span>
+
+<span class="go">cd ..</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Build CSXCAD:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd CSXCAD</span>
+<span class="go">mkdir build</span>
+<span class="go">cd build</span>
+<span class="go">cmake ../ -DCMAKE_INSTALL_PREFIX=/home/user/openEMS</span>
+<span class="go">make</span>
+<span class="go">make install</span>
+
+<span class="go">cd ..</span>
+</pre></div>
+</div>
+<p>3. Build openEMS. The CMAke variales <cite>-DFPARSER_ROOT_DIR</cite> and
+<cite>-DCSXCAD_ROOT_DIR</cite> should be pointed to the install root paths
+of fparser and CSXCAD, which are usually the same as
+<cite>-DCMAKE_INSTALL_PREFIX</cite>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd openEMS</span>
+<span class="go">mkdir build</span>
+<span class="go">cd build</span>
+<span class="go">cmake ../ -DCMAKE_INSTALL_PREFIX=/home/user/openEMS -DFPARSER_ROOT_DIR=/tmp/opt -DCSXCAD_ROOT_DIR=/tmp/opt</span>
+<span class="go">make</span>
+<span class="go">make install</span>
+
+<span class="go">cd ..</span>
+</pre></div>
+</div>
+</section>
+<section id="install-python-bindings-optional">
+<h2>Install Python bindings (optional)<a class="headerlink" href="#install-python-bindings-optional" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Build CSXCAD’s Python extension.</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd CSXCAD</span>
+<span class="go">cd python</span>
+<span class="go">python3 setup.py install --user</span>
+
+<span class="go">cd ..</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Build openEMS’s Python extension:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd openEMS</span>
+<span class="go">cd python</span>
+<span class="go">python3 setup.py install --user</span>
+
+<span class="go">cd ..</span>
+</pre></div>
+</div>
+</section>
+<section id="install-appcsxcad-gui-optional">
+<h2>Install AppCSXCAD GUI (optional)<a class="headerlink" href="#install-appcsxcad-gui-optional" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Build QCSXCAD:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd QCSXCAD</span>
+<span class="go">mkdir build</span>
+<span class="go">cd build</span>
+<span class="go">cmake ../ -DCMAKE_INSTALL_PREFIX=/home/user/openEMS</span>
+<span class="go">make</span>
+<span class="go">make install</span>
+
+<span class="go">cd ..</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Build AppCSXCAD:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd AppCSXCAD</span>
+<span class="go">mkdir build</span>
+<span class="go">cd build</span>
+<span class="go">cmake ../ -DCMAKE_INSTALL_PREFIX=/home/user/openEMS</span>
+<span class="go">make</span>
+<span class="go">make install</span>
+
+<span class="go">cd ..</span>
+</pre></div>
+</div>
+</section>
+<section id="openems-search-path">
+<h2>openEMS search path<a class="headerlink" href="#openems-search-path" title="Permalink to this heading"></a></h2>
+<p>After the build is complete, add <cite>~/openEMS/bin</cite> into your search
+path:</p>
+<blockquote>
+<div><p>export PATH=”$HOME/openEMS/bin:$PATH”</p>
+</div></blockquote>
+<p>You need to write this line into your shell’s profile, such as <cite>~/.bashrc</cite>
+or <cite>~/.zshrc</cite> to make this change persistent.</p>
+<section id="setup-the-octave-matlab-or-python-interfaces">
+<h3>Setup the Octave/Matlab or Python Interfaces<a class="headerlink" href="#setup-the-octave-matlab-or-python-interfaces" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Optional:</strong> Setup the Octave/Matlab environment, see <a class="reference internal" href="../octave/install.html#octave-windows-install"><span class="std std-ref">Octave Interface Install</span></a></p></li>
+<li><p><strong>Optional:</strong> Install the Python modules, see <a class="reference internal" href="../python/install.html#python-windows-install"><span class="std std-ref">Python Interface Install</span></a></p></li>
+</ul>
+</section>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading"></a></h2>
+<p id="manual-freebsd-workaround-src">On FreeBSD, the default CMake has a bug, causing it unable to find
+HDF5 for CSXCAD and openEMS (the version in FreeBSD Ports is fine).</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">CMake Error at /usr/local/share/cmake/Modules/FindPackageHandleStandardArgs.cmake:230 (message):</span>
+<span class="go">  Could NOT find HDF5 (missing: HDF5_LIBRARIES HDF5_HL_LIBRARIES) (found</span>
+<span class="go">  suitable version &quot;1.12.2&quot;, minimum required is &quot;1.8&quot;)</span>
+<span class="go">Call Stack (most recent call first):</span>
+<span class="go">  /usr/local/share/cmake/Modules/FindPackageHandleStandardArgs.cmake:600 (_FPHSA_FAILURE_MESSAGE)</span>
+<span class="go">  /usr/local/share/cmake/Modules/FindHDF5.cmake:1007 (find_package_handle_standard_args)</span>
+<span class="go">  CMakeLists.txt:116 (find_package)</span>
+</pre></div>
+</div>
+<p>If it happens, please change the following line in <cite>CMakeLists.txt</cite>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">find_package(HDF5 1.8 COMPONENTS C HL REQUIRED)</span>
+</pre></div>
+</div>
+<p>To:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">find_package(HDF5 COMPONENTS C HL REQUIRED)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="package.html" class="btn btn-neutral float-left" title="Installing Ready-Made Packages" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="check.html" class="btn btn-neutral float-right" title="Check Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

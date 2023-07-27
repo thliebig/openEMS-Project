@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Check Installation &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorials" href="../python/openEMS/Tutorials/index.html" />
+    <link rel="prev" title="Manual Build and Install" href="manual.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Install</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="requirements.html">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clone-build-install.html">Clone, Build and Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="package.html">Installing Ready-Made Packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manual.html">Manual Build and Install</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Check Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#openems-executable">openEMS executable</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#linux">Linux</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#windows">Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#appcsxcad-executable">AppCSXCAD executable</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Linux</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#matlab-octave-interface">Matlab/Octave Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python-interface">Python interface</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../python/openEMS/Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/python.html">Python Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../octave/octave.html">Octave/Matlab Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Install</a></li>
+      <li class="breadcrumb-item active">Check Installation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/install/check.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="check-installation">
+<span id="check-installation-src"></span><h1>Check Installation<a class="headerlink" href="#check-installation" title="Permalink to this heading"></a></h1>
+<p>In this tutorial we will check if openEMS is correctly installed.</p>
+<p>After completion of this tutorial, there is confidence in the correct installation of openEMS.</p>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Installed openEMS (refer to <a class="reference internal" href="clone-build-install.html#clone-build-install-src"><span class="std std-ref">Clone, Build and Install</span></a> and <a class="reference internal" href="package.html#install-readymade-package-src"><span class="std std-ref">Installing Ready-Made Packages</span></a>)</p></li>
+<li><p>Matlab / Octave</p></li>
+<li><p>Python</p></li>
+</ul>
+</section>
+<section id="openems-executable">
+<h2>openEMS executable<a class="headerlink" href="#openems-executable" title="Permalink to this heading"></a></h2>
+<p>First lets check, if the openEMS executable is correctly installed (there may be
+missing dependencies or an incompatible architecture):</p>
+<section id="linux">
+<h3>Linux<a class="headerlink" href="#linux" title="Permalink to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Open a terminal window</p></li>
+<li><p>Invoke the openEMS solver</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>openEMS
+</pre></div>
+</div>
+<p>The output should be similar to:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go"> ----------------------------------------------------------------------</span>
+<span class="go"> | openEMS 64bit -- version v0.0.33</span>
+<span class="go"> | (C) 2010-2015 Thorsten Liebig &lt;thorsten.liebig@gmx.de&gt;  GPL license</span>
+<span class="go"> ----------------------------------------------------------------------</span>
+<span class="go">[...]</span>
+</pre></div>
+</div>
+<p>If the command is not found, please include the folder to the openEMS installation
+directory (such as <cite>/home/user/openEMS-bin/bin</cite>) to your search path.</p>
+</section>
+<section id="windows">
+<h3>Windows<a class="headerlink" href="#windows" title="Permalink to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>open a command window (“Start”-Button, type “cmd”)</p></li>
+<li><p>change the current folder to the openEMS installation directory</p></li>
+<li><p>invoke the openEMS solver</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">openEMS</span>
+</pre></div>
+</div>
+<p>The output should be similar to:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go"> --------------------------------------------------------------------</span>
+<span class="go"> | openEMS 32bit -- version v0.0.23</span>
+<span class="go"> | (C) 2010 Thorsten Liebig &lt;thorsten.liebig@gmx.de&gt;  GPL license</span>
+<span class="go"> --------------------------------------------------------------------</span>
+<span class="go">[...]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="appcsxcad-executable">
+<h2>AppCSXCAD executable<a class="headerlink" href="#appcsxcad-executable" title="Permalink to this heading"></a></h2>
+<p>The AppCSXCAD program graphically displays the structure built by
+Matlab/Octave or Python scripts. It is very useful to visualize the
+computational area and helps to find errors in the geometrical
+definition of the structure.</p>
+<section id="id1">
+<h3>Linux<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Open a terminal window</p></li>
+<li><p>Invoke AppCSXCAD</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>AppCSXCAD
+</pre></div>
+</div>
+<p>You should be able to see the AppCSXCAD window on your desktop.</p>
+<p>If the command is not found, please include the folder to the openEMS installation
+directory (such as <cite>/home/user/openEMS-bin/bin</cite>) to your search path.</p>
+</section>
+<section id="id2">
+<h3>Windows<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>open a command window (“Start”-Button, type “cmd”)</p></li>
+<li><p>change the current folder to the openEMS installation directory</p></li>
+<li><p>invoke AppCSXCAD</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">AppCSXCAD</span>
+</pre></div>
+</div>
+<p>You should be able to see the AppCSXCAD window on your desktop.</p>
+</section>
+</section>
+<section id="matlab-octave-interface">
+<h2>Matlab/Octave Interface<a class="headerlink" href="#matlab-octave-interface" title="Permalink to this heading"></a></h2>
+<p>openEMS needs a xml-file to start the simulation. This file is normally generated by
+Matlab (or Octave).</p>
+<ul class="simple">
+<li><p>start Matlab (or Octave)</p></li>
+</ul>
+<p>Now let’s check if the CSXCAD interface functions are available, type the following into
+the command window and compare the output:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt; InitCSX</span>
+
+<span class="go">ans =</span>
+
+<span class="go">    Properties: []</span>
+</pre></div>
+</div>
+<p>If the error message states ‘InitCSX’ is undefined, you need to have another look at
+the install instructions:</p>
+<p>Now let’s check if the openEMS interface functions are available:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt; InitFDTD(&#39;NrTS&#39;, 0, &#39;EndCriteria&#39;, 0)</span>
+
+<span class="go">ans =</span>
+
+<span class="go">    ATTRIBUTE: [1x1 struct]</span>
+</pre></div>
+</div>
+<p>If the error message states ‘InitFDTD’ is undefined, you need to have another look at
+the install instructions:</p>
+<p>Let’s try to start the simulator from our Matlab environment:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt; RunOpenEMS( &#39;.&#39;, &#39;nonexistant.xml&#39;, &#39;&#39; )</span>
+<span class="go">[...]</span>
+<span class="go">Read openEMS xml file: nonexistant.xml ...</span>
+<span class="go">openEMS: Error File-Loading failed!!! File: nonexistant.xml</span>
+</pre></div>
+</div>
+<p>Although it presents an error message, the call itself was successful. Matlab is able to find
+the simulator executable and start it with the name of the xml-file.</p>
+</section>
+<section id="python-interface">
+<h2>Python interface<a class="headerlink" href="#python-interface" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>start Python</p></li>
+</ul>
+<p>Now let’s check if the CSXCAD and openEMS interface functions are available, type the
+following into the command window and compare the output:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt; import CSXCAD</span>
+<span class="go">&gt;&gt;&gt; import openEMS</span>
+</pre></div>
+</div>
+<p>If there’s no output, such as a <cite>ModuleNotFoundError</cite>, it means Python can successfully
+find and import the required modules.</p>
+<p>Note that you should run Python from you home directory or another location, it should
+not be ran inside the <cite>python</cite> directory of the CSXCAD or openEMS source code tree.
+Otherwise, Python will attempt to use the <cite>CSXCAD</cite> or <cite>openEMS</cite> files in the source
+code as Python modules, creating confusing errors.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="manual.html" class="btn btn-neutral float-left" title="Manual Build and Install" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../python/openEMS/Tutorials/index.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

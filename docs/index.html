@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Welcome to openEMS’s documentation! &mdash; openEMS 0.0.35 documentation</title>
@@ -11,16 +11,15 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Install" href="install.html" /> 
+    <link rel="next" title="Introduction" href="intro.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -28,23 +27,31 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="#" class="icon icon-home"> openEMS
+
+          
+          
+          <a href="#" class="icon icon-home">
+            openEMS
           </a>
               <div class="version">
                 0.0.35
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python/openEMS/Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="python/python.html">Python Interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="octave/octave.html">Octave/Matlab Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publications.html">Publications</a></li>
 </ul>
 
         </div>
@@ -60,7 +67,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home"></a></li>
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Welcome to openEMS’s documentation!</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
@@ -76,20 +83,136 @@
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="install.html#linux">Linux</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="install.html#requirements">Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="install.html#clone-build-and-install">Clone, build and install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="install.html#setup-the-octave-matlab-or-python-interfaces">Setup the Octave/Matlab or Python Interfaces</a></li>
-<li class="toctree-l3"><a class="reference internal" href="install.html#update-instruction">Update Instruction:</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#citation">Citation</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="install.html#windows">Windows</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="install.html#id1">Setup the Octave/Matlab or Python Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install/index.html">Install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install/requirements.html">Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install/requirements.html#debian-ubuntu">Debian/Ubuntu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install/requirements.html#fedora">Fedora</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install/requirements.html#freebsd">FreeBSD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install/requirements.html#macos">macOS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install/requirements.html#windows">Windows</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="install.html#macos">macOS</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="install.html#updating">Updating</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install/clone-build-install.html">Clone, Build and Install</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install/clone-build-install.html#clone">Clone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install/clone-build-install.html#build-and-install">Build and Install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install/clone-build-install.html#openems-search-path">openEMS search path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install/clone-build-install.html#setup-the-octave-matlab-or-python-interfaces">Setup the Octave/Matlab or Python Interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install/clone-build-install.html#check-installation">Check Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install/clone-build-install.html#update-instruction">Update Instruction</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install/package.html">Installing Ready-Made Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install/package.html#windows">Windows</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="install/package.html#setup-the-octave-matlab-or-python-interfaces">Setup the Octave/Matlab or Python Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="install/package.html#check-installation">Check Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="install/package.html#freebsd">FreeBSD</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="install/package.html#id1">Setup the Octave/Matlab or Python Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="install/package.html#id2">Check Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="install/package.html#macos">macOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="install/package.html#setup-octave-matlab-interfaces">Setup Octave/Matlab Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="install/package.html#setup-python-interfaces">Setup Python Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="install/package.html#id3">Check Installation</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="install/package.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="install/package.html#updating">Updating</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install/manual.html">Manual Build and Install</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install/manual.html#install-dependencies">Install Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install/manual.html#install-basic-programs">Install Basic Programs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install/manual.html#install-python-bindings-optional">Install Python bindings (optional)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install/manual.html#install-appcsxcad-gui-optional">Install AppCSXCAD GUI (optional)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install/manual.html#openems-search-path">openEMS search path</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="install/manual.html#setup-the-octave-matlab-or-python-interfaces">Setup the Octave/Matlab or Python Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="install/manual.html#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install/check.html">Check Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="install/check.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install/check.html#openems-executable">openEMS executable</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="install/check.html#linux">Linux</a></li>
+<li class="toctree-l4"><a class="reference internal" href="install/check.html#windows">Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="install/check.html#appcsxcad-executable">AppCSXCAD executable</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="install/check.html#id1">Linux</a></li>
+<li class="toctree-l4"><a class="reference internal" href="install/check.html#id2">Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="install/check.html#matlab-octave-interface">Matlab/Octave Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install/check.html#python-interface">Python interface</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="python/openEMS/Tutorials/index.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="python/openEMS/Tutorials/index.html#how-to-run-the-tutorials">How to run the tutorials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python/openEMS/Tutorials/index.html#id2">Tutorials</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="python/openEMS/Tutorials/Intro_Tutorials.html">Introductional Tutorials</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="python/openEMS/Tutorials/Rect_Waveguide.html">Rectangular Waveguide</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/Rect_Waveguide.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/Rect_Waveguide.html#python-script">Python Script</a></li>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/Rect_Waveguide.html#images">Images</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="python/openEMS/Tutorials/RCS_Sphere.html">Metal Sphere Radar Cross Section</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/RCS_Sphere.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/RCS_Sphere.html#python-script">Python Script</a></li>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/RCS_Sphere.html#images">Images</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="python/openEMS/Tutorials/MicroWave_Tutorials.html">Micro Wave Tutorials</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="python/openEMS/Tutorials/MSL_NotchFilter.html">Microstrip Notch Filter</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/MSL_NotchFilter.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/MSL_NotchFilter.html#python-script">Python Script</a></li>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/MSL_NotchFilter.html#images">Images</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="python/openEMS/Tutorials/CRLH_Extraction.html">CRLH Parameter Extraction</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/CRLH_Extraction.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/CRLH_Extraction.html#python-script">Python Script</a></li>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/CRLH_Extraction.html#images">Images</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="python/openEMS/Tutorials/Antenna_Tutorials.html">Antennas</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="python/openEMS/Tutorials/Simple_Patch_Antenna.html">Simple Patch Antenna</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/Simple_Patch_Antenna.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/Simple_Patch_Antenna.html#python-script">Python Script</a></li>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/Simple_Patch_Antenna.html#images">Images</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="python/openEMS/Tutorials/Helical_Antenna.html">Helical Antenna</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/Helical_Antenna.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/Helical_Antenna.html#python-script">Python Script</a></li>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/Helical_Antenna.html#images">Images</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="python/openEMS/Tutorials/Bent_Patch_Antenna.html">Bent Patch Antenna</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/Bent_Patch_Antenna.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/Bent_Patch_Antenna.html#python-script">Python Script</a></li>
+<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/Bent_Patch_Antenna.html#images">Images</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -366,29 +489,6 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="python/openEMS/Tutorials/index.html">Tutorials</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="python/openEMS/Tutorials/index.html#how-to-run-the-tutorials">How to run the tutorials</a></li>
-<li class="toctree-l3"><a class="reference internal" href="python/openEMS/Tutorials/index.html#id2">Tutorials</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="python/openEMS/Tutorials/Intro_Tutorials.html">Introductional Tutorials</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/Rect_Waveguide.html">Rectangular Waveguide</a></li>
-<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/RCS_Sphere.html">Metal Sphere Radar Cross Section</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="python/openEMS/Tutorials/MicroWave_Tutorials.html">Micro Wave Tutorials</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/MSL_NotchFilter.html">Microstrip Notch Filter</a></li>
-<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/CRLH_Extraction.html">CRLH Parameter Extraction</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="python/openEMS/Tutorials/Antenna_Tutorials.html">Antennas</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/Simple_Patch_Antenna.html">Simple Patch Antenna</a></li>
-<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/Helical_Antenna.html">Helical Antenna</a></li>
-<li class="toctree-l5"><a class="reference internal" href="python/openEMS/Tutorials/Bent_Patch_Antenna.html">Bent Patch Antenna</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="octave/octave.html">Octave/Matlab Interface</a><ul>
@@ -401,6 +501,21 @@
 </li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="more.html">Learn More</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="more.html#documentation-and-q-a">Documentation and Q&amp;A</a></li>
+<li class="toctree-l2"><a class="reference internal" href="more.html#fdtd">FDTD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="more.html#openems">openEMS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="publications.html">Publications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="publications.html#id1">2023</a></li>
+<li class="toctree-l2"><a class="reference internal" href="publications.html#id2">2022</a></li>
+<li class="toctree-l2"><a class="reference internal" href="publications.html#id3">2020</a></li>
+<li class="toctree-l2"><a class="reference internal" href="publications.html#id4">2019</a></li>
+<li class="toctree-l2"><a class="reference internal" href="publications.html#id5">2012</a></li>
+<li class="toctree-l2"><a class="reference internal" href="publications.html#id6">2011</a></li>
 </ul>
 </li>
 </ul>
@@ -419,7 +534,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="install.html" class="btn btn-neutral float-right" title="Install" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="intro.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

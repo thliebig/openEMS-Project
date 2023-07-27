@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>openEMS &mdash; openEMS 0.0.35 documentation</title>
@@ -11,10 +11,9 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -29,21 +28,27 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> openEMS
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            openEMS
           </a>
               <div class="version">
                 0.0.35
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../python.html">Python Interface</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../install.html">Install</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../CSXCAD/CSXCAD_API.html">CSXCAD Python Interface</a></li>
@@ -56,10 +61,11 @@
 <li class="toctree-l3"><a class="reference internal" href="nf2ff.html">NF2FF</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="Tutorials/index.html">Tutorials</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../octave/octave.html">Octave/Matlab Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../publications.html">Publications</a></li>
 </ul>
 
         </div>
@@ -75,7 +81,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../python.html">Python Interface</a></li>
           <li class="breadcrumb-item"><a href="openEMS_API.html">openEMS Python Interface</a></li>
       <li class="breadcrumb-item active">openEMS</li>
@@ -97,21 +103,21 @@
 to run the final simulation.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">CSX</span> <span class="o">=</span> <span class="n">CSXCAD</span><span class="o">.</span><span class="n">ContinuousStructure</span><span class="p">()</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">grid</span> <span class="o">=</span> <span class="n">CSX</span><span class="o">.</span><span class="n">GetGrid</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">grid</span><span class="o">.</span><span class="n">SetLines</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">grid</span><span class="o">.</span><span class="n">SetLines</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">grid</span><span class="o">.</span><span class="n">SetLines</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mf">2.1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">grid</span><span class="o">.</span><span class="n">SetDeltaUnit</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">FDTD</span> <span class="o">=</span> <span class="n">openEMS</span><span class="p">(</span><span class="n">NrTS</span><span class="o">=</span><span class="mf">1e4</span><span class="p">,</span> <span class="n">EndCriteria</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">FDTD</span><span class="o">.</span><span class="n">SetCSX</span><span class="p">(</span><span class="n">CSX</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">FDTD</span><span class="o">.</span><span class="n">SetBoundaryCond</span><span class="p">([</span><span class="s1">&#39;PML_8&#39;</span><span class="p">,</span> <span class="s1">&#39;PML_8&#39;</span><span class="p">,</span> <span class="s1">&#39;PML_8&#39;</span><span class="p">,</span> <span class="s1">&#39;PML_8&#39;</span><span class="p">,</span> <span class="s1">&#39;PEC&#39;</span><span class="p">,</span> <span class="s1">&#39;PEC&#39;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">FDTD</span><span class="o">.</span><span class="n">SetGaussExcite</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">10e9</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">FDTD</span><span class="o">.</span><span class="n">AddLumpedPort</span><span class="p">(</span><span class="n">port_nr</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">stop</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">p_dir</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">excite</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">FDTD</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">sim_path</span><span class="o">=</span><span class="s1">&#39;/tmp/test&#39;</span><span class="p">)</span>
 </pre></div>
 </div>

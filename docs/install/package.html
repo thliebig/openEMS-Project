@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installing Ready-Made Packages &mdash; openEMS 0.0.35 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Manual Build and Install" href="manual.html" />
+    <link rel="prev" title="Clone, Build and Install" href="clone-build-install.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            openEMS
+          </a>
+              <div class="version">
+                0.0.35
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Install</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="requirements.html">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clone-build-install.html">Clone, Build and Install</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Installing Ready-Made Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#windows">Windows</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#setup-the-octave-matlab-or-python-interfaces">Setup the Octave/Matlab or Python Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#check-installation">Check Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#freebsd">FreeBSD</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Setup the Octave/Matlab or Python Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Check Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#macos">macOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#setup-octave-matlab-interfaces">Setup Octave/Matlab Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setup-python-interfaces">Setup Python Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Check Installation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="manual.html">Manual Build and Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="check.html">Check Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../python/openEMS/Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/python.html">Python Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../octave/octave.html">Octave/Matlab Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../more.html">Learn More</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">openEMS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Install</a></li>
+      <li class="breadcrumb-item active">Installing Ready-Made Packages</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/install/package.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installing-ready-made-packages">
+<span id="install-readymade-package-src"></span><h1>Installing Ready-Made Packages<a class="headerlink" href="#installing-ready-made-packages" title="Permalink to this heading"></a></h1>
+<section id="windows">
+<span id="install-readymade-windows-package-src"></span><h2>Windows<a class="headerlink" href="#windows" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Download the latest 64bit <a class="reference external" href="https://github.com/thliebig/openEMS-Project/releases">openEMS_win</a></p></li>
+<li><p>Unzip to a folder of your choice e.g. <code class="docutils literal notranslate"><span class="pre">C:/</span></code> (zip contains an openEMS folder)</p></li>
+</ul>
+<section id="setup-the-octave-matlab-or-python-interfaces">
+<h3>Setup the Octave/Matlab or Python Interfaces<a class="headerlink" href="#setup-the-octave-matlab-or-python-interfaces" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Optional:</strong> Setup the Octave/Matlab environment, see <a class="reference internal" href="../octave/install.html#octave-windows-install"><span class="std std-ref">Octave Interface Install</span></a></p></li>
+<li><p><strong>Optional:</strong> Install the Python modules, see <a class="reference internal" href="../python/install.html#python-windows-install"><span class="std std-ref">Python Interface Install</span></a></p></li>
+</ul>
+</section>
+<section id="check-installation">
+<h3>Check Installation<a class="headerlink" href="#check-installation" title="Permalink to this heading"></a></h3>
+<p>After completing installation, now it’s a good test to verify that
+the installation is functional according to <a class="reference internal" href="check.html#check-installation-src"><span class="std std-ref">Check Installation</span></a>.</p>
+</section>
+</section>
+<section id="freebsd">
+<span id="install-readymade-freebsd-package-src"></span><h2>FreeBSD<a class="headerlink" href="#freebsd" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Sync FreeBSD Ports tree.</p></li>
+</ul>
+<p>Then:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd /usr/ports/science/openems</span>
+<span class="go">make</span>
+</pre></div>
+</div>
+<section id="id1">
+<h3>Setup the Octave/Matlab or Python Interfaces<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<p>Unfortunately, currently Python modules are not automatically installed,
+they need manual installation.</p>
+<ul class="simple">
+<li><p><strong>Optional:</strong> Setup the Octave/Matlab environment, see <a class="reference internal" href="../octave/install.html#octave-windows-install"><span class="std std-ref">Octave Interface Install</span></a></p></li>
+<li><p><strong>Optional:</strong> Install the Python modules, see <a class="reference internal" href="../python/install.html#python-windows-install"><span class="std std-ref">Python Interface Install</span></a></p></li>
+</ul>
+</section>
+<section id="id2">
+<h3>Check Installation<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<p>After completing installation, now it’s a good test to verify that
+the installation is functional according to <a class="reference internal" href="check.html#check-installation-src"><span class="std std-ref">Check Installation</span></a>.</p>
+</section>
+</section>
+<section id="macos">
+<span id="install-readymade-macos-package-src"></span><h2>macOS<a class="headerlink" href="#macos" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Install <a class="reference external" href="https://brew.sh">Homebrew</a></p></li>
+<li><p>Tap the openEMS-Project repository and build from source</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">brew tap thliebig/openems https://github.com/thliebig/openEMS-Project.git</span>
+<span class="go">brew install --HEAD openems</span>
+</pre></div>
+</div>
+<section id="setup-octave-matlab-interfaces">
+<h3>Setup Octave/Matlab Interfaces<a class="headerlink" href="#setup-octave-matlab-interfaces" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Optional</strong>: Install Octave</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">brew install octave</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Optional</strong>: Add openEMS Matlab files to your Octave/Matlab environment</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">echo &quot;addpath(&#39;$(brew --prefix)/share/openEMS/matlab:$(brew --prefix)/share/CSXCAD/matlab&#39;);&quot; &gt;&gt; ~/.octaverc</span>
+</pre></div>
+</div>
+</section>
+<section id="setup-python-interfaces">
+<h3>Setup Python Interfaces<a class="headerlink" href="#setup-python-interfaces" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Optional</strong>: Build Python libraries.</p></li>
+</ul>
+<p>Unfortunately, currently Python modules are not automatically installed,
+they need manual installation.</p>
+<p>First, install the needed dependencies…</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip3 install cython numpy h5py matplotlib --user</span>
+</pre></div>
+</div>
+<p>Next, go to Homebrew’s cache directory that contains the previously
+cloned git code:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd ~/Library/Caches/Homebrew/openems--git/</span>
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>Build CSXCAD’s Python extension.</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd CSXCAD</span>
+<span class="go">cd python</span>
+<span class="go">pip3 install . --user</span>
+
+<span class="go">cd ..</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Build openEMS’s Python extension:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd openEMS</span>
+<span class="go">cd python</span>
+<span class="go">pip3 install . --user</span>
+
+<span class="go">cd ..</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h3>Check Installation<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
+<p>After completing installation, now it’s a good test to verify that
+the installation is functional according to <a class="reference internal" href="check.html#check-installation-src"><span class="std std-ref">Check Installation</span></a>.</p>
+<section id="troubleshooting">
+<h4>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading"></a></h4>
+<p>If you see the error:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Couldn&#39;t find index page for &#39;CSXCAD&#39; (maybe misspelled?)</span>
+<span class="go">Scanning index of all packages (this may take a while)</span>
+<span class="go">Reading https://pypi.org/simple/</span>
+<span class="go">No local packages or working download links found for CSXCAD==0.6.2</span>
+<span class="go">error: Could not find suitable distribution for Requirement.parse(&#39;CSXCAD==0.6.2&#39;)</span>
+</pre></div>
+</div>
+<p>Do NOT use <cite>python3 setup.py</cite> to install openEMS, it may trigger
+this bug, seemingly related to search path. Use <cite>pip3 install . –user</cite>.</p>
+</section>
+<section id="updating">
+<h4>Updating<a class="headerlink" href="#updating" title="Permalink to this heading"></a></h4>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">brew upgrade --fetch-HEAD openems</span>
+</pre></div>
+</div>
+<p>If Python modules are used, they need to be reinstalled (in case that
+a module has been updated).</p>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="clone-build-install.html" class="btn btn-neutral float-left" title="Clone, Build and Install" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="manual.html" class="btn btn-neutral float-right" title="Manual Build and Install" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Thorsten Liebig.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
