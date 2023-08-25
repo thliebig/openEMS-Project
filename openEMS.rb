@@ -11,7 +11,7 @@ class Openems < Formula
   end
 
   depends_on "cmake" => :build
-  depends_on "qt@5"
+  depends_on "qt@6"
   depends_on "vtk"
   depends_on "tinyxml"
   depends_on "hdf5"
