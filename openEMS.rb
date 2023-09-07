@@ -21,6 +21,7 @@ class Openems < Formula
   depends_on "boost"
 
   def install
+    ENV["SDKROOT"] = MacOS.sdk_path
     system "cmake", ".", *std_cmake_args
     system "make"
     # install is handled by ExternalProject_Add
