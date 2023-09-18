@@ -54,7 +54,7 @@ Build Modules From Source Manually
 .. code-block:: console
 
     python setup.py build_ext -I/opt/include -L/opt/lib -R/opt/lib"
-    pyhton setup.py install
+    python setup.py install
 
 **Note:** The install command may require root on Linux, or add ``--user`` to install to *~/.local*
 

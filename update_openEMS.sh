@@ -14,7 +14,7 @@ then
   echo "	--with-CTB		enable circuit toolbox"
   echo "	--disable-GUI		disable GUI build (AppCSXCAD)"
   echo "	--with-MPI		enable MPI"
-  echo "	--python		build python extentions"
+  echo "	--python		build python extensions"
   exit $E_BADARGS
 fi
 
@@ -133,7 +133,7 @@ echo "build successful, cleaning up tmp dir ..."
 rm -rf $tmpdir
 cd $basedir
 
-#####  addtional packages ####
+#####  additional packages ####
 
 if [ $BUILD_HYP2MAT -eq 1 ]; then
   #build hyp2mat
@@ -146,7 +146,7 @@ if [ $BUILD_CTB -eq 1 ]; then
   install CTB PREFIX=$INSTALL_PATH
 fi
 
-#####  python extention build ####
+#####  python extension build ####
 
 if [ $BUILD_PY_EXT -eq 1 ]; then
     PY_INST_USER=''

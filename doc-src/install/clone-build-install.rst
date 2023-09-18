@@ -37,7 +37,7 @@ we want to install openEMS into `~/opt/openEMS`:
 
 - **Optional:** Passing these options can be used to enable or disable extra features:
 
-* `--python`: Build Python extentions (recommended).
+* `--python`: Build Python extensions (recommended).
 * `--with-CTB`: Enable circuit toolbox (requires Matlab).
 * `--with-hyp2mat`: enable hyp2mat build
 * `--with-MPI`: Build MPI engine (only needed for cluster).
