@@ -40,7 +40,7 @@ version of vtk, such as libvtk7-dev. VTK7 is the lowest version supported.
 
     sudo apt-get install paraview
 
-- For the package hyp2mat_ you need additonal dependencies (optional):
+- For the package hyp2mat_ you need additional dependencies (optional):
 
 .. code-block:: console
 
@@ -82,7 +82,7 @@ Fedora
 
     sudo dnf install paraview
 
-- For the package hyp2mat_ you need additonal dependencies (optional):
+- For the package hyp2mat_ you need additional dependencies (optional):
 
 .. code-block:: console
 
