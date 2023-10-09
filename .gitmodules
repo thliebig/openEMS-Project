@@ -13,6 +13,7 @@
 [submodule "fparser"]
 	path = fparser
 	url = https://github.com/stfc/fparser.git
+	branch = master
 [submodule "hyp2mat"]
 	path = hyp2mat
 	url = https://github.com/koendv/hyp2mat.git
