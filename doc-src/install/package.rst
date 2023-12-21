@@ -86,8 +86,9 @@ Setup Python Interfaces
 
 - **Optional**: Build Python libraries.
 
-Unfortunately, currently Python modules are not automatically installed,
-they need manual installation.
+If you install openEMS with Homebrew, the Python libraries will be automatically installed unless `--without-python@3` is passed.
+
+If you prefer to build them manually, follow the following instructions.
 
 First, install the needed dependencies...
 
@@ -106,21 +107,23 @@ cloned git code:
 
 .. code-block:: console
 
-    cd CSXCAD
-    cd python
-    pip3 install . --user
+    cd CSXCAD/python
+    BREW=$(brew --prefix)
+    python3 setup.py build_ext -I$BREW/include -L$BREW/lib -R$BREW/lib
+    python3 setup.py install
 
-    cd ..
+    cd ../..
 
 2. Build openEMS's Python extension:
 
 .. code-block:: console
 
-    cd openEMS
-    cd python
-    pip3 install . --user
+    cd openEMS/python
+    BREW=$(brew --prefix)
+    python3 setup.py build_ext -I$BREW/include -L$BREW/lib -R$BREW/lib
+    python3 setup.py install
 
-    cd ..
+    cd ../..
 
 Check Installation
 ~~~~~~~~~~~~~~~~~~~
@@ -150,9 +153,6 @@ Updating
 .. code-block:: console
 
     brew upgrade --fetch-HEAD openems
-
-If Python modules are used, they need to be reinstalled (in case that
-a module has been updated).
 
 .. _openEMS_win: https://github.com/thliebig/openEMS-Project/releases
 .. _Homebrew: https://brew.sh
