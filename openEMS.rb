@@ -8,9 +8,7 @@ class Openems < Formula
   desc "Electromagnetic field solver using the FDTD method"
   homepage "https://www.openems.de"
 
-  head do
-    url "https://github.com/thliebig/openEMS-Project.git"
-  end
+  head "https://github.com/thliebig/openEMS-Project.git", branch: "master"
 
   depends_on "cmake" => :build
   depends_on "qt@6"
@@ -27,9 +25,17 @@ class Openems < Formula
     depends_on "cython"
     depends_on "numpy"
     depends_on "python-matplotlib"
+    depends_on "python-setuptools"
   end
 
   def install
+    # Workaround for CMake HDF5 bug: https://gitlab.kitware.com/cmake/cmake/-/issues/25358
+    %w[openEMS/CMakeLists.txt CSXCAD/CMakeLists.txt AppCSXCAD/CMakeLists.txt].each do |file|
+      inreplace file do |s|
+        s.gsub! "find_package(HDF5 1.8 ", "find_package(HDF5 "
+      end
+    end
+
     ENV["SDKROOT"] = MacOS.sdk_path
     system "cmake", ".", *std_cmake_args
     system "make"

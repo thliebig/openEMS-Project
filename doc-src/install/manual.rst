@@ -138,11 +138,12 @@ Troubleshooting
 
 .. _manual_freebsd_workaround_src:
 
-FreeBSD
+HDF5 Not Found
 ^^^^^^^^^
 
 On FreeBSD, the default CMake has a bug, causing it unable to find
 HDF5 for CSXCAD and openEMS (the version in FreeBSD Ports is fine).
+This can also happen on macOS.
 
 .. code-block:: console
 
