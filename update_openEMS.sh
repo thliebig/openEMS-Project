@@ -160,7 +160,8 @@ if [ $BUILD_PY_EXT -eq 1 ]; then
         python3 setup.py build_ext -I $INSTALL_PATH/include -L $INSTALL_PATH/lib -R $INSTALL_PATH/lib >> $LOG_FILE 2>&1
         python3 setup.py install $PY_INST_USER >> $LOG_FILE 2>&1
         if [ $? -ne 0 ]; then
-            echo "python module failed, please see logfile for more details..."
+            echo "ERROR: python module $PY_EXT failed, please see logfile $LOG_FILE for more details..."
+            exit 1
         fi
         cd $basedir
     done
