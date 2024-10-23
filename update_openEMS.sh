@@ -58,6 +58,7 @@ done
 
 basedir=$(pwd)
 INSTALL_PATH=${1%/}
+export OPENEMS_INSTALL_PATH=$INSTALL_PATH
 LOG_FILE=$basedir/build_$(date +%Y%m%d_%H%M%S).log
 
 echo "setting install path to: $INSTALL_PATH"
@@ -123,7 +124,7 @@ fi
 echo "build openEMS and dependencies ... please wait"
 make -j5 >> $LOG_FILE 2>&1
 if [ $? -ne 0 ]; then
-  echo "make failed, build incomplete, please see logfile for more details..."
+  echo "make failed, build incomplete, please see logfile $LOG_FILE for more details..."
   cd $basedir
   echo "build incomplete, cleaning up tmp dir ..."
   rm -rf $tmpdir
@@ -155,10 +156,9 @@ if [ $BUILD_PY_EXT -eq 1 ]; then
     fi
     for PY_EXT in 'CSXCAD' 'openEMS'
     do
-        echo "build $PY_EXT python module ... please wait"
+        echo "Building $PY_EXT python module, please wait..."
         cd $PY_EXT/python
-        python3 setup.py build_ext -I $INSTALL_PATH/include -L $INSTALL_PATH/lib -R $INSTALL_PATH/lib >> $LOG_FILE 2>&1
-        python3 setup.py install $PY_INST_USER >> $LOG_FILE 2>&1
+        pip install . 2>&1
         if [ $? -ne 0 ]; then
             echo "ERROR: python module $PY_EXT failed, please see logfile $LOG_FILE for more details..."
             exit 1
