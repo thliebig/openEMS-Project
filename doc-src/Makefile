@@ -46,6 +46,7 @@ help:
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 	@echo "  coverage   to run coverage check of the documentation (if enabled)"
+	@echo "  doxygen    to generate doxygen html"
 
 .PHONY: clean
 clean:
@@ -214,3 +215,7 @@ pseudoxml:
 	$(SPHINXBUILD) -b pseudoxml $(ALLSPHINXOPTS) $(BUILDDIR)/pseudoxml
 	@echo
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
+
+.PHONY: doxygen
+doxygen: Doxyfile
+	mkdir -p $(BUILDDIR)/doxygen && DOXYGEN_OUTPUT_DIRECTORY=$(BUILDDIR)/doxygen doxygen $<
