@@ -1,0 +1,423 @@
+name: "CI"
+
+on:
+  push:
+    branches: ["master"]
+
+jobs:
+  Linux:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    strategy:
+      # Use "false" means a single failed build won't terminate other combinations
+      # in the matrix. This wastes CPU time, so it's meant for debugging only.
+      fail-fast: false
+
+      matrix:
+        os:
+          # name: OS name (only a name for humans to read).
+          # libc: userland libc, "GNU" or "musl"
+          #       (only a name for humans to read)
+          # ancient: true or false.
+          #          true: incompatible with GitHub's actions/checkout due to
+          #                node.js compatibility problem. Manual git checkout
+          #                required.
+          #          false: use standard GitHub's actions/checkout.
+          # docker-image: string, image on DockerHub to use
+          - name: "CentOS 7"
+            libc: "GNU"
+            ancient: true
+            docker-image: "centos:7"
+
+          - name: "Ubuntu 14.04"
+            libc: "GNU"
+            ancient: true
+            docker-image: "ubuntu:14.04"
+
+          - name: "Debian oldoldstable"
+            libc: "GNU"
+            ancient: false
+            docker-image: "debian:oldoldstable"
+
+          - name: "Debian oldstable"
+            libc: "GNU"
+            ancient: false
+            docker-image: "debian:oldstable"
+
+          - name: "Debian"
+            libc: "GNU"
+            ancient: false
+            docker-image: "debian:latest"
+
+          - name: "Ubuntu"
+            libc: "GNU"
+            ancient: false
+            docker-image: "ubuntu:latest"
+
+          - name: "Fedora"
+            libc: "GNU"
+            ancient: false
+            docker-image: "fedora:latest"
+
+          - name: "AlmaLinux 8"
+            libc: "GNU"
+            ancient: false
+            docker-image: "almalinux:8"
+
+          - name: "AlmaLinux Latest"
+            libc: "GNU"
+            ancient: false
+            docker-image: "almalinux:latest"
+
+          # GUI is not supported on Alpine as VTK is built without Qt
+          - name: "Alpine, No GUI"
+            libc: "musl"
+            ancient: false
+            docker-image: "alpine:latest"
+
+    container:
+      image: ${{ matrix.os.docker-image }}
+
+    name: "${{ matrix.os.libc }}/Linux (${{ matrix.os.name }})"
+
+    steps:
+      - name: Check for dockerenv file
+        # bash is not installed on Alpine at this point
+        shell: sh
+        run: (ls /.dockerenv && echo Found dockerenv) || exit 1
+
+      - name: Install dependencies
+        shell: sh
+        run: |
+          cat /etc/os-release
+
+          touch ~/.bash_profile
+          echo 'export CXXFLAGS="-std=c++11"' >> ~/.bash_profile
+
+          if grep -q "ID=fedora" /etc/os-release; then
+            dnf install -y git
+            dnf install -y gcc gcc-c++ cmake git boost-devel tinyxml-devel vtk-devel hdf5-devel \
+                           CGAL-devel vtk-qt octave python3-Cython python3-h5py \
+                           python3-matplotlib
+          elif grep -q 'ID="almalinux"' /etc/os-release; then
+            dnf install -y epel-release
+            dnf config-manager --set-enabled powertools || dnf config-manager --set-enabled crb
+
+            dnf install -y git
+            dnf install -y gcc gcc-c++ cmake git boost-devel tinyxml-devel vtk-devel hdf5-devel \
+                           CGAL-devel vtk-qt octave python3-Cython python3-h5py \
+                           python3-matplotlib
+          elif grep -q "ID=debian" /etc/os-release || grep -q "ID=ubuntu" /etc/os-release; then
+            # retry failed downloads 3 times
+            echo 'Acquire::Retries "3";' > /etc/apt/apt.conf.d/80-retries
+            apt-get update
+
+            apt-get install -y build-essential git \
+                               libhdf5-dev libtinyxml-dev \
+                               qtbase5-dev octave \
+                               python3-setuptools python3-numpy \
+                               python3-matplotlib python3-h5py
+
+            # VTK9 or VTK7, at least one must succeed (depending on Debian version)
+            # VTK9,  VTK7, or VTK6, at least one must succeed (depending on Debian version)
+            apt-get install -y libvtk9-dev libvtk9-qt-dev || \
+                apt-get install -y libvtk7-dev libvtk7-qt-dev || \
+                  apt-get install -y libvtk6-dev
+                  # libvtk6-qt-dev is not used on Ubuntu 14.04
+
+            if grep -q 'VERSION_ID="14.04"' /etc/os-release; then
+              # Ubuntu 14.04 has CMake 2 by default, but we require CMake 3
+              apt-get install -y cmake3
+
+              # Ubuntu 14.04 ships Boost 1.54 and is required by libcgal-dev,
+              # but we need Boost 1.55, so we install Boost 1.55 first, then
+              # install CGAL from source.
+              apt-get install -y boost1.55 boost1.55-dev
+
+              # CGAL v4.14.3 was old enough to be compatible with GCC 4.8. Otherwise,
+              # you get: The compiler feature "cxx_decltype_auto" is not known
+              # to CXX compiler "GNU" version 4.8.5.
+              apt-get install -y libgmp-dev libmpfr-dev
+              git clone $GITHUB_SERVER_URL/CGAL/cgal.git --depth=1 --branch=v4.14.3
+              cd cgal && mkdir build && cd build
+              cmake ../ && make && make install
+
+              # Ubuntu 14.04's cython3 package is ancient, install via pip instead
+              apt-get install -y python3-pip
+
+              pip3 install cython
+            else
+              apt-get install -y libboost-all-dev
+              apt-get install -y libcgal-dev
+              apt-get install -y cmake
+              apt-get install -y cython3
+            fi
+
+            # old Debian
+            apt-get install -y libqt4-dev || (echo Qt4 not installed)
+          elif grep -q "ID=alpine" /etc/os-release; then
+            apk add bash \
+                    build-base gmp-dev mpfr-dev git cmake \
+                    boost-dev tinyxml-dev hdf5-dev cgal-dev vtk-dev \
+                    octave \
+                    python3-dev cython \
+                    py3-setuptools \
+                    py3-matplotlib py3-numpy py3-h5py
+          elif [ -f /etc/centos-release ]; then
+            # IPv6 on GitHub Actions is broken, causing random network failures
+            # if a CDN rosolves to IPv6.
+            echo "ip_resolve=4" >> /etc/yum.conf
+
+            # CentOS repos are EOL and desupported
+            sed -i 's|^mirrorlist|#mirrorlist|g; s|^#baseurl|baseurl|g; s|mirror.centos.org|vault.centos.org|g' \
+                /etc/yum.repos.d/CentOS-Base.repo
+
+            yum install -y centos-release-scl || true
+            sed -i 's|^mirrorlist|#mirrorlist|g; s|^#baseurl|baseurl|g;
+                    s|^# baseurl|baseurl|g; s|mirror.centos.org|vault.centos.org|g' \
+                /etc/yum.repos.d/CentOS-SCLo-scl.repo \
+                /etc/yum.repos.d/CentOS-SCLo-scl-rh.repo
+            cat /etc/yum.repos.d/CentOS-SCLo-scl.repo
+            cat /etc/yum.repos.d/CentOS-SCLo-scl-rh.repo
+
+            yum install -y epel-release
+            yum install -y git
+            yum install -y gcc gcc-c++ gmp-devel mpfr-devel \
+                           cmake3 git tinyxml-devel vtk-devel hdf5-devel \
+                           vtk-qt octave python3-pip python3-devel python3-Cython
+
+            # use cmake3 instead of default cmake2
+            alternatives --install /usr/local/bin/cmake cmake /usr/bin/cmake3 99
+
+            # To upgrade GCC, one can use GCC 7 from centos-release-scl, required by CGAL.
+            # Even GCC 10+ is provided.
+            # Not used for now, since openEMS is still compatible with GCC 4.8! But we may
+            # need it in the future.
+            # yum install -y devtoolset-7-gcc devtoolset-7-gcc-c++
+            # alternatives --install /usr/local/bin/gcc gcc /opt/rh/devtoolset-7/root/usr/bin/gcc 99
+            # alternatives --install /usr/local/bin/g++ g++ /opt/rh/devtoolset-7/root/usr/bin/g++ 99
+
+            # boost-predef is only available on Boost 1.55 and later.
+            # We borrow a copy of Boost 1.58 from rh repo's mariadb backport package.
+            # /usr/local/include/CGAL/config.h:210:10: fatal error: boost/predef.h: No such
+            # file or directory # include <boost/predef.h>
+            yum install -y rh-mariadb101-boost-devel
+
+            # CMake doesn't support CPATH
+            ln -s /opt/rh/rh-mariadb101/root/usr/include/boost /usr/local/include/boost
+            mkdir /usr/local/lib64 && cd /usr/local/lib64
+            for i in /opt/rh/rh-mariadb101/root/usr/lib64/libboost*; do
+                ln -s $i /usr/local/lib64/
+            done
+
+            # setup.py is broken on CentOS 7, installing openEMS shows:
+            # error: Couldn't find a setup script in /tmp/easy_install-8fl5smm_/numpy-2.2.0.tar.gz
+            # Error: Process completed with exit code 1.
+            pip3 install numpy h5py matplotlib --user
+
+            # not package on CentOS
+            # CGAL v4.14.3 was old enough to be compatible with GCC 4.8. Otherwise,
+            # you get: The compiler feature "cxx_decltype_auto" is not known
+            # to CXX compiler "GNU" version 4.8.5.
+            git clone $GITHUB_SERVER_URL/CGAL/cgal.git --depth=1 --branch=v4.14.3
+            cd cgal && mkdir build && cd build
+            cmake ../ && make && make install
+          else
+            echo "Unknown system!"
+            exit 1
+          fi
+
+      - if: ${{ ! matrix.os.ancient }}
+        name: Checkout openEMS-Project.git
+        uses: actions/checkout@v4
+        with:
+          path: openEMS-Project
+          submodules: recursive
+
+          # checkout must be deep, not shallow.
+          # We need tags for "git describe", otherwise build fails.
+          fetch-depth: 0
+
+      - if: ${{ matrix.os.ancient }}
+        name: Checkout openEMS-Project.git (legacy system only)
+        run: |
+          git clone --recursive $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git openEMS-Project
+          cd $GITHUB_WORKSPACE/openEMS-Project
+
+      - name: Build and install openEMS
+        run: |
+          source ~/.bash_profile
+          cd $GITHUB_WORKSPACE/openEMS-Project
+
+          # GUI is not supported on Alpine as VTK is built without Qt
+          if grep -q "ID=alpine" /etc/os-release; then
+            gui_opt="--disable-GUI"
+          else
+            gui_opt=""
+          fi
+
+          if ./update_openEMS.sh ~/opt --python $gui_opt; then
+            cat build_*.log
+          else
+            cat build_*.log
+            exit 1
+          fi
+
+          echo "addpath('~/opt/share/openEMS/matlab')" >> ~/.octaverc
+          echo "addpath('~/opt/share/CSXCAD/matlab')" >> ~/.octaverc
+
+      - name: Smoketest Octave execution
+        run: |
+          cd $GITHUB_WORKSPACE/openEMS-Project/openEMS/.github/smoketests/octave
+          octave MSL_NotchFilter.m
+
+      - name: Smoketest Python execution
+        run: |
+          source ~/.bash_profile
+          cd $GITHUB_WORKSPACE/openEMS-Project/openEMS/.github/smoketests/python
+          python3 MSL_NotchFilter.py
+
+  macOS:
+    name: "macOS (ARM, latest)"
+
+    runs-on: macos-latest
+    steps:
+      - name: Install dependencies
+        run: |
+          echo 'export CXXFLAGS="-std=c++11"' >> ~/.zprofile
+
+          brew install cmake boost tinyxml hdf5 cgal vtk python3 octave
+
+          # cython is keg-only, which means it was not symlinked into /opt/homebrew,
+          # because this formula is mainly used internally by other formulae.
+          # Users are advised to use `pip` to install cython.
+          #
+          # So Python will NOT be able to find cython from "site-package", nor
+          # will the shell finds a cython executable from "bin"
+          #
+          # But then, `pip` can't be used directly due to PEP 668, which asks us
+          # to install cython via the system's package manager, buh Howebrew does
+          # not provide a fully-function package (unless you hack the symlinks
+          # manually).
+          #
+          # So, the real solution is creating a virtualenv specifically for openEMS
+          # usage.
+          #
+          # TODO: completely update openEMS documentation and scripts to enable and
+          # teach users about virtualenv
+          python3 -m venv $HOME/opt
+          $HOME/opt/bin/pip3 install setuptools cython numpy h5py matplotlib
+
+      - name: Checkout openEMS.git
+        uses: actions/checkout@v4
+        with:
+          path: openEMS-Project
+          submodules: recursive
+
+          # checkout must be deep, not shallow.
+          # We need tags for "git describe", otherwise build fails.
+          fetch-depth: 0
+
+      - name: Build and install openEMS
+        run: |
+          source ~/.zprofile
+          cd $GITHUB_WORKSPACE/openEMS-Project
+
+          # needed by Python modules
+          source $HOME/opt/bin/activate  # activate venv
+          export PATH="$HOME/opt/bin:${PATH}"
+          export CXXFLAGS="-std=c++11 -I$HOME/opt/include -I/opt/homebrew/include"
+          export LDFLAGS="-L$HOME/opt/lib -L/opt/homebrew/lib"
+
+          if ./update_openEMS.sh ~/opt --python; then
+            cat build_*.log
+          else
+            cat build_*.log
+            exit 1
+          fi
+
+          echo "addpath('~/opt/share/openEMS/matlab')" >> ~/.octaverc
+          echo "addpath('~/opt/share/CSXCAD/matlab')" >> ~/.octaverc
+
+      - name: Smoketest Octave execution
+        run: |
+          cd $GITHUB_WORKSPACE/openEMS-Project/openEMS/.github/smoketests/octave
+          octave MSL_NotchFilter.m
+
+      - name: Smoketest Python execution
+        run: |
+          cd $GITHUB_WORKSPACE/openEMS-Project/openEMS/.github/smoketests/python
+          $HOME/opt/bin/python3 MSL_NotchFilter.py
+
+  FreeBSD:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        machine:
+          - name: "FreeBSD 14.2"
+            os: freebsd
+            arch: x86-64
+            version: '14.2'
+
+          # macOS already tests ARM for us, so disable the slow ARM emulator
+          # for now
+          #- name: "FreeBSD 14.2 (ARM emulator)"
+          #  os: freebsd
+          #  arch: arm64
+          #  version: '14.2'
+
+    name: "${{ matrix.machine.name }}"
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Test in FreeBSD ${{ matrix.machine.version }} ${{ matrix.machine.arch }}
+        uses: cross-platform-actions/action@v0.26.0
+        with:
+          cpu_count: 4
+          architecture: ${{ matrix.machine.arch }}
+          operating_system: ${{ matrix.machine.os }}
+          version: ${{ matrix.machine.version }}
+          run: |
+            echo "Install dependencies..."
+            sudo pkg install -y bash cmake git boost-libs tinyxml vtk9 hdf5 cgal octave \
+                                qt5 python3 \
+                                py311-cython3 py311-numpy py311-h5py py311-matplotlib
+                                # prefix must match FreeBSD's default python
+                                # version. FreeBSD 14.2 uses Python 3.11 so
+                                # use "py311-"
+
+            echo "Clone repos..."
+            cd ~/
+            git clone --recursive $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git openEMS-Project
+
+            echo "Build and install openEMS..."
+
+            # needed by Python modules
+            export CFLAGS="-I$HOME/opt/include -I/usr/local/include"
+            export CXXFLAGS="-I$HOME/opt/include -I/usr/local/include"
+            export LDFLAGS="-L$HOME/opt/lib -L/usr/local/lib"
+
+            cd ~/openEMS-Project
+            if bash ./update_openEMS.sh ~/opt --python; then
+              cat build_*.log
+            else
+              cat build_*.log
+              exit 1
+            fi
+
+            echo "addpath('~/opt/share/openEMS/matlab')" >> ~/.octaverc
+            echo "addpath('~/opt/share/CSXCAD/matlab')" >> ~/.octaverc
+
+            echo "Smoketest Octave execution..."
+            cd ~/openEMS-Project/openEMS/.github/smoketests/octave/
+            octave MSL_NotchFilter.m
+
+            echo "Smoketest Python execution..."
+            cd ~/openEMS-Project/openEMS/.github/smoketests/python
+            python3 MSL_NotchFilter.py
