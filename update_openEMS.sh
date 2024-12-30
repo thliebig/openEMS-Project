@@ -112,7 +112,7 @@ cd ..
 ##### build openEMS and dependencies ####
 tmpdir=`mktemp -d` && cd $tmpdir
 echo "running cmake in tmp dir: $tmpdir"
-cmake -DBUILD_APPCSXCAD=$BUILD_GUI -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH -DWITH_MPI=$WITH_MPI $basedir >> $LOG_FILE
+cmake -DBUILD_APPCSXCAD=$BUILD_GUI -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH -DWITH_MPI=$WITH_MPI $basedir >> $LOG_FILE 2>&1
 if [ $? -ne 0 ]; then
   echo "cmake failed"
   cd $basedir
@@ -147,26 +147,15 @@ if [ $BUILD_CTB -eq 1 ]; then
 fi
 
 #####  python extension build ####
-
 if [ $BUILD_PY_EXT -eq 1 ]; then
-    # are we running inside a Python venv?
-    PY_INST_IS_VENV=$(python3 -c "import sys; print(int(sys.prefix != sys.base_prefix))")
-
-    PY_INST_USER=''
-    if [[ $EUID != 0 ]] && [[ $PY_INST_IS_VENV != 1 ]]; then
-        PY_INST_USER='--user'
+    echo "Building python modules ... please wait"
+    ./build_python.sh $INSTALL_PATH >> $LOG_FILE 2>&1
+    EC=$?
+    if [ $EC -ne 0 ]; then
+        echo "Python modules build failed, please see logfile for more details..."
+        exit $EC
     fi
-    for PY_EXT in 'CSXCAD' 'openEMS'
-    do
-        echo "build $PY_EXT python module ... please wait"
-        cd $PY_EXT/python
-        python3 setup.py build_ext -I $INSTALL_PATH/include -L $INSTALL_PATH/lib -R $INSTALL_PATH/lib >> $LOG_FILE 2>&1
-        python3 setup.py install $PY_INST_USER >> $LOG_FILE 2>&1
-        if [ $? -ne 0 ]; then
-            echo "python module failed, please see logfile for more details..."
-        fi
-        cd $basedir
-    done
+    cd $basedir
 fi
 
 #####
