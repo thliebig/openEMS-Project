@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Compiling OpenEMS may require installing the following packages:
 # apt-get install cmake qt4-qmake libtinyxml-dev libcgal-dev libvtk5-qt4-dev

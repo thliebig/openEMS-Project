@@ -2,7 +2,12 @@ name: "CI"
 
 on:
   push:
-    branches: ["master"]
+    branches:
+        - master
+        - CI_testing
+  pull_request:
+    branches:
+        - master
 
 jobs:
   Linux:
@@ -244,7 +249,8 @@ jobs:
       - if: ${{ matrix.os.ancient }}
         name: Checkout openEMS-Project.git (legacy system only)
         run: |
-          git clone --recursive $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git openEMS-Project
+          echo "Clone $GITHUB_REF_NAME from $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+          git clone -b $GITHUB_REF_NAME --recursive $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git openEMS-Project
           cd $GITHUB_WORKSPACE/openEMS-Project
 
       - name: Build and install openEMS
@@ -392,9 +398,9 @@ jobs:
                                 # version. FreeBSD 14.2 uses Python 3.11 so
                                 # use "py311-"
 
-            echo "Clone repos..."
+            echo "Clone $GITHUB_REF_NAME from $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
             cd ~/
-            git clone --recursive $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git openEMS-Project
+            git clone -b $GITHUB_REF_NAME --recursive $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git openEMS-Project
 
             echo "Build and install openEMS..."
 
