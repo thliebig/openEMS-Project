@@ -29,13 +29,7 @@ class Openems < Formula
   end
 
   def install
-    # Workaround for CMake HDF5 bug: https://gitlab.kitware.com/cmake/cmake/-/issues/25358
-    %w[openEMS/CMakeLists.txt CSXCAD/CMakeLists.txt AppCSXCAD/CMakeLists.txt].each do |file|
-      inreplace file do |s|
-        s.gsub! "find_package(HDF5 1.8 ", "find_package(HDF5 "
-      end
-    end
-
+    
     ENV["SDKROOT"] = MacOS.sdk_path
     system "cmake", ".", *std_cmake_args
     system "make"
