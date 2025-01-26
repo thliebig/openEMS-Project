@@ -22,7 +22,6 @@ class Openems < Formula
   depends_on "python@3" => :recommended
 
   if build.with? "python@3"
-    depends_on "cython"
     depends_on "numpy"
     depends_on "python-matplotlib"
     depends_on "python-setuptools"
@@ -43,24 +42,23 @@ class Openems < Formula
       # Install non-bottled dependencies into a virtual environment
       venv = virtualenv_create(libexec, "python3")
       venv.pip_install "h5py"
+      venv.pip_install "cython"
 
       # Create .pth file to reference packages in venv
       (lib/"#{python}/site-packages/homebrew-openems-dependencies.pth").write <<~EOS
         #{libexec}/lib/#{python}/site-packages
       EOS
 
-      # Use keg-only cython
-      ENV.prepend_path "PYTHONPATH", "#{Formula["cython"].libexec}/lib/#{python}/site-packages"
-
       # Build and install bindings
+      ENV.prepend_path "CXXFLAGS", "-std=c++14"
       cd "CSXCAD/python" do
-        system Formula["python@3"].opt_bin/"python3", "setup.py", "build_ext", "-I", include, "-L", lib, "-R", lib, "-j", ENV.make_jobs
-        system Formula["python@3"].opt_bin/"python3", *Language::Python.setup_install_args(prefix)
+        system venv.root/"bin/python3", "setup.py", "build_ext", "-I", include, "-L", lib, "-R", lib, "-j", ENV.make_jobs
+        system venv.root/"bin/python3", *Language::Python.setup_install_args(prefix)
       end
 
       cd "openEMS/python" do
-        system Formula["python@3"].opt_bin/"python3", "setup.py", "build_ext", "-I", include, "-L", lib, "-R", lib, "-j", ENV.make_jobs
-        system Formula["python@3"].opt_bin/"python3", *Language::Python.setup_install_args(prefix)
+        system venv.root/"bin/python3", "setup.py", "build_ext", "-I", include, "-L", lib, "-R", lib, "-j", ENV.make_jobs
+        system venv.root/"bin/python3", *Language::Python.setup_install_args(prefix)
       end
     end
   end
