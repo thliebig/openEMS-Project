@@ -15,7 +15,27 @@
 
 import sys
 import os
+import subprocess
 import sphinx_rtd_theme
+
+
+def setup(app):
+    app.connect('builder-inited', run_before_docs)
+
+
+def run_before_docs(app):
+    retval = subprocess.run(
+        ["python3", "convert_tutorials.py"],
+        cwd="./python/openEMS/"
+    )
+    retval.check_returncode()
+
+    retval = subprocess.run(
+        ["python3", "generate_octave_docs.py"],
+        cwd="./octave/"
+    )
+    retval.check_returncode()
+
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -31,6 +51,7 @@ import sphinx_rtd_theme
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'myst_parser',
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
