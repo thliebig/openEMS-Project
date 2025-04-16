@@ -5,6 +5,8 @@
 # Compiling hyp2mat may require installing the following packages:
 # apt-get install gengetopt help2man groff pod2pdf bison flex libhpdf-dev libtool
 
+set -o pipefail
+
 EOK=0
 EINVAL=22
 
