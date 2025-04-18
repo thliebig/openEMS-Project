@@ -45,44 +45,44 @@ INSTALL_PATH=
 for varg in $@
 do
   case "$varg" in
-    "--verbose")
+    --verbose)
       STDOUT="$(tty)"
       ;;
-    "--njobs=*")
+    --njobs=*)
       NJOBS="${varg#*=}"
       ;;
-    "--with-hyp2mat")
+    --with-hyp2mat)
       echo "enabling hyp2mat build"
       BUILD_HYP2MAT=1
       ;;
-    "--with-CTB")
+    --with-CTB)
       echo "enabling CTB build"
       BUILD_CTB=1
       ;;
-    "--disable-GUI")
+    --disable-GUI)
       echo "disabling AppCSXCAD build"
       BUILD_GUI="NO"
       ;;
-    "--with-MPI")
+    --with-MPI)
       echo "enabling MPI"
       WITH_MPI=1
       ;;
-    "--python")
+    --python)
       echo "enabling Python Extension build"
       BUILD_PY_EXT=1
       ;;
-    "--help")
+    --help)
       help_msg
       exit $EOK
       ;;
-    "--*")
+    --*)
       echo "error, unknown argument: $varg"
       help_msg
       exit $EINVAL
       ;;
     *)
       if [ -n "$INSTALL_PATH" ]; then
-        echo "error, install path specified twice. First: '$INSTALL_PATH'; Second: '$varg'"
+        echo "error, install path specified twice. First: '$INSTALL_PATH'; Second: '$varg' $NJOBS"
         help_msg
         exit $EINVAL
       fi
@@ -165,7 +165,7 @@ fi
 echo "build openEMS and dependencies ... please wait"
 make -j$NJOBS 2>&1 | tee $LOG_FILE >> $STDOUT
 if [ $? -ne 0 ]; then
-  echo "make failed, build incomplete, please see logfile for more details..."
+  echo "make failed, build incomplete, please see logfile for more details... $LOG_FILE"
   cd $basedir
   echo "build incomplete, cleaning up tmp dir ..."
   rm -rf $tmpdir
@@ -194,7 +194,7 @@ if [ $BUILD_PY_EXT -eq 1 ]; then
     ./build_python.sh $INSTALL_PATH 2>&1 | tee $LOG_FILE >> $STDOUT
     EC=$?
     if [ $EC -ne 0 ]; then
-        echo "Python modules build failed, please see logfile for more details..."
+        echo "Python modules build failed, please see logfile for more details... $LOG_FILE"
         exit $EC
     fi
     cd $basedir
