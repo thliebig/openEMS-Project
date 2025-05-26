@@ -1,21 +1,21 @@
 [submodule "CSXCAD"]
 	path = CSXCAD
-	url = ../CSXCAD.git
+	url = https://github.com/thliebig/CSXCAD.git
 [submodule "QCSXCAD"]
 	path = QCSXCAD
-	url = ../QCSXCAD.git
+	url = https://github.com/thliebig/QCSXCAD.git
 [submodule "AppCSXCAD"]
 	path = AppCSXCAD
-	url = ../AppCSXCAD.git
+	url = https://github.com/thliebig/AppCSXCAD.git
 [submodule "openEMS"]
 	path = openEMS
-	url = ../openEMS.git
+	url = https://github.com/thliebig/openEMS.git
 [submodule "fparser"]
 	path = fparser
-	url = ../fparser.git
+	url = https://github.com/thliebig/fparser.git
 [submodule "hyp2mat"]
 	path = hyp2mat
 	url = https://github.com/koendv/hyp2mat.git
 [submodule "CTB"]
 	path = CTB
-	url = ../CTB.git
+	url = https://github.com/thliebig/CTB.git
