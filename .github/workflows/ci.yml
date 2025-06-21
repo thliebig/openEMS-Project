@@ -297,7 +297,51 @@ jobs:
         run: |
           echo 'export CXXFLAGS="-std=c++11"' >> ~/.zprofile
 
-          brew install cmake boost tinyxml hdf5 cgal vtk python3 octave
+          brew install cmake boost hdf5 cgal vtk python3 octave
+
+          # TinyXML has been disabled by Homebrew at it's unmaintained
+          # since 2011, TinyXML2 is not API-compatible. As a stop-gap,
+          # build from source.
+          #
+          # -L: follow redirect, REQUIRED!
+          curl -L https://sourceforge.net/projects/tinyxml/files/tinyxml/2.6.2/tinyxml_2_6_2.tar.gz -o tinyxml-2.6.2.tar.gz
+          tar -xf tinyxml-2.6.2.tar.gz
+          cd tinyxml
+
+          # The first patch enforces use of stl strings, rather than a custom string type.
+          # The second patch is a fix for incorrect encoding of elements with special characters
+          # The third and fourth patches are security fixes.
+          #
+          # -L: follow redirect, REQUIRED!
+          # -O: save to disk with an automatic file name.
+          curl -L -O "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/tinyxml-2.6.2-defineSTL.patch"
+          curl -L -O "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/tinyxml-2.6.1-entity.patch"
+          curl -L -O "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/CVE-2021-42260.patch"
+          curl -L -O "https://raw.githubusercontent.com/alpinelinux/aports/b1ff376e83eb49c0127b039b3684eccdf9a60694/community/tinyxml/CVE-2023-34194.patch"
+
+          # The final patch adds a CMakeLists.txt file to build a shared library and provide an install target
+          # submitted upstream as https://sourceforge.net/p/tinyxml/patches/66/
+          curl -L -O "https://gist.githubusercontent.com/scpeters/6325123/raw/cfb079be67997cb19a1aee60449714a1dedefed5/tinyxml_CMakeLists.patch"
+
+          patch -p1 < tinyxml-2.6.2-defineSTL.patch
+          patch -p1 < tinyxml-2.6.1-entity.patch
+          patch -p1 < CVE-2021-42260.patch
+          patch -p1 < CVE-2023-34194.patch
+
+          # You know something is truly deprecated when the patch itself needs
+          # patching! In CMake 4, 3.10 is deprecated and 3.5 has been removed.
+          # use 3.0...3.10 so all of these versions are acceptable as min. version.
+          # (CMake 2 is dropped since openEMS already requires CMake 3, and also
+          # because CMake 2 is too old that it's not even documented anymore)
+          #
+          # https://cmake.org/cmake/help/latest/command/cmake_minimum_required.html
+          sed -i -e "s/cmake_minimum_required(VERSION 2.4.6)/cmake_minimum_required(VERSION 3.0...3.10)/" \
+                    tinyxml_CMakeLists.patch  # -e is not optional in BSD sed
+          patch -p1 < tinyxml_CMakeLists.patch
+
+          mkdir build && cd build
+          cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt
+          make -j`nproc` && make install
 
           # cython is keg-only, which means it was not symlinked into /opt/homebrew,
           # because this formula is mainly used internally by other formulae.
