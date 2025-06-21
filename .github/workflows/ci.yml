@@ -251,9 +251,15 @@ jobs:
       - if: ${{ matrix.os.ancient }}
         name: Checkout openEMS-Project.git (legacy system only)
         run: |
-          echo "Clone $GITHUB_REF_NAME from $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
-          git clone -b $GITHUB_REF_NAME --recursive $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git openEMS-Project
+          echo "Clone $GITHUB_SHA from $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+          git clone --recursive $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git openEMS-Project
           cd $GITHUB_WORKSPACE/openEMS-Project
+
+          # force git to fetch all trees, otherwise "git checkout $GITHUB_SHA"
+          # fails with "fatal: reference is not a tree" for Pull Requests
+          git fetch --force $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git "+refs/heads/*:refs/remotes/origin/*"
+          git fetch --force $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git "+refs/pull/*/merge:refs/remotes/origin/pr/*"
+          git checkout $GITHUB_SHA
 
       - name: Build and install openEMS
         run: |
@@ -445,9 +451,9 @@ jobs:
                                 # version. FreeBSD 14.2 uses Python 3.11 so
                                 # use "py311-"
 
-            echo "Clone $GITHUB_REF_NAME from $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+            echo "Clone $GITHUB_SHA from $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
             cd ~/
-            git clone -b $GITHUB_REF_NAME --recursive $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git openEMS-Project
+            git clone --recursive $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git openEMS-Project
 
             echo "Build and install openEMS..."
 
@@ -457,6 +463,13 @@ jobs:
             export LDFLAGS="-L$HOME/opt/lib -L/usr/local/lib"
 
             cd ~/openEMS-Project
+
+            # force git to fetch all trees, otherwise "git checkout $GITHUB_SHA"
+            # fails with "fatal: reference is not a tree" for Pull Requests
+            git fetch --force $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git "+refs/heads/*:refs/remotes/origin/*"
+            git fetch --force $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git "+refs/pull/*/merge:refs/remotes/origin/pr/*"
+            git checkout $GITHUB_SHA
+
             if bash ./update_openEMS.sh ~/opt --python; then
               cat build_*.log
             else
