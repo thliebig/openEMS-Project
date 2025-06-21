@@ -153,7 +153,9 @@ jobs:
               # Ubuntu 14.04's cython3 package is ancient, install via pip instead
               apt-get install -y python3-pip
 
-              pip3 install cython
+              # Must use Cython 3.0 or lower, since 3.1 uses f-string which is
+              # incompatible with Python 3.4.
+              pip3 install "cython<3.1"
             else
               apt-get install -y libboost-all-dev
               apt-get install -y libcgal-dev
