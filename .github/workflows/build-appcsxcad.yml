@@ -100,8 +100,9 @@ jobs:
         "${LINUXDEPLOYQT_DIR}/AppRun" local/bin/AppCSXCAD \
           -appimage -bundle-non-qt-libs -verbose=2
 
-    - name: Upload AppImage artifact
-      uses: actions/upload-artifact@v4
+    - name: Upload to GitHub Release
+      uses: softprops/action-gh-release@v1
       with:
-        name: AppCSXCAD.AppImage
-        path: ${{ env.APPIMAGE_DIR }}/AppCSXCAD*.AppImage
+        files: ${{ env.APPIMAGE_DIR }}/AppCSXCAD*.AppImage
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
