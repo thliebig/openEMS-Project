@@ -1,64 +1,104 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Compiling OpenEMS may require installing the following packages:
 # apt-get install cmake qt4-qmake libtinyxml-dev libcgal-dev libvtk5-qt4-dev
 # Compiling hyp2mat may require installing the following packages:
 # apt-get install gengetopt help2man groff pod2pdf bison flex libhpdf-dev libtool
 
-if [ $# -lt 1 ]
-then
-  echo "Usage: `basename $0` <path-to-install> [<options>]"
+set -o pipefail
+
+EOK=0
+EINVAL=22
+
+function help_msg {
+  echo "Usage: `basename $0` [options] <path-to-install>"
   echo ""
   echo "  options:"
+  echo "	--verbose 		output build info to terminal"
+  echo "	--njobs=N 		build with N jobs (defaults to $NJOBS on your system)"
   echo "	--with-hyp2mat:		enable hyp2mat build"
   echo "	--with-CTB		enable circuit toolbox"
   echo "	--disable-GUI		disable GUI build (AppCSXCAD)"
   echo "	--with-MPI		enable MPI"
   echo "	--python		build python extensions"
-  exit $E_BADARGS
+  echo "	--help			print this help message, and exit"
+}
+
+
+if [ $# -lt 1 ]
+then
+  help_msg
+  exit $EINVAL
 fi
 
 # defaults
+STDOUT="/dev/null"
+NJOBS=$(nproc)
 BUILD_HYP2MAT=0
 BUILD_CTB=0
 BUILD_GUI="YES"
 WITH_MPI=0
 BUILD_PY_EXT=0
+INSTALL_PATH=
 
 # parse arguments
-for varg in ${@:2:$#}
+for varg in $@
 do
   case "$varg" in
-    "--with-hyp2mat")
+    --verbose)
+      STDOUT="$(tty)"
+      ;;
+    --njobs=*)
+      NJOBS="${varg#*=}"
+      ;;
+    --with-hyp2mat)
       echo "enabling hyp2mat build"
       BUILD_HYP2MAT=1
       ;;
-    "--with-CTB")
+    --with-CTB)
       echo "enabling CTB build"
       BUILD_CTB=1
       ;;
-    "--disable-GUI")
+    --disable-GUI)
       echo "disabling AppCSXCAD build"
       BUILD_GUI="NO"
       ;;
-    "--with-MPI")
+    --with-MPI)
       echo "enabling MPI"
       WITH_MPI=1
       ;;
-    "--python")
+    --python)
       echo "enabling Python Extension build"
       BUILD_PY_EXT=1
       ;;
-    *)
-      echo "error, unknown argumennt: $varg"
-      exit 1
+    --help)
+      help_msg
+      exit $EOK
       ;;
+    --*)
+      echo "error, unknown argument: $varg"
+      help_msg
+      exit $EINVAL
+      ;;
+    *)
+      if [ -n "$INSTALL_PATH" ]; then
+        echo "error, install path specified twice. First: '$INSTALL_PATH'; Second: '$varg' $NJOBS"
+        help_msg
+        exit $EINVAL
+      fi
+      INSTALL_PATH=$varg
   esac
 done
 
+if [ -z "$INSTALL_PATH" ]; then
+  echo -e "\nerror, install path must be specified\n"
+  help_msg
+  exit $EINVAL
+fi
+
 basedir=$(pwd)
 INSTALL_PATH=${1%/}
-export OPENEMS_INSTALL_PATH=$INSTALL_PATH
+
 LOG_FILE=$basedir/build_$(date +%Y%m%d_%H%M%S).log
 
 echo "setting install path to: $INSTALL_PATH"
@@ -70,7 +110,7 @@ make clean &> /dev/null
 
 if [ -f bootstrap.sh ]; then
   echo "bootstrapping $1 ... please wait"
-  sh ./bootstrap.sh >> $LOG_FILE
+  sh ./bootstrap.sh | tee $LOG_FILE >> $STDOUT
   if [ $? -ne 0 ]; then
     echo "bootstrap for $1 failed"
     cd ..
@@ -80,7 +120,7 @@ fi
 
 if [ -f configure ]; then
   echo "configuring $1 ... please wait"
-  ./configure $2 >> $LOG_FILE
+  ./configure $2 | tee $LOG_FILE >> $STDOUT
   if [ $? -ne 0 ]; then
     echo "configure for $1 failed"
     cd ..
@@ -89,7 +129,7 @@ if [ -f configure ]; then
 fi
 
 echo "compiling $1 ... please wait"
-make -j4 >> $LOG_FILE
+make -j$NJOBS | tee $LOG_FILE >> $STDOUT
 if [ $? -ne 0 ]; then
   echo "make for $1 failed"
   cd ..
@@ -101,7 +141,7 @@ cd ..
 function install {
 cd $1
 echo "installing $1 ... please wait"
-make ${@:2:$#} install >> $LOG_FILE
+make ${@:2:$#} install | tee $LOG_FILE >> $STDOUT
 if [ $? -ne 0 ]; then
   echo "make install for $1 failed"
   cd ..
@@ -110,10 +150,13 @@ fi
 cd ..
 }
 
+# cmake 4 does not work without this:
+export CMAKE_POLICY_VERSION_MINIMUM=3.5
+
 ##### build openEMS and dependencies ####
 tmpdir=`mktemp -d` && cd $tmpdir
 echo "running cmake in tmp dir: $tmpdir"
-cmake -DBUILD_APPCSXCAD=$BUILD_GUI -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH -DWITH_MPI=$WITH_MPI $basedir >> $LOG_FILE
+cmake -DBUILD_APPCSXCAD=$BUILD_GUI -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH -DWITH_MPI=$WITH_MPI $basedir 2>&1 | tee $LOG_FILE >> $STDOUT
 if [ $? -ne 0 ]; then
   echo "cmake failed"
   cd $basedir
@@ -122,9 +165,9 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 echo "build openEMS and dependencies ... please wait"
-make -j5 >> $LOG_FILE 2>&1
+make -j$NJOBS 2>&1 | tee $LOG_FILE >> $STDOUT
 if [ $? -ne 0 ]; then
-  echo "make failed, build incomplete, please see logfile $LOG_FILE for more details..."
+  echo "make failed, build incomplete, please see logfile for more details... $LOG_FILE"
   cd $basedir
   echo "build incomplete, cleaning up tmp dir ..."
   rm -rf $tmpdir
@@ -148,23 +191,15 @@ if [ $BUILD_CTB -eq 1 ]; then
 fi
 
 #####  python extension build ####
-
 if [ $BUILD_PY_EXT -eq 1 ]; then
-    PY_INST_USER=''
-    if (( $EUID != 0 )); then
-        PY_INST_USER='--user'
+    echo "Building python modules ... please wait"
+    ./build_python.sh $INSTALL_PATH 2>&1 | tee $LOG_FILE >> $STDOUT
+    EC=$?
+    if [ $EC -ne 0 ]; then
+        echo "Python modules build failed, please see logfile for more details... $LOG_FILE"
+        exit $EC
     fi
-    for PY_EXT in 'CSXCAD' 'openEMS'
-    do
-        echo "Building $PY_EXT python module, please wait..."
-        cd $PY_EXT/python
-        pip install . 2>&1
-        if [ $? -ne 0 ]; then
-            echo "ERROR: python module $PY_EXT failed, please see logfile $LOG_FILE for more details..."
-            exit 1
-        fi
-        cd $basedir
-    done
+    cd $basedir
 fi
 
 #####
