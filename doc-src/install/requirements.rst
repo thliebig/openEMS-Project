@@ -28,12 +28,6 @@ version of vtk, such as libvtk7-dev. VTK7 is the lowest version supported.
 
     sudo apt-get install octave liboctave-dev
 
-- To use Python scripting (recommended):
-
-.. code-block:: console
-
-    sudo apt-get install python3-numpy python3-matplotlib cython3 python3-h5py
-
 - To use Paraview to visualize simulation results (recommended):
 
 .. code-block:: console
@@ -69,12 +63,6 @@ Fedora
 .. code-block:: console
 
     sudo dnf install octave
-
-- To use Python scripting (recommended):
-
-.. code-block:: console
-
-    sudo dnf install python3-Cython python3-h5py python3-matplotlib
 
 - To use Paraview to visualize simulation results (recommended):
 
@@ -136,12 +124,6 @@ these instructions only if a manual install is needed during development.
 .. code-block:: console
 
     brew install octave
-
-- To use Python scripting (recommended):
-
-.. code-block:: console
-
-    pip3 install cython numpy h5py matplotlib --user
 
 - To use Paraview to visualize simulation results (recommended):
 

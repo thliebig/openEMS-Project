@@ -9,6 +9,8 @@ fi
 basedir=$(pwd)
 INSTALL_PATH=${1%/}
 
+export OPENEMS_INSTALL_PATH=$INSTALL_PATH
+
 echo $INSTALL_PATH
 
 # are we running inside a Python venv?
@@ -22,10 +24,10 @@ for PY_EXT in 'CSXCAD' 'openEMS'
 do
     echo "build $PY_EXT python module ... please wait"
     cd $PY_EXT/python
-    python3 setup.py build_ext -I $INSTALL_PATH/include -L $INSTALL_PATH/lib -R $INSTALL_PATH/lib && python3 setup.py install $PY_INST_USER
+   pip install . $PY_INST_USER
     EC=$?
     if [ $EC -ne 0 ]; then
-        echo "Python module build failed!"
+        echo "Python module $PY_EXT build failed!"
         exit $EC
     fi
     cd $basedir

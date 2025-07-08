@@ -97,6 +97,8 @@ if [ -z "$INSTALL_PATH" ]; then
 fi
 
 basedir=$(pwd)
+INSTALL_PATH=${1%/}
+
 LOG_FILE=$basedir/build_$(date +%Y%m%d_%H%M%S).log
 
 echo "setting install path to: $INSTALL_PATH"
