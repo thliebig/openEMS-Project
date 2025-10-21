@@ -33,7 +33,7 @@ fi
 
 # defaults
 STDOUT="/dev/null"
-NJOBS=$(nproc)
+NJOBS=$(python3 -c "import os; print(os.cpu_count())" || nproc || sysctl -n hw.ncpu)
 BUILD_HYP2MAT=0
 BUILD_CTB=0
 BUILD_GUI="YES"
