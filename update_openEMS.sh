@@ -191,7 +191,7 @@ fi
 #####  python extension build ####
 if [ $BUILD_PY_EXT -eq 1 ]; then
     echo "Building python modules ... please wait"
-    ./build_python.sh $INSTALL_PATH 2>&1 | tee $LOG_FILE >> $STDOUT
+    ./scripts/build_python.sh $INSTALL_PATH 2>&1 | tee $LOG_FILE >> $STDOUT
     EC=$?
     if [ $EC -ne 0 ]; then
         echo "Python modules build failed, please see logfile for more details... $LOG_FILE"
