@@ -20,6 +20,9 @@ function help_msg {
   echo "	--with-CTB		enable circuit toolbox"
   echo "	--disable-GUI		disable GUI build (AppCSXCAD)"
   echo "	--with-MPI		enable MPI"
+  echo "        --with-tinyxml          download and build custom TinyXML from source,"
+  echo "                                enabled by default on macOS as TinyXML is desupported"
+  echo "                                (need network access to SourceForge & GitHub)"
   echo "	--python		build python extensions"
   echo "	--help			print this help message, and exit"
 }
@@ -39,7 +42,14 @@ BUILD_CTB=0
 BUILD_GUI="YES"
 WITH_MPI=0
 BUILD_PY_EXT=0
+BUILD_TINYXML=0
 INSTALL_PATH=
+
+# Unfortunately, TinyXML has been desupported by Homebrew, so we must
+# download and build it from source, see comments in scripts/build_tinyxml.sh
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  BUILD_TINYXML=1
+fi
 
 # parse arguments
 for varg in $@
@@ -66,6 +76,10 @@ do
     --with-MPI)
       echo "enabling MPI"
       WITH_MPI=1
+      ;;
+    --with-tinyxml)
+      echo "enabling custom TinyXML download and build"
+      BUILD_TINYXML=1
       ;;
     --python)
       echo "enabling Python Extension build"
@@ -152,8 +166,18 @@ cd ..
 export CMAKE_POLICY_VERSION_MINIMUM=3.5
 
 ##### build openEMS and dependencies ####
-tmpdir=`mktemp -d` && cd $tmpdir
+tmpdir=`mktemp -d`
+
+if [ "$BUILD_TINYXML" -eq 1 ]; then
+  echo "downloading and building custom TinyXML in tmp dir: $tmpdir"
+  echo "Make sure you have network access to SourceForge and GitHub,"
+  echo "if not, check the online manual."
+  mkdir -p ./downloads
+  ./scripts/build_tinyxml.sh --build-dir "$tmpdir" --install-dir "$INSTALL_PATH"
+fi
+
 echo "running cmake in tmp dir: $tmpdir"
+cd $tmpdir
 cmake -DBUILD_APPCSXCAD=$BUILD_GUI -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH -DWITH_MPI=$WITH_MPI $basedir 2>&1 | tee $LOG_FILE >> $STDOUT
 if [ $? -ne 0 ]; then
   echo "cmake failed"
