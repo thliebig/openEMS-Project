@@ -42,6 +42,11 @@ jobs:
             ancient: true
             docker-image: "ubuntu:14.04"
 
+          - name: "Debian oldoldstable"
+            libc: "GNU"
+            ancient: false
+            docker-image: "debian:oldoldstable"
+
           - name: "Debian oldstable"
             libc: "GNU"
             ancient: false
