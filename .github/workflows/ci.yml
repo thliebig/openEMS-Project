@@ -102,6 +102,15 @@ jobs:
           touch ~/.bash_profile
           echo 'export CXXFLAGS="-std=c++11"' >> ~/.bash_profile
 
+          # Use a strict shell, stop the interpreter on various errors,
+          # so errors such as undefined variables are caught by CI/CD
+          # instead of ignored. Use printf because it contains options,
+          # which can be difficult to escape.
+          printf "%s\n" "set -euo pipefail" >> ~/.bash_profile
+
+          # For non-interactive shells such as "bash script.sh"
+          echo 'export BASH_ENV="$HOME/.bash_profile"' >> ~/.bash_profile
+
           if grep -q "ID=fedora" /etc/os-release; then
             dnf install -y git
             dnf install -y gcc gcc-c++ cmake git boost-devel tinyxml-devel vtk-devel hdf5-devel \
@@ -302,6 +311,25 @@ jobs:
       - name: Install dependencies
         run: |
           echo 'export CXXFLAGS="-std=c++11"' >> ~/.zprofile
+
+          # Use a strict shell, stop the interpreter on various errors,
+          # so errors such as undefined variables are caught by CI/CD
+          # instead of ignored. Use printf because it contains options,
+          # which can be difficult to escape.
+          printf "%s\n" "set -euo pipefail" >> ~/.zprofile
+
+          # For #!/bin/bash scripts.
+          # To ensure ~/.bash_profile, BASH_ENV must be set for the current
+          # default shell of which bash is launched from.
+          echo 'export BASH_ENV="$HOME/.bash_profile"' >> ~/.zprofile
+
+          # GitHub's default ~/.bash_profile contains:
+          #
+          #     POWERSHELL_DISTRIBUTION_CHANNEL=GitHub-Actions-macos15
+          #
+          # WITHOUT ending with "\n". Add a "\n" manually, otherwise
+          # the command is invalid.
+          printf "\n%s\n" "set -euo pipefail" >> ~/.bash_profile
 
           brew install cmake boost hdf5 cgal vtk python3 octave
 
