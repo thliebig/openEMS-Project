@@ -371,8 +371,6 @@ jobs:
           # needed by Python modules
           source $HOME/opt/bin/activate  # activate venv
           export PATH="$HOME/opt/bin:${PATH}"
-          export CXXFLAGS="-std=c++11 -I$HOME/opt/include -I/opt/homebrew/include"
-          export LDFLAGS="-L$HOME/opt/lib -L/opt/homebrew/lib"
 
           if ./update_openEMS.sh ~/opt --python; then
             cat build_*.log
