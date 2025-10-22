@@ -444,11 +444,6 @@ jobs:
 
             echo "Build and install openEMS..."
 
-            # needed by Python modules
-            export CFLAGS="-I$HOME/opt/include -I/usr/local/include"
-            export CXXFLAGS="-I$HOME/opt/include -I/usr/local/include"
-            export LDFLAGS="-L$HOME/opt/lib -L/usr/local/lib"
-
             cd ~/openEMS-Project
 
             # force git to fetch all trees, otherwise "git checkout $GITHUB_SHA"
