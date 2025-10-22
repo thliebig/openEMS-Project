@@ -41,7 +41,7 @@ The output should be similar to:
     [...]
 
 If the command is not found, please include the folder to the openEMS installation
-directory (such as `/home/user/openEMS-bin/bin`) to your search path.
+directory (such as ``~/opt/openEMS/bin``) to your search path.
 
 
 Windows
@@ -86,7 +86,7 @@ Linux
 You should be able to see the AppCSXCAD window on your desktop.
 
 If the command is not found, please include the folder to the openEMS installation
-directory (such as `/home/user/openEMS-bin/bin`) to your search path.
+directory (such as ``~/opt/openEMS/bin``) to your search path.
 
 Windows
 ^^^^^^^^^
@@ -153,6 +153,14 @@ Python interface
 
 - start Python
 
+.. important::
+
+   If Python dependencies were installed into a ``venv``, activate
+   the ``venv`` first. Assume the ``venv`` is located in
+   ``$HOME/opt/openEMS/bin``::
+
+       source $HOME/opt/openEMS/bin/activate
+
 Now let's check if the CSXCAD and openEMS interface functions are available, type the
 following into the command window and compare the output:
 
@@ -161,10 +169,10 @@ following into the command window and compare the output:
     >>> import CSXCAD
     >>> import openEMS
 
-If there's no output, such as a `ModuleNotFoundError`, it means Python can successfully
+If there's no output, such as a ``ModuleNotFoundError``, it means Python can successfully
 find and import the required modules.
 
 Note that you should run Python from you home directory or another location, it should
-not be ran inside the `python` directory of the CSXCAD or openEMS source code tree.
-Otherwise, Python will attempt to use the `CSXCAD` or `openEMS` files in the source
+not be ran inside the ``python`` directory of the CSXCAD or openEMS source code tree.
+Otherwise, Python will attempt to use the ``CSXCAD`` or ``openEMS`` files in the source
 code as Python modules, creating confusing errors.
