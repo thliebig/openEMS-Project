@@ -310,8 +310,6 @@ jobs:
     steps:
       - name: Install dependencies
         run: |
-          echo 'export CXXFLAGS="-std=c++11"' >> ~/.zprofile
-
           # Use a strict shell, stop the interpreter on various errors,
           # so errors such as undefined variables are caught by CI/CD
           # instead of ignored. Use printf because it contains options,
