@@ -24,8 +24,8 @@ Clone
 Python venv
 -------------
 
-On most systems, openEMS installs Python into the current user's home
-directory, such as ``~/.local``, while all of its dependencies came from
+On most systems, openEMS installs its Python binding into the current user's
+home directory, such as ``~/.local``, while all of its dependencies came from
 the system's package manager. This is the "classical" behavior of openEMS,
 no user intervention is needed, and this section can be safely skipped.
 
