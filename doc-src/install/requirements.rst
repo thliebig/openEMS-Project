@@ -182,7 +182,16 @@ CentOS 7, but additional steps are required.
           ln -s $i /usr/local/lib64/
       done
 
-- CentOS 7 uses GCC 4.8, which lacks full C++11 support. CGAL v4.14.3.
+- In early GCC/G++, the support of C++11 features exists. But it's incomplete and
+  disabled by default. Before building openEMS itself or its dependencies, make
+  sure that the environmental variable ``CXXFLAGS`` contains ``--std=c++11``:
+
+  .. code-block:: console
+
+     # enable C++11 for the current shell
+     export CXXFLAGS="$CXXFLAGS -std=c++11"
+
+- CentOS 7 uses GCC 4.8, which has only partial C++11 support. CGAL v4.14.3.
   is the last version compatible with GCC 4.8. In newer CGAL versions,
   the following errors occur: ``The compiler feature "cxx_decltype_auto" is
   not known to CXX compiler "GNU" version 4.8.5.`` Thus we need to build
@@ -277,6 +286,15 @@ required.
 Debian/Ubuntu
 """""""""""""""
 
+- In early GCC/G++, the support of C++11 features exists. But it's incomplete and
+  disabled by default. Before building openEMS itself or its dependencies, make
+  sure that the environmental variable ``CXXFLAGS`` contains ``--std=c++11``:
+
+  .. code-block:: console
+
+     # enable C++11 for the current shell
+     export CXXFLAGS="$CXXFLAGS -std=c++11"
+
 - Instead of ``libvtk9-dev``, on earlier versions of Debian/Ubuntu, you need to
   choose an older version of vtk. Both ``libvtk7-dev`` and ``libvtk6-dev`` are
   still supported.
@@ -310,7 +328,7 @@ Ubuntu 14.04 only
 
       sudo apt-get install boost1.55 boost1.55-dev
 
-- Ubuntu 14.04 uses GCC 4.8, which lacks full C++11 support. CGAL v4.14.3.
+- Ubuntu 14.04 uses GCC 4.8, which has only partial C++11 support. CGAL v4.14.3.
   is the last version compatible with GCC 4.8. In newer CGAL versions,
   the following errors occur: ``The compiler feature "cxx_decltype_auto" is
   not known to CXX compiler "GNU" version 4.8.5.`` Thus we need to build
