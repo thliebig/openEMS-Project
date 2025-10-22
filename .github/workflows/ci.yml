@@ -427,8 +427,11 @@ jobs:
           version: ${{ matrix.machine.version }}
           run: |
             echo "Install dependencies..."
+
+            # use separate packages, not the meta-package "qt5" to save disk space
             sudo pkg install -y bash cmake git boost-libs tinyxml vtk9 hdf5 cgal octave \
-                                qt5 python3 \
+                                qt5-core qt5-gui qt5-opengl qt5-xml \
+                                python3 \
                                 py311-setuptools \
                                 py311-cython3 py311-numpy py311-h5py py311-matplotlib
                                 # prefix must match FreeBSD's default python
