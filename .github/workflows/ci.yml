@@ -353,9 +353,6 @@ jobs:
           #
           # So, the real solution is creating a virtualenv specifically for openEMS
           # usage.
-          #
-          # TODO: completely update openEMS documentation and scripts to enable and
-          # teach users about virtualenv
           python3 -m venv $HOME/opt
           $HOME/opt/bin/pip3 install setuptools cython numpy h5py matplotlib
 
@@ -376,7 +373,6 @@ jobs:
 
           # needed by Python modules
           source $HOME/opt/bin/activate  # activate venv
-          export PATH="$HOME/opt/bin:${PATH}"
 
           if ./update_openEMS.sh ~/opt --python; then
             cat build_*.log
