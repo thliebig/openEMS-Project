@@ -109,7 +109,11 @@ jobs:
           printf "%s\n" "set -euo pipefail" >> ~/.bash_profile
 
           # For non-interactive shells such as "bash script.sh"
-          echo 'export BASH_ENV="$HOME/.bash_profile"' >> ~/.bash_profile
+          # Use a special ~/.bash_env file because ~/.bash_profile
+          # may contain commands that reset environment variables
+          # such as PATH.
+          printf "%s\n" "set -euo pipefail" >> ~/.bash_env
+          echo 'export BASH_ENV="$HOME/.bash_env"' >> ~/.bash_profile
 
           if grep -q "ID=fedora" /etc/os-release; then
             dnf install -y git
@@ -317,9 +321,13 @@ jobs:
           printf "%s\n" "set -euo pipefail" >> ~/.zprofile
 
           # For #!/bin/bash scripts.
-          # To ensure ~/.bash_profile, BASH_ENV must be set for the current
-          # default shell of which bash is launched from.
-          echo 'export BASH_ENV="$HOME/.bash_profile"' >> ~/.zprofile
+          # To ensure ~/.bash_env is executed, BASH_ENV must be set for the
+          # current default shell of which bash is launched from.
+          # Use a special ~/.bash_env file because ~/.bash_profile
+          # may contain commands that reset environment variables
+          # such as PATH.
+          printf "%s\n" "set -euo pipefail" >> ~/.bash_env
+          echo 'export BASH_ENV="$HOME/.bash_env"' >> ~/.zprofile
 
           # GitHub's default ~/.bash_profile contains:
           #
