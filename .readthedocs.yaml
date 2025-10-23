@@ -1,0 +1,30 @@
+# Read the Docs configuration file
+# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
+
+# Required
+version: 2
+
+# formats for offline edition
+formats:
+  - htmlzip
+
+# Set the OS, Python version, and other tools you might need
+build:
+  os: ubuntu-24.04
+  tools:
+    python: "3.13"
+  apt_packages:
+    - octave
+
+submodules:
+  include:
+    - CSXCAD
+    - openEMS
+
+python:
+  install:
+    - requirements: doc-src/requirements.txt
+
+sphinx:
+  # Path to your Sphinx configuration file.
+  configuration: doc-src/conf.py
