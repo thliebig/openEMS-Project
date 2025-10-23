@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: openEMS Simulation Engine and API Bugs
+    url: https://github.com/thliebig/openEMS/issues
+    about: Please report simulation engine bugs at openEMS.git (including Octave/Python API bugs), not here.
+
+  - name: CSXCAD Geometry Library and API Bugs
+    url: https://github.com/thliebig/CSXCAD/issues
+    about: Please report geometry library bugs at CSXCAD.git (including Octave/Python API bugs), not here.
+
+  - name: Usage Questions
+    url: https://github.com/thliebig/openEMS-Project/discussions
+    about: Please post usage questions to GitHub Discussions, not as bugs.
