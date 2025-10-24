@@ -19,6 +19,11 @@ import subprocess
 import sphinx_rtd_theme
 
 
+# find the the parent documentation directory in absolute path
+import pathlib
+docroot = pathlib.Path(__file__).parent
+
+
 def setup(app):
     app.connect('builder-inited', run_before_docs)
 
@@ -26,13 +31,13 @@ def setup(app):
 def run_before_docs(app):
     retval = subprocess.run(
         ["python3", "convert_tutorials.py"],
-        cwd="./python/openEMS/"
+        cwd=str(docroot / "python/openEMS/")
     )
     retval.check_returncode()
 
     retval = subprocess.run(
         ["python3", "generate_octave_docs.py"],
-        cwd="./octave/"
+        cwd=str(docroot / "octave/")
     )
     retval.check_returncode()
 
