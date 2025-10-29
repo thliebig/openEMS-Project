@@ -162,9 +162,6 @@ fi
 cd ..
 }
 
-# cmake 4 does not work without this:
-export CMAKE_POLICY_VERSION_MINIMUM=3.5
-
 ##### build openEMS and dependencies ####
 tmpdir=`mktemp -d`
 
