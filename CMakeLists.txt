@@ -2,12 +2,12 @@
 ## usage: cmake -DCMAKE_INSTALL_PREFIX=<install/path> .
 ## use -DBUILD_APPCSXCAD=NO to not build QCSXCAD and AppCSXCAD
 
-PROJECT(openEMS-Project CXX)
-
 # In CMake 4, 3.10 is deprecated and 3.5 has been removed.
 # use 3.0...3.10 so all of these versions are acceptable as min. version.
 # https://cmake.org/cmake/help/latest/command/cmake_minimum_required.html
 cmake_minimum_required(VERSION 3.0...3.10)
+
+PROJECT(openEMS-Project CXX)
 
 if (CMAKE_TOOLCHAIN_FILE)
     message(STATUS "Using CMAKE_TOOLCHAIN_FILE: " ${CMAKE_TOOLCHAIN_FILE})
