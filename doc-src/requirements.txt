@@ -1,4 +1,24 @@
+# dependencies required for documentation itself
 sphinx
 sphinx_rtd_theme
 myst_parser
 numpydoc
+
+# CSXCAD and openEMS must actually be installed to the system to
+# generate Python modules via "automodule", meaning that both the
+# C++ and Python parts of CSXCAD and openEMS must be installed to
+# the system, and must be able to be found by the Python installation
+# used to build the documentation (both native or venv are okay, if
+# venv is used, it must be activated first). CSXCAD and openEMS's own
+# dependencies (C++ or Python) are NOT listed here, because installing
+# the entire openEMS project is out of scope for a documentation subproject.
+# This is only used to generate an error if both packages are not already
+# present.
+#
+# * Check the docs itself for a standard installation guide.
+# * Check openEMS-Project/.readthedocs.yaml for the ReadTheDocs.org
+#   setup for a minimum reference on Ubuntu.
+# * Check openEMS-Project/.github/workflows/ci.yml for a full reference
+#   on other systems.
+CSXCAD
+openEMS
