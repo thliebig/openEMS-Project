@@ -33,15 +33,44 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     SYSLOCAL="$(brew --prefix)"
 fi
 
+# "+x" checks whether the variable is unset (not just empty), needed
+# in strict "set -u" mode as it forbids the use of unbounded variables.
+if [ -z ${CXXFLAGS+x} ]; then
+  EXTERNAL_CXXFLAGS=""
+else
+  EXTERNAL_CXXFLAGS="$CXXFLAGS"
+fi
+
+if [ -z ${LDFLAGS+x} ]; then
+  EXTERNAL_LDFLAGS=""
+else
+  EXTERNAL_LDFLAGS="$LDFLAGS"
+fi
+
 for PY_EXT in 'CSXCAD' 'openEMS'
 do
     echo "build $PY_EXT python module ... please wait"
     cd $PY_EXT/python
-    python3 setup.py build_ext \
-        -I "$INSTALL_PATH/include:$SYSLOCAL/include" \
-        -L "$INSTALL_PATH/lib:$SYSLOCAL/lib" \
-        -R $INSTALL_PATH/lib
-    python3 setup.py install $PY_INST_USER
+
+    export CXXFLAGS="\"-I$INSTALL_PATH/include\" \"-I$SYSLOCAL/include\" $EXTERNAL_CXXFLAGS"
+    export LDFLAGS="\"-L$INSTALL_PATH/lib\" \"-L$SYSLOCAL/lib\" \"-Wl,-rpath,$INSTALL_PATH/lib\" $EXTERNAL_LDFLAGS"
+
+    if [ $PY_INST_IS_VENV == 1 ]; then
+        # In pip, build-time package dependencies MUST be defined in pyproject.toml,
+	# because pip uses an internal isolated venv (even different from the user's
+	# own venv) to build the package. But we currently do not, thus we use
+	# --no-build-isolation
+        pip3 install . $PY_INST_USER --no-build-isolation
+    else
+        # --break-system-packages means we install directly to a user's
+	# home directory, this is safe because openEMS currently doesn't
+	# auto-install dependencies - the old setup.py does the same.
+	#
+	# TODO: add a "--python-venv" option in update_openEMS.sh, allowing
+	# users to switch between both behaviors using a single command.
+        pip3 install . $PY_INST_USER --no-build-isolation --break-system-packages
+    fi
+
     EC=$?
     if [ $EC -ne 0 ]; then
         echo "Python module build failed!"

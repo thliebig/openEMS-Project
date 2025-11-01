@@ -118,15 +118,15 @@ jobs:
           if grep -q "ID=fedora" /etc/os-release; then
             dnf install -y git
             dnf install -y gcc gcc-c++ cmake git boost-devel tinyxml-devel vtk-devel hdf5-devel \
-                           CGAL-devel vtk-qt octave python3-setuptools python3-Cython python3-h5py \
-                           python3-matplotlib
+                           CGAL-devel vtk-qt octave python3-pip python3-setuptools python3-Cython \
+                           python3-h5py python3-matplotlib
           elif grep -q 'ID="almalinux"' /etc/os-release; then
             dnf install -y epel-release
             dnf config-manager --set-enabled powertools || dnf config-manager --set-enabled crb
 
             dnf install -y git
             dnf install -y gcc gcc-c++ cmake git boost-devel tinyxml-devel vtk-devel hdf5-devel \
-                           CGAL-devel vtk-qt octave python3-Cython python3-h5py \
+                           CGAL-devel vtk-qt octave python3-pip python3-Cython python3-h5py \
                            python3-matplotlib
           elif grep -q "ID=debian" /etc/os-release || grep -q "ID=ubuntu" /etc/os-release; then
             # retry failed downloads 3 times
@@ -136,6 +136,7 @@ jobs:
             apt-get install -y build-essential git \
                                libhdf5-dev libtinyxml-dev \
                                qtbase5-dev octave \
+                               python3-pip \
                                python3-setuptools python3-numpy \
                                python3-matplotlib python3-h5py
 
@@ -163,9 +164,6 @@ jobs:
               cd cgal && mkdir build && cd build
               cmake ../ && make && make install
 
-              # Ubuntu 14.04's cython3 package is ancient, install via pip instead
-              apt-get install -y python3-pip
-
               # Must use Cython 3.0 or lower, since 3.1 uses f-string which is
               # incompatible with Python 3.4.
               pip3 install "cython<3.1"
@@ -184,6 +182,7 @@ jobs:
                     boost-dev tinyxml-dev hdf5-dev cgal-dev vtk-dev \
                     octave \
                     python3-dev cython \
+                    py3-pip \
                     py3-setuptools \
                     py3-matplotlib py3-numpy py3-h5py
           elif [ -f /etc/centos-release ]; then
@@ -432,6 +431,7 @@ jobs:
             sudo pkg install -y bash cmake git boost-libs tinyxml vtk9 hdf5 cgal octave \
                                 qt5-core qt5-gui qt5-opengl qt5-xml \
                                 python3 \
+                                py311-pip \
                                 py311-setuptools \
                                 py311-cython3 py311-numpy py311-h5py py311-matplotlib
                                 # prefix must match FreeBSD's default python

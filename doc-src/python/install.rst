@@ -94,8 +94,8 @@ Python modules into a ``venv``.
        source $HOME/opt/openEMS/bin/activate
 
 If we've built openEMS from source and installed it into a custom
-prefix, the following command-line arguments are needed by
-``setup.py build_ext`` to find the needed headers and libraries.
+prefix, the following command-line arguments are needed in
+``CXXFLAGS`` and ``LDFLAGS`` to find the needed headers and libraries.
 
 * ``-I``: header include path, including the ``/include`` suffix, comma-separated.
 * ``-L``: library linking path, including the ``/lib`` suffix, comma-separated.
@@ -122,7 +122,7 @@ headers and libraries from three distinct sources:
    category, and the required prefix are ``-L $(brew --prefix)/include``
    and ``-R $(brew --prefix)/lib`` respectively.
 
-Comma is used as the separator between multiple paths within each option.
+If multiple paths are needed, repeat the option for each path.
 
 The following example assumes the openEMS installation prefix is
 ``$HOME/opt/openEMS``, and some libraries have been installed to
@@ -130,39 +130,20 @@ The following example assumes the openEMS installation prefix is
 
 .. code-block:: bash
 
+    export CXXFLAGS="-I$HOME/opt/include -I/usr/local/include $CXXFLAGS"
+    export LDFLAGS="-L$HOME/opt/lib -L/usr/local/lib -R$HOME/opt/lib $LDFLAGS"
+
     cd openEMS-Project/CSXCAD/python
-
-    python3 setup.py build_ext \
-      -I "$HOME/opt/include:/usr/local/include" \
-      -L "$HOME/opt/lib:/usr/local/lib" \
-      -R $HOME/opt/lib
-
-    python3 setup.py install --user
+    pip3 install . --user
     # if using a venv, remove --user so the venv path is respected
-    # python setup.py install
+    # pip3 install .
 
     cd openEMS-Project/openEMS
-
-    python3 setup.py build_ext \
-      -I "$HOME/opt/include:/usr/local/include" \
-      -L "$HOME/opt/lib:/usr/local/lib" \
-      -R $HOME/opt/lib
-
-    python3 setup.py install --user
+    pip3 install . --user
     # if using a venv, remove --user so the venv path is respected
-    # python setup.py install
+    # pip3 install .
 
 .. tip::
-
-   Alternatively, the header and link search paths can also be
-   controlled by the classical, global ``CXXFLAGS`` and ``LDFLAGS``
-   without touching Python's ``built_ext`` flags.
-   For example::
-
-     export CXXFLAGS="-std=c++11 -I$HOME/opt/include -I/usr/local/include"
-     export LDFLAGS="-L$HOME/opt/lib -L/usr/local/lib"
-
-.. important::
 
    Not all operating systems use ``/usr/local`` for local packages.
    If Boost is located in a different path, the following error
@@ -183,14 +164,37 @@ The following example assumes the openEMS installation prefix is
 
    .. code-block:: console
 
-       python3 setup.py build_ext \
-         -I "$HOME/opt/include:$(brew --prefix)/include" \
-         -L "$HOME/opt/lib:$(brew --prefix)/lib" \
-         -R $HOME/opt/lib
+       export CXXFLAGS="-I$HOME/opt/include -I$(brew --prefix)/include $CXXFLAGS"
+       export LDFLAGS="-L$HOME/opt/lib -L$(brew --prefix)/lib -R$HOME/opt/lib $LDFLAGS"
 
    Alternatively, you can install a copy of Boost directly into
    the openEMS installation prefix ``$HOME/opt/``, if you're
    compiling your own Boost just for this purpose.
+
+.. important::
+
+   In the past, the header and link search paths could also be
+   controlled by the traditional ``setup.py build_ext`` options.
+   Comma is used as the separator between multiple paths within
+   each option.
+
+   .. code-block:: console
+
+     python3 setup.py build_ext \
+       -I "$HOME/opt/include:/usr/local/include" \
+       -L "$HOME/opt/lib:/usr/local/lib" \
+       -R $HOME/opt/lib
+
+     python3 setup.py install --user
+     # if using a venv, remove --user so the venv path is respected
+     # pip3 install .
+
+   However, invoking ``setup.py`` by raw commands has been deprecated
+   upstream, thus they're no longer supported on systems with new
+   Python installation after 2025/10/31. Likewise, support for
+   ``pip install --global-option`` and ``pip install --install-option``
+   have also been removed by Python developers, as both also internally
+   invoke ``setup.py``.
 
 macOS
 ^^^^^^^^
