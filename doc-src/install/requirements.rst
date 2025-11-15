@@ -401,6 +401,62 @@ Fedora
 
 - Skip to :ref:`clone_build_install_src` and continue installation.
 
+VoidLinux
+------------
+
+- Install some basic pre-requisities:
+
+  .. code-block:: console
+    
+    sudo xbps-install -S base-devel cmake git hdf5-devel boost-devel cgal-devel tinyxml-devel qt5-devel 
+
+- VTK with QT does not exist for VoidLinux so it need be built from source.
+  First remove any `vtk` packages that might be hanging around.
+
+  .. code-block:: console
+    
+    sudo xbps-remove -R vtk vtk-devel
+
+- Install VTK compilation pre-requsites:
+
+  .. code-block:: console
+
+    sudo xbps-install -S qt5-plugin-mysql qt5-plugin-odbc qt5-plugin-pgsql qt5-plugin-sqlite qt5-plugin-tds qt5-declarative qt5-declarative-devel python3-devel
+
+- Fetch VTK and compile:
+
+  .. code-block:: console
+  
+    git clone https://gitlab.kitware.com/vtk/vtk.git
+    cd vtk
+    mkdir build && cd build
+    cmake .. -DVTK_GROUP_ENABLE_Qt=YES -DVTK_QT_VERSION=5 -DCMAKE_BUILD_TYPE=Release
+    make -j$(nproc)
+    sudo make install
+
+- Python virtual environment and install required packages:
+
+  .. code-block:: console
+
+    python -m venv .venv
+    source .venv/bin/activate
+    pip install setuptools numpy h5py matplotlib cython
+
+
+- To build docs:
+
+  .. code-block:: console
+
+    sudo xbps-install -y octave
+
+    cd openEMS-Project/doc-src
+    python3 -m venv venv
+    source venv/bin/activate
+
+    pip install -r requirements.txt
+    pip install sphinx sphinx-rtd-theme
+    make html
+
 FreeBSD
 --------
 
