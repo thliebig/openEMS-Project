@@ -33,7 +33,6 @@ build:
     # need to install CSXCAD and openEMS first).
     pre_install:
       - . $READTHEDOCS_VIRTUALENV_PATH/bin/activate
-      - pip install setuptools numpy matplotlib h5py cython
       - ./update_openEMS.sh $HOME/opt/ --python --disable-GUI || cat build_*
 
 submodules:

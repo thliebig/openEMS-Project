@@ -85,6 +85,8 @@ jobs:
 
     container:
       image: ${{ matrix.os.docker-image }}
+      # allow mount/netns
+      options: "--cap-add CAP_SYS_ADMIN --cap-add NET_ADMIN --security-opt apparmor=unconfined"
 
     name: "${{ matrix.os.libc }}/Linux (${{ matrix.os.name }})"
 
@@ -113,20 +115,29 @@ jobs:
           # such as PATH.
           printf "%s\n" "set -euo pipefail" >> ~/.bash_env
           echo 'export BASH_ENV="$HOME/.bash_env"' >> ~/.bash_profile
+          echo 'export CXXFLAGS="-Wall -Wextra -Wno-error"' >> ~/.bash_profile
 
           if grep -q "ID=fedora" /etc/os-release; then
             dnf install -y git
             dnf install -y gcc gcc-c++ cmake git boost-devel tinyxml-devel vtk-devel hdf5-devel \
-                           CGAL-devel vtk-qt octave python3-setuptools python3-Cython python3-h5py \
-                           python3-matplotlib
+                           CGAL-devel vtk-qt octave python3-pip \
+                           python3-setuptools python3-setuptools_scm \
+                           python3-Cython python3-numpy python3-h5py python3-matplotlib
+
+            # only for CI/CD test builds without networks.
+            dnf install -y iproute
           elif grep -q 'ID="almalinux"' /etc/os-release; then
             dnf install -y epel-release
             dnf config-manager --set-enabled powertools || dnf config-manager --set-enabled crb
 
             dnf install -y git
             dnf install -y gcc gcc-c++ cmake git boost-devel tinyxml-devel vtk-devel hdf5-devel \
-                           CGAL-devel vtk-qt octave python3-Cython python3-h5py \
-                           python3-matplotlib
+                           CGAL-devel vtk-qt octave python3-pip \
+                           python3-setuptools python3-setuptools_scm \
+                           python3-Cython python3-numpy python3-h5py python3-matplotlib
+
+            # only for CI/CD test builds without networks.
+            dnf install -y iproute
           elif grep -q "ID=debian" /etc/os-release || grep -q "ID=ubuntu" /etc/os-release; then
             # retry failed downloads 3 times
             echo 'Acquire::Retries "3";' > /etc/apt/apt.conf.d/80-retries
@@ -134,16 +145,19 @@ jobs:
 
             apt-get install -y build-essential git \
                                libhdf5-dev libtinyxml-dev \
-                               qtbase5-dev octave \
-                               python3-setuptools python3-numpy \
-                               python3-matplotlib python3-h5py
+                               qtbase5-dev \
+                               octave \
+                               python3-pip \
+                               python3-setuptools python3-numpy python3-matplotlib python3-h5py
 
             # VTK9 or VTK7, at least one must succeed (depending on Debian version)
             # VTK9,  VTK7, or VTK6, at least one must succeed (depending on Debian version)
             apt-get install -y libvtk9-dev libvtk9-qt-dev || \
                 apt-get install -y libvtk7-dev libvtk7-qt-dev || \
                   apt-get install -y libvtk6-dev
-                  # libvtk6-qt-dev is not used on Ubuntu 14.04
+
+            # only for CI/CD test builds without networks.
+            apt-get install -y iproute2
 
             if grep -q 'VERSION_ID="14.04"' /etc/os-release; then
               # Ubuntu 14.04 has CMake 2 by default, but we require CMake 3
@@ -160,31 +174,44 @@ jobs:
               apt-get install -y libgmp-dev libmpfr-dev
               git clone $GITHUB_SERVER_URL/CGAL/cgal.git --depth=1 --branch=v4.14.3
               cd cgal && mkdir build && cd build
-              cmake ../ && make && make install
-
-              # Ubuntu 14.04's cython3 package is ancient, install via pip instead
-              apt-get install -y python3-pip
+              cmake ../ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/opt
+              make -j`nproc` && make install
 
               # Must use Cython 3.0 or lower, since 3.1 uses f-string which is
               # incompatible with Python 3.4.
               pip3 install "cython<3.1"
+
+              # Ubuntu 14.04's matplotlib package is ancient, install the
+              # minimum version and its dependencies via pip. Note that the
+              # native build uses Python 3.4 while the venv build (tested
+              # later) uses Python 3.5 without these problems.
+              #
+              # pip's pyparsing is incompatible with Python 3.4
+              apt-get install -y python3-pyparsing
+
+              # same, newer cycler has incompatible type annotation
+              pip3 install "cycler==0.10.0"
+              pip3 install "matplotlib==2.1.0"
             else
               apt-get install -y libboost-all-dev
               apt-get install -y libcgal-dev
               apt-get install -y cmake
-              apt-get install -y cython3
-            fi
+              apt-get install -y python3-setuptools-scm cython3 python3-matplotlib
 
-            # old Debian
-            apt-get install -y libqt4-dev || (echo Qt4 not installed)
+              # testing Python packages in isolated venv
+              apt-get install -y python3-venv
+            fi
           elif grep -q "ID=alpine" /etc/os-release; then
             apk add bash \
                     build-base gmp-dev mpfr-dev git cmake \
                     boost-dev tinyxml-dev hdf5-dev cgal-dev vtk-dev \
                     octave \
-                    python3-dev cython \
-                    py3-setuptools \
-                    py3-matplotlib py3-numpy py3-h5py
+                    python3-dev py3-pip \
+                    py3-setuptools py3-setuptools_scm cython \
+                    py3-numpy py3-h5py py3-matplotlib
+
+            # only for CI/CD test builds without networks.
+            apk add iproute2
           elif [ -f /etc/centos-release ]; then
             # IPv6 on GitHub Actions is broken, causing random network failures
             # if a CDN rosolves to IPv6.
@@ -205,8 +232,12 @@ jobs:
             yum install -y epel-release
             yum install -y git
             yum install -y gcc gcc-c++ gmp-devel mpfr-devel \
-                           cmake3 git tinyxml-devel vtk-devel hdf5-devel \
-                           vtk-qt octave python3-pip python3-devel python3-Cython
+                           cmake3 git tinyxml-devel vtk-devel hdf5-devel octave \
+                           python3-devel python3-pip \
+                           python3-setuptools python3-setuptools_scm python3-Cython
+
+            # only for CI/CD test builds without networks.
+            yum install -y iproute
 
             # use cmake3 instead of default cmake2
             alternatives --install /usr/local/bin/cmake cmake /usr/bin/cmake3 99
@@ -220,12 +251,12 @@ jobs:
             # alternatives --install /usr/local/bin/g++ g++ /opt/rh/devtoolset-7/root/usr/bin/g++ 99
 
             # boost-predef is only available on Boost 1.55 and later.
+            #   /usr/local/include/CGAL/config.h:210:10: fatal error: boost/predef.h:
+            #   No such file or directory
             # We borrow a copy of Boost 1.58 from rh repo's mariadb backport package.
-            # /usr/local/include/CGAL/config.h:210:10: fatal error: boost/predef.h: No such
-            # file or directory # include <boost/predef.h>
             yum install -y rh-mariadb101-boost-devel
 
-            # CMake doesn't support CPATH
+            # copy rh repo's Boost to /usr/local because CMake doesn't support CPATH
             ln -s /opt/rh/rh-mariadb101/root/usr/include/boost /usr/local/include/boost
             mkdir /usr/local/lib64 && cd /usr/local/lib64
             for i in /opt/rh/rh-mariadb101/root/usr/lib64/libboost*; do
@@ -243,11 +274,14 @@ jobs:
             # to CXX compiler "GNU" version 4.8.5.
             git clone $GITHUB_SERVER_URL/CGAL/cgal.git --depth=1 --branch=v4.14.3
             cd cgal && mkdir build && cd build
-            cmake ../ && make && make install
+            cmake ../ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/opt
+            make -j`nproc` && make install
           else
             echo "Unknown system!"
             exit 1
           fi
+
+          ip netns add no-network
 
       - if: ${{ ! matrix.os.ancient }}
         name: Checkout openEMS-Project.git
@@ -273,7 +307,11 @@ jobs:
           git fetch --force $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git "+refs/pull/*/merge:refs/remotes/origin/pr/*"
           git checkout $GITHUB_SHA
 
-      - name: Build and install openEMS
+          # update git submodules, because the Pull Request may change it
+          git submodule init
+          git submodule update
+
+      - name: Build and install openEMS with --python-use-network=disable
         run: |
           source ~/.bash_profile
           cd $GITHUB_WORKSPACE/openEMS-Project
@@ -285,7 +323,12 @@ jobs:
             gui_opt=""
           fi
 
-          if ./update_openEMS.sh ~/opt --python $gui_opt; then
+          run_without_network="ip netns exec no-network"
+
+          if $run_without_network \
+             ./update_openEMS.sh ~/opt --python $gui_opt \
+             --python-venv-mode=disable --python-use-network=disable
+          then
             cat build_*.log
           else
             cat build_*.log
@@ -302,6 +345,55 @@ jobs:
 
       - name: Smoketest Python execution
         run: |
+          source ~/.bash_profile
+          cd $GITHUB_WORKSPACE/openEMS-Project/openEMS/.github/smoketests/python
+          python3 MSL_NotchFilter.py
+
+      - name: Build and install openEMS in venv
+        run: |
+          cd $GITHUB_WORKSPACE/openEMS-Project
+
+          # GUI is not supported on Alpine as VTK is built without Qt
+          if grep -q "ID=alpine" /etc/os-release; then
+            gui_opt="--disable-GUI"
+          else
+            gui_opt=""
+          fi
+
+          if grep -q "ID=ubuntu" /etc/os-release && \
+            grep -q 'VERSION_ID="14.04"' /etc/os-release; then
+              # Use Python 3.5 instead of the default Python 3.4 because
+              # 3.5 is the latest available version on Ubuntu 14.04, and
+              # also because Python 3.5 is the first Python that supported
+              # type annotation, while Python 3.4 is locked out from most
+              # modern packages.
+              apt-get install -y curl python3.5-dev
+
+              # Ubuntu 14.04 is ancient, and the python3.5-venv package is
+              # broken. So the best approach is to install a bare Python 3.5
+              # interpreter from apt, and bootstrapping pip ourselves.
+              python3.5 -m venv ~/opt/venv --without-pip
+              curl -O https://bootstrap.pypa.io/pip/3.5/get-pip.py
+              source ~/opt/venv/bin/activate
+              python3.5 get-pip.py
+          fi
+
+          # set it here because "source ~/venv/bin/activate" is
+          # incompatible with set -euo pipefail
+          source ~/.bash_profile
+          if ./update_openEMS.sh ~/opt --python $gui_opt; then
+            cat build_*.log
+          else
+            cat build_*.log
+            exit 1
+          fi
+
+          echo "addpath('~/opt/share/openEMS/matlab')" >> ~/.octaverc
+          echo "addpath('~/opt/share/CSXCAD/matlab')" >> ~/.octaverc
+
+      - name: Smoketest Python execution in venv
+        run: |
+          source ~/opt/venv/bin/activate
           source ~/.bash_profile
           cd $GITHUB_WORKSPACE/openEMS-Project/openEMS/.github/smoketests/python
           python3 MSL_NotchFilter.py
@@ -336,26 +428,11 @@ jobs:
           # the command is invalid.
           printf "\n%s\n" "set -euo pipefail" >> ~/.bash_profile
 
-          brew install cmake boost hdf5 cgal vtk python3 octave
+          brew install cmake boost hdf5 cgal vtk octave \
+                       python3 \
+                       python-setuptools numpy python-matplotlib cython
 
-          # cython is keg-only, which means it was not symlinked into /opt/homebrew,
-          # because this formula is mainly used internally by other formulae.
-          # Users are advised to use `pip` to install cython.
-          #
-          # So Python will NOT be able to find cython from "site-package", nor
-          # will the shell finds a cython executable from "bin"
-          #
-          # But then, `pip` can't be used directly due to PEP 668, which asks us
-          # to install cython via the system's package manager, buh Howebrew does
-          # not provide a fully-function package (unless you hack the symlinks
-          # manually).
-          #
-          # So, the real solution is creating a virtualenv specifically for openEMS
-          # usage.
-          python3 -m venv $HOME/opt
-          $HOME/opt/bin/pip3 install setuptools cython numpy h5py matplotlib
-
-      - name: Checkout openEMS.git
+      - name: Checkout openEMS-Project.git
         uses: actions/checkout@v4
         with:
           path: openEMS-Project
@@ -365,15 +442,14 @@ jobs:
           # We need tags for "git describe", otherwise build fails.
           fetch-depth: 0
 
-      - name: Build and install openEMS
+      - name: Build and install openEMS with --python-use-network=disable
         run: |
           source ~/.zprofile
           cd $GITHUB_WORKSPACE/openEMS-Project
 
-          # needed by Python modules
-          source $HOME/opt/bin/activate  # activate venv
-
-          if ./update_openEMS.sh ~/opt --python; then
+          if ./update_openEMS.sh ~/opt --python \
+             --python-venv-mode=disable --python-use-network=disable
+          then
             cat build_*.log
           else
             cat build_*.log
@@ -391,7 +467,29 @@ jobs:
       - name: Smoketest Python execution
         run: |
           cd $GITHUB_WORKSPACE/openEMS-Project/openEMS/.github/smoketests/python
-          $HOME/opt/bin/python3 MSL_NotchFilter.py
+          python3 MSL_NotchFilter.py
+
+      - name: Build and install openEMS in venv
+        run: |
+          # remove Python dependencies to see if venv really works
+          pip3 uninstall -y CSXCAD openEMS --break-system-packages
+          brew remove python-setuptools cython numpy python-matplotlib
+
+          source ~/.zprofile
+          cd $GITHUB_WORKSPACE/openEMS-Project
+
+          if ./update_openEMS.sh ~/opt --python; then
+            cat build_*.log
+          else
+            cat build_*.log
+            exit 1
+          fi
+
+      - name: Smoketest Python execution in venv
+        run: |
+          cd $GITHUB_WORKSPACE/openEMS-Project/openEMS/.github/smoketests/python
+          source ~/opt/venv/bin/activate
+          python3 MSL_NotchFilter.py
 
   FreeBSD:
     runs-on: ubuntu-latest
@@ -416,6 +514,12 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+          # checkout must be deep, not shallow.
+          # We need tags for "git describe", otherwise build fails.
+          fetch-depth: 0
 
       - name: Test in FreeBSD ${{ matrix.machine.version }} ${{ matrix.machine.arch }}
         uses: cross-platform-actions/action@v0.26.0
@@ -424,6 +528,7 @@ jobs:
           architecture: ${{ matrix.machine.arch }}
           operating_system: ${{ matrix.machine.os }}
           version: ${{ matrix.machine.version }}
+          sync_files: runner-to-vm
           run: |
             echo "Install dependencies..."
 
@@ -431,27 +536,17 @@ jobs:
             sudo pkg install -y bash cmake git boost-libs tinyxml vtk9 hdf5 cgal octave \
                                 qt5-core qt5-gui qt5-opengl qt5-xml \
                                 python3 \
-                                py311-setuptools \
+                                py311-pip py311-setuptools py311-wheel \
                                 py311-cython3 py311-numpy py311-h5py py311-matplotlib
                                 # prefix must match FreeBSD's default python
                                 # version. FreeBSD 14.2 uses Python 3.11 so
                                 # use "py311-"
 
-            echo "Clone $GITHUB_SHA from $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
-            cd ~/
-            git clone --recursive $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git openEMS-Project
+            echo "Build and install openEMS with --python-use-network=disable..."
 
-            echo "Build and install openEMS..."
-
-            cd ~/openEMS-Project
-
-            # force git to fetch all trees, otherwise "git checkout $GITHUB_SHA"
-            # fails with "fatal: reference is not a tree" for Pull Requests
-            git fetch --force $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git "+refs/heads/*:refs/remotes/origin/*"
-            git fetch --force $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git "+refs/pull/*/merge:refs/remotes/origin/pr/*"
-            git checkout $GITHUB_SHA
-
-            if bash ./update_openEMS.sh ~/opt --python; then
+            if ./update_openEMS.sh ~/opt --python \
+               --python-venv-mode=disable --python-use-network=disable
+            then
               cat build_*.log
             else
               cat build_*.log
@@ -462,9 +557,30 @@ jobs:
             echo "addpath('~/opt/share/CSXCAD/matlab')" >> ~/.octaverc
 
             echo "Smoketest Octave execution..."
-            cd ~/openEMS-Project/openEMS/.github/smoketests/octave/
+            cd openEMS/.github/smoketests/octave/
             octave MSL_NotchFilter.m
+            cd -
 
             echo "Smoketest Python execution..."
-            cd ~/openEMS-Project/openEMS/.github/smoketests/python
+            cd openEMS/.github/smoketests/python
+            python3 MSL_NotchFilter.py
+            cd -
+
+            echo "Build and install openEMS in venv..."
+            # remove Python dependencies to see if venv really works
+            pip uninstall -y CSXCAD openEMS --break-system-packages
+            sudo pkg remove -y py311-pip \
+                               py311-setuptools py311-wheel py311-setuptools-scm \
+                               py311-cython3 py311-numpy py311-h5py py311-matplotlib
+
+            if ./update_openEMS.sh ~/opt --python; then
+              cat build_*.log
+            else
+              cat build_*.log
+              exit 1
+            fi
+
+            echo "Smoketest Python execution in venv..."
+            cd openEMS/.github/smoketests/python
+            . ~/opt/venv/bin/activate
             python3 MSL_NotchFilter.py
