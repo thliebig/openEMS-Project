@@ -182,20 +182,19 @@ CentOS 7, but additional steps are required.
           ln -s $i /usr/local/lib64/
       done
 
-- In early GCC/G++, the support of C++11 features exists. But it's incomplete and
-  disabled by default. Before building openEMS itself or its dependencies, make
-  sure that the environmental variable ``CXXFLAGS`` contains ``--std=c++11``:
+- CentOS 7 uses GCC 4.8, which has only partial C++11 support, but it's currently
+  sufficient to build CSXCAD or openEMS.
 
-  .. code-block:: console
+  .. warning::
+     Manual ``-std=`` options are no longer needed in ``CXXFLAGS``. Before
+     building CSXCAD or openEMS, one should remove all ``-std=`` options
+     from ``CXXFLAGS``. This flag is now managed by CMake. See
+     :ref:`remove_cxx11` for details.
 
-     # enable C++11 for the current shell
-     export CXXFLAGS="$CXXFLAGS -std=c++11"
-
-- CentOS 7 uses GCC 4.8, which has only partial C++11 support. CGAL v4.14.3.
-  is the last version compatible with GCC 4.8. In newer CGAL versions,
-  the following errors occur: ``The compiler feature "cxx_decltype_auto" is
-  not known to CXX compiler "GNU" version 4.8.5.`` Thus we need to build
-  CGAL from source.
+- CGAL v4.14.3 is the last version compatible with GCC 4.8. In newer
+  CGAL versions, the following errors occur: ``The compiler feature
+  "cxx_decltype_auto" is not known to CXX compiler "GNU" version
+  4.8.5.`` Thus we need to build CGAL from source.
 
   CGAL can be installed to a custom user directory. Here, we use
   ``$HOME/opt/openEMS`` as an example. This directory must match the
@@ -286,15 +285,6 @@ required.
 Debian/Ubuntu
 """""""""""""""
 
-- In early GCC/G++, the support of C++11 features exists. But it's incomplete and
-  disabled by default. Before building openEMS itself or its dependencies, make
-  sure that the environmental variable ``CXXFLAGS`` contains ``--std=c++11``:
-
-  .. code-block:: console
-
-     # enable C++11 for the current shell
-     export CXXFLAGS="$CXXFLAGS -std=c++11"
-
 - Instead of ``libvtk9-dev``, on earlier versions of Debian/Ubuntu, you need to
   choose an older version of vtk. Both ``libvtk7-dev`` and ``libvtk6-dev`` are
   still supported.
@@ -328,11 +318,19 @@ Ubuntu 14.04 only
 
       sudo apt-get install boost1.55 boost1.55-dev
 
-- Ubuntu 14.04 uses GCC 4.8, which has only partial C++11 support. CGAL v4.14.3.
-  is the last version compatible with GCC 4.8. In newer CGAL versions,
-  the following errors occur: ``The compiler feature "cxx_decltype_auto" is
-  not known to CXX compiler "GNU" version 4.8.5.`` Thus we need to build
-  CGAL from source.
+- Ubuntu 14.04 uses GCC 4.8, which has only partial C++11 support, but it's currently
+  sufficient to build CSXCAD or openEMS.
+
+  .. warning::
+     Manual ``-std=`` options are no longer needed in ``CXXFLAGS``. Before
+     building CSXCAD or openEMS, one should remove all ``-std=`` options
+     from ``CXXFLAGS``. This flag is now managed by CMake. See
+     :ref:`remove_cxx11` for details.
+
+- CGAL v4.14.3 is the last version compatible with GCC 4.8. In newer
+  CGAL versions, the following errors occur: ``The compiler feature
+  "cxx_decltype_auto" is not known to CXX compiler "GNU" version
+  4.8.5.`` Thus we need to build CGAL from source.
 
   CGAL can be installed to a custom user directory. Here, we use
   ``$HOME/opt/openEMS`` as an example. This directory must match the

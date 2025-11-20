@@ -28,18 +28,40 @@ only used as the last troubleshooting step.
    * `openEMS (manual workflow)
      <https://github.com/thliebig/openEMS/blob/master/.github/workflows/ci.yml>`_
 
+.. _remove_cxx11:
+
+Remove C++11 from CXXFLAGS
+-------------------------------
+
+In previous documentation versions, ``--std=c++11`` was added
+globally via the environment variable ``CXXFLAGS``. However,
+C++ standard version is now managed by CMake. As a result, one
+should remove all ``-std=`` options from ``CXXFLAGS``.
+
+.. warning::
+
+    Passing ``-std=c++11`` is not just useless, but is now harmful. If an
+    legacy GCC version (e.g. GCC 4.8/5/6) is used, the following error may
+    occur::
+
+        /usr/include/boost/math/constants/constants.hpp: In static member
+        function 'static constexpr T boost::math::constants::detail::constant_half<T>
+        ::get(const mpl_::int_<5>&)':
+        /usr/include/boost/math/constants/constants.hpp:252:3: error: unable to
+        find numeric literal operator 'operator"" Q'
+           BOOST_DEFINE_MATH_CONSTANT(half, 5.000000000000000000000000000000000000e-01, "5.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000e-01")
+
+    This is a known Boost/GCC issue. According to a
+    Boost `bug report <https://github.com/boostorg/math/issues/272>`__:
+    when using both ``-std=gnu++11`` (automatically via CMake) and ``std=c++11``
+    (manually via ``CXXFLAGS``), GCC enters an inconsistent state. As a
+    result, Boost enables ``__float128`` when it is unsupported, causing
+    build failures.
+
 Install Dependencies
 ------------------------
 
 Refer to :ref:`install_requirements_src` for a list of dependencies.
-
-To ensure compatibility, we first enable C++11 in the global ``CXXFLAGS``.
-This is already the default for most systems, but we do this here to
-be safe:
-
-.. code-block:: console
-
-   export CXXFLAGS="-std=c++11"
 
 Install Basic Programs
 ------------------------
