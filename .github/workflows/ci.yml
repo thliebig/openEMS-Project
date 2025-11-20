@@ -99,8 +99,7 @@ jobs:
         run: |
           cat /etc/os-release
 
-          touch ~/.bash_profile
-          echo 'export CXXFLAGS="-std=c++11"' >> ~/.bash_profile
+          touch ~/.bash_profile  # set environment variables here
 
           # Use a strict shell, stop the interpreter on various errors,
           # so errors such as undefined variables are caught by CI/CD
