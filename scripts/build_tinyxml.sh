@@ -52,9 +52,9 @@ function die {
 }
 
 function print_help {
-  printf "(1) Build:\n  $0 --build-dir [TEMPORARY DIRECTORY] --install-dir [INSTALL DIRECTORY]\n\n"
-  printf "(2) Optional pre-downloading:\n  $0 --download\n\n"
-  printf "Optional override for (1) and (2):\n  $0 --download-dir [DOWNLOAD DIRECTORY]\n"
+  printf "(1) Build:\n  %s --build-dir [TEMPORARY DIRECTORY] --install-dir [INSTALL DIRECTORY]\n\n" "$0"
+  printf "(2) Optional pre-downloading:\n  %s --download\n\n" "$0"
+  printf "Optional override for (1) and (2):\n  %s --download-dir [DOWNLOAD DIRECTORY]\n" "$0"
 }
 
 function print_sha256_message {
@@ -93,8 +93,8 @@ function download {
     local digest="${FILES[i+2]}"
 
     if [ -f "$download_dir/$filename" ]; then
-      local expect_hash="$(sha256 "$download_dir/$filename")"
-      local actual_hash="$digest"
+      local expect_hash; expect_hash="$(sha256 "$download_dir/$filename")"
+      local actual_hash; actual_hash="$digest"
       if [ "$expect_hash" == "$actual_hash" ]; then
         echo "Skip download (file exists, hash valid): $download_dir/$filename"
         continue
@@ -109,7 +109,7 @@ function download {
     echo "curl -L $url -o $download_dir/$filename"
 
     # -L: follow redirect, REQUIRED!
-    curl -L $url -o "$download_dir/$filename"
+    curl -L "$url" -o "$download_dir/$filename"
 
     if [ ! -f "$download_dir/$filename" ]; then
       echo ""
@@ -118,7 +118,7 @@ function download {
       exit 1
     fi
 
-    local expect_hash="$(sha256 "$download_dir/$filename")"
+    local expect_hash; expect_hash=$(sha256 "$download_dir/$filename")
     local actual_hash="$digest"
     if [ "$expect_hash" != "$actual_hash" ]; then
       echo ""
@@ -157,104 +157,109 @@ function build {
   make && make install
 }
 
+function parse_args {
+  while :; do
+    # "+x" checks whether the variable is unset (not just empty), needed
+    # in strict "set -u" mode as it forbids the use of unbounded variables.
+    if [ -z ${1+x} ]; then
+      break
+    fi
+
+    case $1 in
+      -h|--help)
+        print_help
+        exit
+        ;;
+      --download)
+        DOWNLOAD_ONLY=1
+        ;;
+      --download-dir)
+        if [ "$2" ]; then
+          DOWNLOAD_DIR="$2"
+          shift
+        else
+          die "ERROR: --download-dir is specified with an empty value!"
+        fi
+        ;;
+      --download-dir=?*)
+        DOWNLOAD_DIR=${1#*=}
+        ;;
+      --download-dir=)
+        die "ERROR: --download-dir is specified with an empty value!"
+        ;;
+      --build-dir)
+        if [ "$2" ]; then
+          BUILD_DIR="$2"
+          shift
+        else
+          die "ERROR: --build-dir is specified with an empty value!"
+        fi
+        ;;
+      --build-dir=?*)
+        BUILD_DIR=${1#*=}
+        ;;
+      --build-dir=)
+        die "ERROR: --install-dir is specified with an empty value!"
+        ;;
+      --install-dir)
+        if [ "$2" ]; then
+          INSTALL_DIR="$2"
+          shift
+        else
+          die "ERROR: --install-dir is specified with an empty value!"
+        fi
+        ;;
+      --install-dir=?*)
+        INSTALL_DIR=${1#*=}
+        ;;
+      --install-dir=)
+        die "ERROR: --install-dir is specified with an empty value!"
+        ;;
+      --)
+        shift
+        break
+        ;;
+      -?*)
+        die "ERROR: Unknown option"
+        ;;
+      *)
+        break
+    esac
+
+    shift
+  done
+
+  if (( DOWNLOAD_ONLY )); then
+    return 0
+  else
+    if [ -z "$BUILD_DIR" ]; then
+      die "No --build-dir is specified, installation aborted!"
+    fi
+    if [ -z "$INSTALL_DIR" ]; then
+      die "No --install-dir is specified, installation aborted!"
+    fi
+
+    if [ ! -d "$BUILD_DIR" ]; then
+      die "$BUILD_DIR does not exist!"
+    fi
+    if [ ! -d "$INSTALL_DIR" ]; then
+      die "$INSTALL_DIR does not exist!"
+    fi
+
+    DOWNLOAD_DIR=$(readlink -f "$DOWNLOAD_DIR")
+    BUILD_DIR=$(readlink -f "$BUILD_DIR")
+    INSTALL_DIR=$(readlink -f "$INSTALL_DIR")
+  fi
+}
+
+# default values
 DOWNLOAD_ONLY=0
-DOWNLOAD_DIR=$(realpath "./downloads")
+DOWNLOAD_DIR=$(readlink -f "./downloads")
 INSTALL_DIR=""
 BUILD_DIR=""
 
-while :; do
-  # "+x" checks whether the variable is unset (not just empty), needed
-  # in strict "set -u" mode as it forbids the use of unbounded variables.
-  if [ -z ${1+x} ]; then
-    break
-  fi
-
-  case $1 in
-    -h|--help)
-      print_help
-      exit
-      ;;
-    --download)
-      DOWNLOAD_ONLY=1
-      ;;
-    --download-dir)
-      if [ "$2" ]; then
-        DOWNLOAD_DIR="$2"
-        shift
-      else
-        die "ERROR: --download-dir is specified with an empty value!"
-      fi
-      ;;
-    --download-dir=?*)
-      DOWNLOAD_DIR=${1#*=}
-      ;;
-    --download-dir=)
-      die "ERROR: --download-dir is specified with an empty value!"
-      ;;
-    --build-dir)
-      if [ "$2" ]; then
-        BUILD_DIR="$2"
-        shift
-      else
-        die "ERROR: --build-dir is specified with an empty value!"
-      fi
-      ;;
-    --build-dir=?*)
-      BUILD_DIR=${1#*=}
-      ;;
-    --build-dir=)
-      die "ERROR: --install-dir is specified with an empty value!"
-      ;;
-    --install-dir)
-      if [ "$2" ]; then
-        INSTALL_DIR="$2"
-        shift
-      else
-        die "ERROR: --install-dir is specified with an empty value!"
-      fi
-      ;;
-    --install-dir=?*)
-      INSTALL_DIR=${1#*=}
-      ;;
-    --install-dir=)
-      die "ERROR: --install-dir is specified with an empty value!"
-      ;;
-    --)
-      shift
-      break
-      ;;
-    -?*)
-      die "ERROR: Unknown option"
-      ;;
-    *)
-      break
-  esac
-
-  shift
-done
-
-if (( DOWNLOAD_ONLY )); then
-  download "$DOWNLOAD_DIR"
-  exit 0
-fi
-
-if [ -z "$BUILD_DIR" ]; then
-  die "No --build-dir is specified, installation aborted!"
-fi
-if [ -z "$INSTALL_DIR" ]; then
-  die "No --install-dir is specified, installation aborted!"
-fi
-
-if [ ! -d "$BUILD_DIR" ]; then
-  die "$BUILD_DIR does not exist!"
-fi
-if [ ! -d "$INSTALL_DIR" ]; then
-  die "$INSTALL_DIR does not exist!"
-fi
-
-DOWNLOAD_DIR=$(realpath "$DOWNLOAD_DIR")
-BUILD_DIR=$(realpath "$BUILD_DIR")
-INSTALL_DIR=$(realpath "$INSTALL_DIR")
+# modifies global variables above
+parse_args "$@"
 
 download "$DOWNLOAD_DIR"
 build "$DOWNLOAD_DIR" "$BUILD_DIR" "$INSTALL_DIR"
