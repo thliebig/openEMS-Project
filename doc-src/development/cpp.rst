@@ -1,7 +1,7 @@
 .. _manual_build:
 
-Manual Build and Install
-=====================================
+Manual C++ Build and Install
+===============================
 
 During development and testing, it's often necessary to build and
 install openEMS manually. Such cases are encountered when creating
@@ -15,8 +15,8 @@ and :ref:`install_readymade_package_src` first. This section is
 only used as the last troubleshooting step.
 
 .. tip::
-   The following instructions are working as of writing, but it can become
-   outdated. If you have difficulties building the project from source,
+   The following instructions are working as the time of writing, but it
+   can become outdated. If you have difficulties building the project from source,
    refer to these official CI/CD test scripts in the source code. They
    contain all commands necessary for building openEMS on 10+ different
    systems.
@@ -28,10 +28,125 @@ only used as the last troubleshooting step.
    * `openEMS (manual workflow)
      <https://github.com/thliebig/openEMS/blob/master/.github/workflows/ci.yml>`_
 
+
+Install Dependencies
+------------------------
+
+Before proceeding...
+
+1. Refer to :ref:`install_requirements_src` for a list of dependencies.
+
+2. Check :ref:`special_requirements` for special setups that are potentially
+   needed on your system.
+
+Install Basic Programs
+------------------------
+
+1. Build fparser:
+
+   .. code-block:: console
+
+       cd fparser
+       mkdir build
+       cd build
+       cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
+       make
+       make install
+
+       cd ..
+
+2. Build CSXCAD. The CMake variales ``-DFPARSER_ROOT_DIR``
+   should be pointed to the install root paths of fparser,
+   which are usually the same as ``-DCMAKE_INSTALL_PREFIX``.
+
+   .. code-block:: console
+
+       cd CSXCAD
+       mkdir build
+       cd build
+       cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS -DFPARSER_ROOT_DIR=$HOME/opt/openEMS
+       make
+       make install
+
+       cd ..
+
+3. Build openEMS. The CMake variales ``-DFPARSER_ROOT_DIR`` and
+   ``-DCSXCAD_ROOT_DIR`` should be pointed to the install root paths
+   of fparser and CSXCAD, which are usually the same as
+   ``-DCMAKE_INSTALL_PREFIX``.
+
+   .. code-block:: console
+
+       cd openEMS
+       mkdir build
+       cd build
+       cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS -DFPARSER_ROOT_DIR=$HOME/opt/openEMS -DCSXCAD_ROOT_DIR=$HOME/opt/openEMS
+       make
+       make install
+
+       cd ..
+
+.. important::
+
+   Don't forget to set ``-DFPARSER_ROOT_DIR`` and ``-DCSXCAD_ROOT_DIR``. They are
+   NOT optional.
+
+
+Install AppCSXCAD GUI (optional)
+------------------------------------
+
+1. Build QCSXCAD:
+
+.. code-block:: console
+
+    cd QCSXCAD
+    mkdir build
+    cd build
+    cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
+    make
+    make install
+
+    cd ..
+
+2. Build AppCSXCAD:
+
+.. code-block:: console
+
+    cd AppCSXCAD
+    mkdir build
+    cd build
+    cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
+    make
+    make install
+
+    cd ..
+
+openEMS search path
+--------------------
+
+After the build is complete, add ``~/openEMS/bin`` into your search
+path::
+
+    export PATH="$HOME/openEMS/bin:$PATH"
+
+You need to write this line into your shell's profile, such as ``~/.bashrc``
+or ``~/.zshrc`` to make this change persistent.
+
+Setup the Octave/Matlab or Python Interfaces
+-----------------------------------------------
+
+- **Optional:** Setup the Octave/Matlab environment, see :ref:`Octave Interface Install <octave_install>`.
+- **Optional:** Install the Python modules, see :ref:`python_binding_build_manual`.
+
+.. _special_requirements:
+
+Special Requirements
+---------------------
+
 .. _remove_cxx11:
 
 Remove C++11 from CXXFLAGS
--------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In previous documentation versions, ``--std=c++11`` was added
 globally via the environment variable ``CXXFLAGS``. However,
@@ -58,68 +173,15 @@ should remove all ``-std=`` options from ``CXXFLAGS``.
     result, Boost enables ``__float128`` when it is unsupported, causing
     build failures.
 
-Install Dependencies
-------------------------
-
-Refer to :ref:`install_requirements_src` for a list of dependencies.
-
-Install Basic Programs
-------------------------
-
-1. Build fparser:
-
-.. code-block:: console
-
-    cd fparser
-    mkdir build
-    cd build
-    cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
-    make
-    make install
-
-    cd ..
-
-2. Build CSXCAD:
-
-.. code-block:: console
-
-    cd CSXCAD
-    mkdir build
-    cd build
-    cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
-    make
-    make install
-
-    cd ..
-
-3. Build openEMS. The CMAke variales ``-DFPARSER_ROOT_DIR`` and
-``-DCSXCAD_ROOT_DIR`` should be pointed to the install root paths
-of fparser and CSXCAD, which are usually the same as
-``-DCMAKE_INSTALL_PREFIX``.
-
-.. code-block:: console
-
-    cd openEMS
-    mkdir build
-    cd build
-    cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS -DFPARSER_ROOT_DIR=/tmp/opt -DCSXCAD_ROOT_DIR=/tmp/opt
-    make
-    make install
-
-    cd ..
-
-.. important::
-
-   Don't forget to set ``-DFPARSER_ROOT_DIR`` and ``-DCSXCAD_ROOT_DIR``. They are
-   NOT optional.
+.. _tinyxml_from_source:
 
 Download and Build TinyXML from Source
----------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Unfortunately, openEMS depends on TinyXML, which is unmaintained since 2011 and
-has been removed from Homebrew (TinyXML2 is not API-compatible). As a workaround,
-on macOS, ``update_openEMS.sh`` will automatically download TinyXML and patches online,
-building it from source.
+For macOS users, unfortunately, openEMS depends on TinyXML, which is unmaintained
+since 2011 and has been removed from Homebrew (TinyXML2 is not API-compatible).
+As a workaround, on macOS, ``update_openEMS.sh`` will automatically download
+TinyXML and patches online, building it from source.
 
 .. tip::
    Only macOS Homebrew has removed TinyXML. As of writing, it's still available
@@ -186,54 +248,3 @@ manual build process without using any script.
       mkdir build && cd build
       cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
       make && make install
-
-Install Python bindings (optional)
-------------------------------------
-
-See :ref:`python_binding_build_manual`.
-
-Install AppCSXCAD GUI (optional)
-------------------------------------
-
-1. Build QCSXCAD:
-
-.. code-block:: console
-
-    cd QCSXCAD
-    mkdir build
-    cd build
-    cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
-    make
-    make install
-
-    cd ..
-
-2. Build AppCSXCAD:
-
-.. code-block:: console
-
-    cd AppCSXCAD
-    mkdir build
-    cd build
-    cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
-    make
-    make install
-
-    cd ..
-
-openEMS search path
---------------------
-
-After the build is complete, add ``~/openEMS/bin`` into your search
-path::
-
-    export PATH="$HOME/openEMS/bin:$PATH"
-
-You need to write this line into your shell's profile, such as ``~/.bashrc``
-or ``~/.zshrc`` to make this change persistent.
-
-Setup the Octave/Matlab or Python Interfaces
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- **Optional:** Setup the Octave/Matlab environment, see :ref:`Octave Interface Install <octaveinstall>`
-- **Optional:** Install the Python modules, see :ref:`Python Interface Install <pyinstall>`

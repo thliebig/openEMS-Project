@@ -8,8 +8,15 @@ Instructions how to install the **CSXCAD & openEMS Octave/Matlab interface**.
 Requirements
 ------------
 
-Install Octave_ or Matlab_ and make sure openEMS and dependencies were installed correctly.
-See :ref:`Install from Source <install_src>` for more details.
+Make sure openEMS and dependencies were installed correctly, and ensure
+Ensure Octave_ (or Matlab_) has also been installed.
+
+.. code-block:: bash
+
+   octave --version
+
+If not, see :ref:`Install from Source <install_requirements_src>` for
+instructions.
 
 Setup
 -----
@@ -38,20 +45,6 @@ located ``/usr/share/openEMS/matlab`` and ``/usr/share/CSXCAD/matlab``.
 
 Alternatively you can setup these path more permanently using the "Edit"-Menu
 using "Set Path" in Octave.
-
-.. _Octave macOS Install:
-
-macOS
-^^^^^^
-
-First, ensure Octave has been installed. If not:
-
-.. code-block:: bash
-
-    brew install octave
-
-Follow the :ref:`Unix/Linux <Octave Linux Install>` section to add
-CSXCAD and openEMS libraries to your ``~/.octaverc`` search paths.
 
 .. _Octave Windows Install:
 
