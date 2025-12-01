@@ -42,10 +42,10 @@ Although these solid-state physics parameters may appear unrelated to practical
 RF/microwave engineering, in FDTD, they mainly act as calculation tools rather
 than providing physical interpretations.
 The required parameters are obtained by numerically fitting the model to
-measured material response curves for the purpose of simulations. Both first-order
-and higher-order models are supported, using one or more sets of parameters.
+measured material response curves for the purpose of simulations. Both single-term
+and multi-term models are supported, using one or more sets of parameters.
 There are many
-"degrees of freedom" in the fitting process. If a first-order fit fails to
+"degrees of freedom" in the fitting process. If a single-term fit fails to
 produce the desired curves, more parameters can be added until one obtains a
 satisfactory fit.
 
@@ -138,7 +138,7 @@ The model is defined by the following parameters:
    dielectric). This convention is never used in openEMS, its use in simulation
    code is strongly discouraged.
 
-For the first-order model, use one set of parameters (i.e. ``EpsilonDelta_1``,
+For the single-term model, use one set of parameters (i.e. ``EpsilonDelta_1``,
 ``EpsilonRelaxTime_1``). For higher-order modeling, add more parameters with
 increasing indices in their suffixes ``n`` (e.g. ``EpsilonDelta_2``, ``EpsilonRelaxTime_2``,
 ...)
@@ -307,7 +307,7 @@ basic constant-property material model, and are not implemented in
 the Drude/Lorentz model per se. But they should be considered in the curve
 fitting process.
 
-For the first-order model, use one set of parameters (i.e. ``EpsilonPlasmaFrequency``,
+For the single-term model, use one set of parameters (i.e. ``EpsilonPlasmaFrequency``,
 ``EpsilonRelaxTime``) without suffix ``_n``. For higher-order modeling, add more parameters
 with increasing indices in their suffixes `n` (e.g.  ``EpsilonPlasmaFrequency_1``,
 ``EpsilonRelaxTime_1``, ``EpsilonPlasmaFrequency_2``, ``EpsilonRelaxTime_2``, ...)
@@ -384,7 +384,7 @@ described, and two additional Lorentz parameters.
 
 If the material is non-magnetic, ``f_mue_Lor_Pole_n`` is optional.
 
-For the first-order model, use one set of parameters (i.e. ``f_eps_Lor_Pole``)
+For the single-term model, use one set of parameters (i.e. ``f_eps_Lor_Pole``)
 without suffix ``_n``. For higher-order modeling, add more parameters with increasing
 indices in their suffixes `n` (e.g. ``f_mue_Lor_Pole_1``, ``f_mue_Lor_Pole_2``, ...)
 
@@ -548,7 +548,7 @@ Relation to Other Formulations
 The Drude/Lorentz formulation used by openEMS is not identical
 to the common formulations found in textbooks and the literature.
 In fact, many different variations are in use due to their flexibility.
-They can be formulated as first-order or higher-order models,
+They can be formulated as single-term or multi-term models,
 with or without the conductivity term, with or
 without the asymptotic term, with different definitions of the
 asymptotic terms, and with different symbols and sign conventions.
@@ -562,22 +562,22 @@ combinations of the mentioned factors. However, after reading
 this section, readers will hopefully understand how to rewrite
 one formulation to another by simple algebra.
 
-First-Order Lorentz Model
+Single-Term Lorentz Model
 ''''''''''''''''''''''''''
 
-When there's only one term, these models reduces to their first-order form. For
-example, the first-order Lorentz model of dielectric materials is defined by:
+When there's only one term, these models reduces to their single-term form. For
+example, the single-term Lorentz model of dielectric materials is defined by:
 
 .. math::
    \epsilon(\omega) = \epsilon_0 \epsilon_{r,\infty} \left[ 1 -
    \frac{\omega^{2}_{p\epsilon}}{\omega^2 - \omega^2_\mathrm{Lor\mu} - j \omega \frac{1}{\tau_{\epsilon}}} \right]
    - j \frac{\kappa}{\omega}
 
-First-Order Drude Model
+Single-Term Drude Model
 '''''''''''''''''''''''''
 
 When the Lorentz pole frequency term :math:`\omega^2_\mathrm{Lor\mu} = 0`,
-the Lorentz model reduces to the Drude model. For example, the first-order
+the Lorentz model reduces to the Drude model. For example, the single-term
 Drude model of dielectric materials is defined by:
 
 .. math::
@@ -585,11 +585,11 @@ Drude model of dielectric materials is defined by:
    \frac{\omega^{2}_{p\epsilon}}{\omega^2 - j \omega \frac{1}{\tau_{\epsilon}}} \right]
    - j \frac{\kappa}{\omega}
 
-First-Order Drude Model w/o Asymptotic and Conductivity Terms
+Single-Term Drude Model w/o Asymptotic and Conductivity Terms
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 The openEMS's Drude model contains a conductivity term :math:`\kappa`.
-For non-conductive material, the first-order Drude model reduces to:
+For non-conductive material, the single-term Drude model reduces to:
 
 .. math::
    \epsilon(\omega) = \epsilon_0 \epsilon_{r,\infty} \left[ 1 -
@@ -637,7 +637,7 @@ and does not represent physical processes at the atomic level.
 Relaxation Time Definitions
 '''''''''''''''''''''''''''
 
-Taflove's formulation of the first-order Lorentz model
+Taflove's formulation of the single-term Lorentz model
 is ( [3]_, page 355, equation 9.6):
 
 .. math::
@@ -666,7 +666,7 @@ Asymptotic Term Definitions
 
 The formulation of Drude and Lorentz models are slightly different in
 comparison to the forms in standard textbooks, due to how the asymptotic
-term is defined. In most textbooks, the first-order Lorentz model
+term is defined. In most textbooks, the single-term Lorentz model
 (without the conductivity term) is defined as ( [3]_, page 355, equation 9.6;
 [4]_, page 293, equation 10.25):
 
@@ -747,7 +747,7 @@ without the asymptotic term:
                     &= \epsilon_0 \left[ 1 - \frac{\omega_p^2}{\omega^2 - j'\omega\frac{1}{\tau_p}} \right]
    \end{align}
 
-This is our first-order Drude model without asymptotic and conductivity
+This is our single-term Drude model without asymptotic and conductivity
 terms, which matching the description above. Introducing both additional
 terms according to the aforementioned procedure would reproduce the exact
 openEMS equations.
@@ -776,7 +776,7 @@ and multiplying by :math:`\frac{-1}{-1}`, we obtain:
    \epsilon_r(\omega) &= 1 - \Delta \epsilon_r \frac{\omega_p^2}{\omega^2-\omega_0^2-j'\omega \frac{1}{\tau_p}} \\
    \end{align}
 
-This is our first-order Lorentz model without asymptotic and conductivity
+This is our single-term Lorentz model without asymptotic and conductivity
 terms, which matching the description above. Introducing both additional
 terms according to the aforementioned procedure would reproduce the exact
 openEMS equations.
