@@ -73,8 +73,9 @@ In circuit design, the permittivity of a dielectric material or the
 permeability of a magnetic material is often given as a real-valued
 constant.
 However, this is an incomplete definition that is only suitable for
-DC or narrowband applications. For wideband EM simulation with
-dispersion and loss, one needs the full definition.
+narrowband applications, or high-performance materials with low dispersion
+throughout the spectrum. For wideband EM simulation with dispersion and
+loss, one needs the full definition.
 
 The complex permittivity and permeability are functions of frequency:
 
@@ -84,17 +85,24 @@ The complex permittivity and permeability are functions of frequency:
    \mu(\omega) &= \mu'(\omega) + j\mu''(\omega)
    \end{align}
 
-In dielectric materials, the complex permittivity function describes
+In dielectric materials, the complex permittivity describes
 the polarization and associated energy loss.
 In magnetic materials, the complex permeability describes the magnetization
 and associated energy loss.
 
-The effects of both dielectric and conductive (ohmic) losses are included
-in the imaginary parts in the complex representation. Thus, the electric
-and magnetic loss tangents can be defined as:
+The imaginary part of a complex permittivity or permeability represents
+the energy loss. Alternatively, one can describe the the same loss by
+*loss tangent*. The electric and magnetic loss tangents can be defined
+as:
 
 .. math::
    \tan{\delta_\epsilon} = \frac{\epsilon''}{\epsilon'},\space\space \tan{\delta_\mu} = \frac{\mu''}{\mu'}
+
+.. tip::
+
+   Knowing the real permittivity (or permeability) and loss tangent at
+   a given frequency is equivalent to knowing one data point on the
+   complex permittivity (or permeability) function.
 
 Debye Model
 """"""""""""
@@ -234,7 +242,7 @@ checking the model and fitting quality.
 
 Definition::
 
-    [paramDebye, paramSarkar] = CalcDebyeMaterial(f, eps_r, kappa, eps_Delta, t_relax)
+    [paramDebye, paramSarkar] = CalcDjordjevicSarkarApprox(varargin)
 
 The parameters are nearly identical to :func:`AddDjordjevicSarkarMaterial`,
 see :func:`CalcDjordjevicSarkarApprox` for details.
@@ -679,7 +687,7 @@ But openEMS follows Rennings's formulation and defines it as
    \epsilon(\omega)_\mathrm{openEMS} &= \epsilon_0 \epsilon_{r,\infty} \left[ 1 -
    \frac{\omega^{2}_{p\epsilon\mathrm{(openEMS)}}}{\omega^2 -\omega^2_\mathrm{Lor\epsilon} - j \omega \frac{1}{\tau_{\epsilon}}} \right] \\
    &= \epsilon_0 \epsilon_{r,\infty} - \epsilon_0 \epsilon_{r,\infty}
-   \frac{\omega^{2}_{p\epsilon}}{\omega^2 -\omega^2_{\mathrm{Lor}\epsilon} -
+   \frac{\omega^{2}_{p\epsilon\mathrm{(openEMS)}}}{\omega^2 -\omega^2_{\mathrm{Lor}\epsilon} -
    j \omega \frac{1}{\tau_{\epsilon}}}
    \end{align}
 
@@ -693,7 +701,7 @@ formulation to openEMS's formulation, the plasma frequency must be redefined:
 
    \omega_{p\epsilon\mathrm{(openEMS)}} =
     \omega_{p\epsilon\mathrm{(book)}}
-    \sqrt{\Delta \epsilon_r}
+    \sqrt{\frac{\Delta \epsilon_r}{\epsilon_{r,\infty}}}
 
 Sign Conventions
 '''''''''''''''''''
@@ -744,8 +752,8 @@ terms, which matching the description above. Introducing both additional
 terms according to the aforementioned procedure would reproduce the exact
 openEMS equations.
 
-Example: Fox and Taflove's Lorentz Model Formulation
-......................................................
+Example: Fox's Lorentz Model Formulation
+.........................................
 
 The textbook *Optical Properties of Solids* by Mark Fox defines the
 Lorentz model as ( [5]_, page 36, equation 2.24):
