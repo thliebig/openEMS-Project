@@ -1,13 +1,14 @@
 Boundary Conditions
 =====================
 
-In openEMS, all physical phenomena occur in a small simulation box, so
-we must decide what happens to the electromagnetic fields at its edges.
-These are known as the *boundary conditions* of Partial Differential
-Equations (PDEs). To create an effective simulation, we must select the
-appropriate boundary conditions. There are six in total, located at
-the six faces of the box: ``x_min``, ``x_max``, ``y_min``, ``y_max``,
-``z_min``, ``z_max``. Each is independently adjustable.
+In computational electromagnetics, all physical phenomena occur in a small
+simulation box, so we must decide what happens to the electromagnetic
+fields at its edges. These are known as the *boundary conditions* of
+Partial Differential Equations (PDEs). To create an effective
+simulation, we must select the appropriate boundary conditions. There
+are six in total, located at the six faces of the box: ``x_min``,
+``x_max``, ``y_min``, ``y_max``, ``z_min``, ``z_max``. Each is
+independently adjustable.
 
 Set Boundary Conditions
 ------------------------
@@ -19,30 +20,32 @@ of ``[x_min, x_max, y_min, y_max, z_min, z_max]``. Each element is a string or
 integer according to the following table. Note that the use of integers is
 discouraged due to poor readability, but one may encounter them in older examples.
 
-+-----------------------------+-----------+----+-------------------------------------------------+
-|      Boundary Condition     | String    | ID |                   Notes                         |
-+=============================+===========+====+=================================================+
-|  Perfect Electric Conductor | ``PEC``   | 0  | Reflective. Fast.                               |
-+-----------------------------+-----------+----+-------------------------------------------------+
-|  Perfect Magnetic Conductor | ``PMC``   | 1  | Reflective. Fast.                               |
-+-----------------------------+-----------+----+-------------------------------------------------+
-|  Mur's Absorbing Boundary   | ``MUR``   | 2  | Absorbing. Slow.                                |
-|                             |           |    |                                                 |
-|                             |           |    | Only absorbs waves orthogonal to the boundary.  |
-|                             |           |    |                                                 |
-|                             |           |    | Named after Gerrit Mur.                         |
-+-----------------------------+-----------+----+-------------------------------------------------+
-|  Perfectly Matched Layer    | ``PML_8`` | 3  | Absorbing. Slowest.                             |
-|                             |           |    |                                                 |
-|                             | ``PML_x`` |    | ``x`` has a range [6, 20], 8 by default.        |
-|                             |           |    |                                                 |
-|                             |           |    | Occupies ``x`` mesh lines near the boundary.    |
-|                             |           |    |                                                 |
-|                             |           |    |                                                 |
-|                             |           |    | Keep structures ``x`` cells away from boundary. |
-|                             |           |    |                                                 |
-|                             |           |    | For radiating structures, λ / 4 away.           |
-+-----------------------------+-----------+----+-------------------------------------------------+
++-----------------------------+-----------+----+--------------------------------------------------+
+|      Boundary Condition     | String    | ID |                   Notes                          |
++=============================+===========+====+==================================================+
+|  Perfect Electric Conductor | ``PEC``   | 0  | Reflective. Fast.                                |
++-----------------------------+-----------+----+--------------------------------------------------+
+|  Perfect Magnetic Conductor | ``PMC``   | 1  | Reflective. Fast.                                |
++-----------------------------+-----------+----+--------------------------------------------------+
+|  Mur's Absorbing Boundary   | ``MUR``   | 2  | Absorbing. Slow.                                 |
+|                             |           |    |                                                  |
+|                             |           |    | Best only for waves orthogonal to boundary with  |
+|                             |           |    |                                                  |
+|                             |           |    | a known phase velocity (:math:`c_0` by default). |
+|                             |           |    |                                                  |
+|                             |           |    | Named after Gerrit Mur.                          |
++-----------------------------+-----------+----+--------------------------------------------------+
+|  Perfectly Matched Layer    | ``PML_8`` | 3  | Absorbing. Slowest.                              |
+|                             |           |    |                                                  |
+|                             | ``PML_x`` |    | ``x`` has a range [6, 20], 8 by default.         |
+|                             |           |    |                                                  |
+|                             |           |    | Occupies ``x`` mesh lines near the boundary.     |
+|                             |           |    |                                                  |
+|                             |           |    |                                                  |
+|                             |           |    | Keep structures ``x`` cells away from boundary.  |
+|                             |           |    |                                                  |
+|                             |           |    | For radiating structures, λ / 4 away.            |
++-----------------------------+-----------+----+--------------------------------------------------+
 
 Matlab/Octave example::
 
@@ -140,19 +143,20 @@ Two kinds of Absorbing Boundary Conditions are implemented in openEMS.
 
 #. **Mur's Boundary Condition (MUR)**. This is a
    first-generation boundary condition purely defined by differential
-   equations, originally invented by Gerrit Mur in the 1980s. It has
-   a moderate computational overhead, but it works only if the EM wave
-   is traveling at a direction orthogonal to the boundary, with a
-   well-defined phase velocity. Thus, reflections may cause errors if
-   strong radiation exists due to imperfect absorption, or if Mur's
-   phase velocity parameter differs from the actual EM wave.
+   equations, originally invented by Gerrit Mur in the 1980s, with
+   a moderate computational overhead. It works optimally when
+   the EM wave is traveling at a direction orthogonal to the boundary,
+   at a known phase velocity. However, it's less effective if a
+   wave's incident angle is oblique, or if the boundary's phase velocity
+   parameter differs from the actual EM wave. Imperfect absorption
+   contributes to simulation errors.
 
    .. seealso::
 
       By default, Mur's phase velocity parameter is set to the speed
-      of light. It may be adjusted via :func:`SetBoundaryCond`'s optional
-      argument ``MUR_PhaseVelocity``. For Python, this API is currently
-      unimplemented.
+      of light in free space. It may be adjusted via
+      :func:`SetBoundaryCond`'s optional argument ``MUR_PhaseVelocity``.
+      For Python, this API is currently unimplemented.
 
 #. **Perfectly Matched Layer (PML)**. This is the
    second-generation boundary condition proposed in the 1990s, modeling
@@ -175,6 +179,8 @@ Two kinds of Absorbing Boundary Conditions are implemented in openEMS.
       of the simulation box are dedicated to the PML. This is an assumption made
       by the simulator and not visible in AppCSXCAD. Ensure your structures do not
       overlap with edge cells (unless intentionally terminating a region with
-      the PML). Radiating structures must be kept at a distance of :math:`\lambda / 4`
-      from PML as intrusion of evanescent waves (fringe fields) can create
-      numerical instability.
+      the PML). As a rule of thumb, keep radiating structures at a distance of
+      :math:`\lambda / 4` from PML, as intrusion of evanescent waves (fringe
+      fields) can create numerical instability. When in doubt, make a secondary
+      simulation with the PML further away. If nothing changes, the original
+      clearance was sufficient.
