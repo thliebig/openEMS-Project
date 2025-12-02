@@ -4,6 +4,7 @@ sphinx_rtd_theme
 myst_parser
 numpydoc
 sphinxcontrib-video
+sphinx-tabs
 
 # CSXCAD and openEMS must actually be installed to the system to
 # generate Python modules via "automodule", meaning that both the
