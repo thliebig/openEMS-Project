@@ -227,6 +227,8 @@ between 1 and 2 in space is defined::
    expressive if tricky. See the fparser project documentation [1]_
    for syntax.
 
+.. _concept_magnetic_conductivity:
+
 Magnetic Conductivity
 """""""""""""""""""""""
 
@@ -251,9 +253,12 @@ conductivity terms, respectively.
 
 The modified Faraday's law allows one to introduce both electric and
 magnetic conduction losses, which simplifies certain aspects of a
-simulation. For example, the Perfectly Matched Layer's internal
-implementation makes use of magnetic conductivity to enable EM wave
-absorption.
+simulation. For example, the Perfect Magnetic Conductor (PMC)
+:ref:`boundary condition <concept_bc>` is a wall with
+:math:`\sigma \to \infty`, which allowing cutting a symmetrical
+simulation domain by half by implicitly enforcing field symmetry.
+The Perfectly Matched Layer's internal implementation makes use
+of magnetic conductivity to enable EM wave absorption.
 
 .. tip::
    In the physical universe, magnetic monopoles don't exist according

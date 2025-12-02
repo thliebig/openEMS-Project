@@ -1,3 +1,5 @@
+.. _concept_bc:
+
 Boundary Conditions
 =====================
 
@@ -85,16 +87,17 @@ conditions implicitly enforce these behaviors.
 the (tangential) electric field at the boundary to 0.
 Since the electric field lines can't penetrate this boundary, it's
 equivalent to a Perfect Electric Conductor (PEC) with infinite
-conductivity, also known as an Electric Wall. All incoming waves are
-fully reflected back, analogous to a 1D transmission line terminated
-by a short circuit.
+conductivity :math:`\kappa`, also known as an Electric Wall. All incoming
+waves are fully reflected back, analogous to a 1D transmission line
+terminated by a short circuit.
 
 **Perfect Magnetic Conductor (PMC)**: By duality, it sets the magnetic
 field to 0 at the boundary. It acts as a boundary at which
 the magnetic field lines can't penetrate. It's equivalent to a Perfect
-Magnetic Conductor (PMC) with infinite permeability, also known as the
-Magnetic Wall. All incoming waves are fully reflected back as well,
-but with a phase opposite to that of the PEC, analogous to a 1D
+Magnetic Conductor (PMC) with infinite conductivity :math:`\sigma`
+(see :ref:`concept_magnetic_conductivity`), also
+known as the Magnetic Wall. All incoming waves are fully reflected back
+as well, but with a phase opposite to that of the PEC, analogous to a 1D
 transmission line terminated by an open circuit. It's used mainly as
 a mathematical tool to enforce field symmetry when simulating a
 half-structure, as no natural material in the real world behaves like
