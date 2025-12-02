@@ -47,18 +47,22 @@ Example
 It's added by the :func:`AddMetal` method in Matlab/Octave, or by the
 :meth:`~CSXCAD.ContinuousStructure.AddMetal` method in Python.
 
-Create a Perfect Electric Conductor named ``plate``::
+Create a Perfect Electric Conductor named ``plate``:
 
-    % Matlab/Octave
-    csx = InitCSX();
-    csx = AddMetal(csx, 'plate');
-    % derive primitives via AddBox(), AddCylinder(), etc.
+.. tabs::
 
-    # Python
-    import CSXCAD
-    csx = CSXCAD.ContinuousStructure()
-    metal = csx.AddMetal('plate')
-    # derive primitives via metal.AddBox(), metal.AddCylinder(), etc.
+   .. code-tab:: octave
+
+      csx = InitCSX();
+      csx = AddMetal(csx, 'plate');
+      % derive primitives via AddBox(), AddCylinder(), etc.
+
+   .. code-tab:: python
+
+      import CSXCAD
+      csx = CSXCAD.ContinuousStructure()
+      metal = csx.AddMetal('plate')
+      # derive primitives via metal.AddBox(), metal.AddCylinder(), etc.
 
 Thin Conducting Sheet
 -----------------------
@@ -87,18 +91,22 @@ It's added by the :func:`AddConductingSheet` method in Matlab/Octave, or by the
 The following example creates a Thin Conducting Sheet material named
 ``copper_foil``, with a conductivity of 59.6e6 S/m and a simulated thickness
 of 35 µm (the shape created from it must be a 2D plane with zero thickness).
-This is typical for a 1-oz circuit board::
+This is typical for a 1-oz circuit board:
 
-    % Matlab/Octave
-    csx = InitCSX();
-    csx = AddConductingSheet(csx, 'copper', 59.6e6, 35e-6);
-    % derive primitives via AddBox(), AddCylinder(), etc.
+.. tabs::
 
-    # Python
-    import CSXCAD
-    csx = CSXCAD.ContinuousStructure()
-    sheet = csx.AddConductingSheet('copper_foil', conductivity=59.6e6, thickness=35e-6)
-    # derive primitives via sheet.AddBox(), sheet.AddCylinder(), etc.
+   .. code-tab:: octave
+
+      csx = InitCSX();
+      csx = AddConductingSheet(csx, 'copper', 59.6e6, 35e-6);
+      % derive primitives via AddBox(), AddCylinder(), etc.
+
+   .. code-tab:: python
+
+      import CSXCAD
+      csx = CSXCAD.ContinuousStructure()
+      sheet = csx.AddConductingSheet('copper_foil', conductivity=59.6e6, thickness=35e-6)
+      # derive primitives via sheet.AddBox(), sheet.AddCylinder(), etc.
 
 General Material
 -----------------
@@ -130,19 +138,23 @@ Example
 It's added by the :func:`AddMaterial` method in Matlab/Octave, or by the
 :meth:`~CSXCAD.ContinuousStructure.AddMaterial` method in Python.
 
-Create a plexiglass material::
+Create a plexiglass material:
 
-    % Matlab/Octave
-    csx = InitCSX();
-    csx = AddMaterial(csx, 'plexiglass');
-    csx = SetMaterialProperty(csx, 'plexiglass', 'Epsilon', 2.22);
-    % derive primitives via AddBox(), AddCylinder(), etc.
-    
-    # Python
-    import CSXCAD
-    csx = CSXCAD.ContinuousStructure()
-    plexiglass = csx.AddMaterial('plexiglass', epsilon=2.22)
-    # derive primitives via plexiglass.AddBox(), plexiglass.AddCylinder(), etc.
+.. tabs::
+
+   .. code-tab:: octave
+
+      csx = InitCSX();
+      csx = AddMaterial(csx, 'plexiglass');
+      csx = SetMaterialProperty(csx, 'plexiglass', 'Epsilon', 2.22);
+      % derive primitives via AddBox(), AddCylinder(), etc.
+
+   .. code-tab:: python
+
+      import CSXCAD
+      csx = CSXCAD.ContinuousStructure()
+      plexiglass = csx.AddMaterial('plexiglass', epsilon=2.22)
+      # derive primitives via plexiglass.AddBox(), plexiglass.AddCylinder(), etc.
 
 Anisotropic Material
 """""""""""""""""""""
@@ -160,26 +172,29 @@ on the excitation mode (single-ended vs. differential) due to anisotropic
 permittivity of the fiberglass-epoxy mixture.
 
 To model anisotropic effects, set the respective material property as
-an array ``[x, y, z]``::
+an array ``[x, y, z]``:
 
-    % Matlab/Octave
-    csx = InitCSX();
-    csx = AddMaterial(csx, 'yso');
+.. tabs::
 
-    % YSO (Y2SiO5) crystal, 8 - 22.3 GHz, room temperature.
-    % source: https://arxiv.org/abs/1503.04089
-    csx = SetMaterialProperty(csx, 'yso', 'Epsilon', [9.60, 11.22, 10.39]);
-    % derive primitives via AddBox(), AddCylinder(), etc.
+   .. code-tab:: octave
 
-    # Python
-    import CSXCAD
-    csx = CSXCAD.ContinuousStructure()
+      csx = InitCSX();
+      csx = AddMaterial(csx, 'yso');
 
-    # YSO (Y2SiO5) crystal, 8 - 22.3 GHz, room temperature.
-    # source: https://arxiv.org/abs/1503.04089
-    yso = csx.AddMaterial("YSO", epsilon=[9.60, 11.22, 10.39])
+      % YSO (Y2SiO5) crystal, 8 - 22.3 GHz, room temperature.
+      % source: https://arxiv.org/abs/1503.04089
+      csx = SetMaterialProperty(csx, 'yso', 'Epsilon', [9.60, 11.22, 10.39]);
+      % derive primitives via AddBox(), AddCylinder(), etc.
 
-    # derive primitives via yso.AddBox(), yso.AddCylinder(), etc.
+   .. code-tab:: python
+
+      import CSXCAD
+      csx = CSXCAD.ContinuousStructure()
+
+      # YSO (Y2SiO5) crystal, 8 - 22.3 GHz, room temperature.
+      # source: https://arxiv.org/abs/1503.04089
+      yso = csx.AddMaterial("YSO", epsilon=[9.60, 11.22, 10.39])
+      # derive primitives via yso.AddBox(), yso.AddCylinder(), etc.
 
 .. important::
 
@@ -198,18 +213,22 @@ by the ``fparser`` library, so the string should be a legal ``fparser``
 expression with proper syntax.
 
 In the following example, a material with a permittivity that alternates
-between 1 and 2 in space is defined::
+between 1 and 2 in space is defined:
 
-    % Matlab/Octave
-    csx = AddMaterial(csx, 'material');
-    csx = SetMaterialProperty(csx, 'material', 'Epsilon', 1);
-    csx = SetMaterialWeight(csx, 'material', 'Epsilon', ['(sin(4 * z / 1000 * 2 * pi) > 0) + 1']);
-    
-    # Python
-    import CSXCAD
-    csx = CSXCAD.ContinuousStructure()
-    material = csx.AddMaterial("material", epsilon=1)
-    material.SetMaterialWeight(epsilon='(sin(4 * z / 1000 * 2 * pi) > 0) + 1')
+.. tabs::
+
+   .. code-tab:: octave
+
+      csx = AddMaterial(csx, 'material');
+      csx = SetMaterialProperty(csx, 'material', 'Epsilon', 1);
+      csx = SetMaterialWeight(csx, 'material', 'Epsilon', ['(sin(4 * z / 1000 * 2 * pi) > 0) + 1']);
+
+   .. code-tab:: python
+
+      import CSXCAD
+      csx = CSXCAD.ContinuousStructure()
+      material = csx.AddMaterial("material", epsilon=1)
+      material.SetMaterialWeight(epsilon='(sin(4 * z / 1000 * 2 * pi) > 0) + 1')
 
 .. tip::
 
@@ -271,18 +290,22 @@ line simulations can be found in ``matlab/examples/transmission_lines/MSL.m``,
 which combines electric conductivity, magnetic conductivity, and two
 custom weighting functions, creating a hypothetical "tapered conductivity"
 and achieving low reflections. It demonstrates a non-standard and advanced
-simulation by a clever combination of different features::
+simulation by a clever combination of different features:
 
-    % this "pml" is a normal material with graded losses
-    % electric and magnetic losses are related to give low reflection
-    % for normally incident TEM waves
-    finalKappa = 1 / abs_length ^ 2;
-    finalSigma = finalKappa * MUE0 / EPS0;
-    csx = AddMaterial(csx, 'fakepml');
-    csx = SetMaterialProperty(csx, 'fakepml', 'Kappa', finalKappa);
-    csx = SetMaterialProperty(csx, 'fakepml', 'Sigma', finalSigma);
-    csx = SetMaterialWeight(csx, 'fakepml', 'Kappa', ['pow(z-' num2str(length - abs_length) ',2)']);
-    csx = SetMaterialWeight(csx, 'fakepml', 'Sigma', ['pow(z-' num2str(length - abs_length) ',2)']);
+.. tabs::
+
+   .. code-tab:: octave
+
+      % this "pml" is a normal material with graded losses
+      % electric and magnetic losses are related to give low reflection
+      % for normally incident TEM waves
+      finalKappa = 1 / abs_length ^ 2;
+      finalSigma = finalKappa * MUE0 / EPS0;
+      csx = AddMaterial(csx, 'fakepml');
+      csx = SetMaterialProperty(csx, 'fakepml', 'Kappa', finalKappa);
+      csx = SetMaterialProperty(csx, 'fakepml', 'Sigma', finalSigma);
+      csx = SetMaterialWeight(csx, 'fakepml', 'Kappa', ['pow(z-' num2str(length - abs_length) ',2)']);
+      csx = SetMaterialWeight(csx, 'fakepml', 'Sigma', ['pow(z-' num2str(length - abs_length) ',2)']);
 
 Lumped Element
 ---------------
@@ -299,18 +322,22 @@ It's added by the :func:`AddLumpedElement` method in Matlab/Octave, or by the
 If argument ``caps`` is enabled, a small PEC plate is added to each end of the
 lumped element to ensure electrical contact to the connected lines.
 
-Create a lumped 1 pF capacitor in ``y`` direction::
+Create a lumped 1 pF capacitor in ``y`` direction:
 
-    % Matlab/Octave
-    csx = InitCSX();
-    CSX = AddLumpedElement(CSX, 'capacitor', 'y', 'Caps', 1, 'C', 1e-12);
-    % derive primitives via AddBox(), AddCylinder(), etc.
+.. tabs::
 
-    # Python
-    import CSXCAD
-    csx = CSXCAD.ContinuousStructure()
-    capacitor = csx.AddLumpedElement('capacitor', 'y', C=1e-12, caps=True)
-    # derive primitives via capacitor.AddBox(), capacitor.AddCylinder(), etc.
+   .. code-tab:: octave
+
+      csx = InitCSX();
+      CSX = AddLumpedElement(CSX, 'capacitor', 'y', 'Caps', 1, 'C', 1e-12);
+      % derive primitives via AddBox(), AddCylinder(), etc.
+
+   .. code-tab:: python
+
+      import CSXCAD
+      csx = CSXCAD.ContinuousStructure()
+      capacitor = csx.AddLumpedElement('capacitor', 'y', C=1e-12, caps=True)
+      # derive primitives via capacitor.AddBox(), capacitor.AddCylinder(), etc.
 
 .. important::
    **Axis Alignment.** Lumped elements must have an orientation aligned to
