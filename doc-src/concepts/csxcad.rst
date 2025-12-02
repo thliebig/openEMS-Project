@@ -8,28 +8,36 @@ An openEMS simulation always starts by creating a 3D model of the structure
 using the CSXCAD library. All created entities for the simulation are stored
 in the ``csx`` data structure (or Python object), which must be initialized
 first. It's done by either the :func:`InitCSX` method in Matlab/Octave, or
-the :class:`~CSXCAD.ContinuousStructure` class in Python::
+the :class:`~CSXCAD.ContinuousStructure` class in Python:
 
-    % Matlab/Octave
-    csx = InitCSX();
+.. tabs::
 
-    # Python
-    import CSXCAD
-    csx = CSXCAD.ContinuousStructure()
+   .. code-tab:: octave
+
+       csx = InitCSX();
+
+   .. code-tab:: python
+
+       import CSXCAD
+       csx = CSXCAD.ContinuousStructure()
 
 Once initialized, 3D models can be created by the functions provided by CSXCAD.
 In Matlab/Octave, nearly all of them accept an old instance of the ``csx`` data
 structure, and returns a modified new one. The Python binding has a more modern
 coding style in comparison, which achieves this via class methods rather than
-functions::
+functions:
 
-    % Matlab/Octave
-    % create a property (e.g. AddMetal, AddMaterial)
-    csx = AddExample(csx, arg1, arg2, arg3, ...)
+.. tabs::
 
-    # Python
-    # create a property (e.g. AddMetal, AddMaterial)
-    prop = csx.AddExample(arg1, arg2, arg3, ...)
+   .. code-tab:: octave
+
+       % create a property (e.g. AddMetal, AddMaterial)
+       csx = AddExample(csx, arg1, arg2, arg3, ...)
+
+   .. code-tab:: python
+
+       # create a property (e.g. AddMetal, AddMaterial)
+       prop = csx.AddExample(arg1, arg2, arg3, ...)
 
 These CSXCAD functions can be classified into two types, *primitives*
 and *properties*. They define shapes and their material properties respectively.
@@ -69,14 +77,18 @@ By default, a Cartesian coordinate system is used, which is suitable for
 most simulations. If the simulated structure is predominantly circular, the
 Cartesian mesh may have a difficult time aligning itself with an object's
 shape. Hence openEMS provides the alternative cylindrical coordinate system
-to minimize staircasing errors::
+to minimize staircasing errors:
 
-    % Matlab/Octave
-    csx = InitCSX('CoordSystem', '1');
+.. tabs::
 
-    # Python
-    import CSXCAD
-    csx = CSXCAD.ContinuousStructure(CoordSystem=1)
+   .. code-tab:: octave
+
+       csx = InitCSX('CoordSystem', '1');
+
+   .. code-tab:: python
+
+       import CSXCAD
+       csx = CSXCAD.ContinuousStructure(CoordSystem=1)
 
 .. note::
 
@@ -109,35 +121,38 @@ Model-Only Save
 
 To save only the geometry as a self-contained ``.xml`` file, use the
 :func:`struct_2_xml` function in Matlab/Octave, or the
-:meth:`CSXCAD.ContinuousStructure.Write2XML` method in Python::
+:meth:`CSXCAD.ContinuousStructure.Write2XML` method in Python:
 
-    % Matlab/Octave
+.. tabs::
 
-    % create and edit CSX here
-    csx = InitCSX();
+   .. code-tab:: octave
 
-    path = '/tmp';
-    filename = 'simulation.xml';
+       % create and edit CSX here
+       csx = InitCSX();
 
-    % create an empty data structure "output", and assign "CSX"
-    % to its CSXCAD attribute.
-    output.CSXCAD = csx;
-    struct_2_xml(filename, output, 'openEMS');
+       path = '/tmp';
+       filename = 'simulation.xml';
 
-    # Python
-    import pathlib
-    import CSXCAD
+       % create an empty data structure "output", and assign "CSX"
+       % to its CSXCAD attribute.
+       output.CSXCAD = csx;
+       struct_2_xml(filename, output, 'openEMS');
 
-    # create and edit CSX here
-    csx = CSXCAD.ContinuousStructure()
+   .. code-tab:: python
 
-    simdir = pathlib.Path("./")
-    xmlname = pathlib.Path("simulation.xml")
+       import pathlib
+       import CSXCAD
 
-    # concat two paths
-    xmlpath = simdir / xmlname
+       # create and edit CSX here
+       csx = CSXCAD.ContinuousStructure()
 
-    csx.Write2XML(str(xmlpath))  # convert Path object to string
+       simdir = pathlib.Path("./")
+       xmlname = pathlib.Path("simulation.xml")
+
+       # concat two paths
+       xmlpath = simdir / xmlname
+
+       csx.Write2XML(str(xmlpath))  # convert Path object to string
 
 One can view this ``.xml`` file via :program:`AppCSXCAD`, but this
 file cannot be used as input to the :program:`openEMS` executable
@@ -157,40 +172,43 @@ or the :meth:`openEMS.openEMS.Write2XML` method in Python.
 
 This file contains both the geometry and simulation data, the former is
 owned by CSXCAD, and latter is owned by openEMS. Hence, both inputs are
-required::
+required:
 
-    % Matlab/Octave
+.. tabs::
 
-    # create and edit CSX and simulation parameters here
-    csx = InitCSX();
-    fdtd = InitFDTD();
+   .. code-tab:: octave
 
-    path = '/tmp';
-    filename = 'simulation.xml';
+       # create and edit CSX and simulation parameters here
+       csx = InitCSX();
+       fdtd = InitFDTD();
 
-    % write openEMS compatible xml-file
-    WriteOpenEMS([path '/' filename], fdtd, csx);
+       path = '/tmp';
+       filename = 'simulation.xml';
 
-    # Python
-    import pathlib
-    import CSXCAD
-    import openEMS
+       % write openEMS compatible xml-file
+       WriteOpenEMS([path '/' filename], fdtd, csx);
 
-    # create and edit CSX here
-    csx = CSXCAD.ContinuousStructure()
-    openems = openEMS.openEMS()
+   .. code-tab:: python
 
-    # assign the CSXCAD structure to the simulator
-    openems.SetCSX(csx)
+       import pathlib
+       import CSXCAD
+       import openEMS
 
-    simdir = pathlib.Path("./")
-    xmlname = pathlib.Path("simulation.xml")
+       # create and edit CSX here
+       csx = CSXCAD.ContinuousStructure()
+       openems = openEMS.openEMS()
 
-    # concat two paths
-    xmlpath = simdir / xmlname
+       # assign the CSXCAD structure to the simulator
+       openems.SetCSX(csx)
 
-    # write openEMS compatible xml-file
-    openems.Write2XML(str(xmlpath))  # convert Path object to string
+       simdir = pathlib.Path("./")
+       xmlname = pathlib.Path("simulation.xml")
+
+       # concat two paths
+       xmlpath = simdir / xmlname
+
+       # write openEMS compatible xml-file
+       openems.Write2XML(str(xmlpath))  # convert Path object to string
 
 Models and Simulations Reuse
 ------------------------------
@@ -331,8 +349,9 @@ In Matlab/Octave, the following functions are available:
 Python
 """""""
 
-Unfortunately, none of the functions above have been implemented in Python.
-To import an external model, one uses an alternative method
+Unfortunately, with the exception to STL, none of the functions
+above have been implemented in Python.
+To import an external STL model, one uses an alternative method
 :meth:`~CSXCAD.CSProperties.CSProperties.AddPolyhedronReader`
 from :class:`~CSXCAD.CSProperties.CSProperties`::
 
@@ -350,8 +369,8 @@ from :class:`~CSXCAD.CSProperties.CSProperties`::
     # can be manipulated like any other primitives
     enclosure.AddTransform( ... )
 
-Alternatively, one can use Matlab/Octave to import an STL model
-(:func:`ImportSTL`), export the result to ``.xml``, and load the
+Alternatively, one can use Matlab/Octave's :func:`ImportPLY` to
+import a PTY model, export the result to ``.xml``, and load the
 model in Python via :meth:`~CSXCAD.ContinuousStructure.ReadFromXML`.
 
 For exporting, :program:`AppCSXCAD` itself can generate
@@ -368,7 +387,6 @@ POV-Ray, STL, X3D, Polydata-VTK, and PNG file formats.
    so a model and a mesh is usually co-developed. If a model comes from
    another source, yet the user is not already familiar with the meshing
    process and its pitfalls, confusing problems may arise.
-
 
 Modeling via a GUI?
 ------------------------
