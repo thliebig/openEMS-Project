@@ -26,7 +26,7 @@ As an extension the FDTD algorithm, openEMS also supports meshing
 in cylindrical coordinates. The is useful for simulating round
 structures without the "staircasing" error. The cylindrical mesh
 can be uniform or non-uniform, however, the cylindrical mesh
-system also creates an unique problem for FDTD - the origin is a
+system also creates a unique problem for FDTD - the origin is a
 coordinate singularity. At a fixed angular resolution, all cells
 near the origin becomes progressively smaller. Therefore, openEMS
 also has a special feature called "subgridding" to reduce the
@@ -248,21 +248,28 @@ MHz, where the wavelength is 300 m in vacuum.
    In openEMS, you only need to define an appropriate mesh.
    There's no need to calculate the required timestep size,
    By default, openEMS uses a modified timestep criterion
-   named *Rennings2* is used, not CFL. This improves timestep
-   selection in non-uniform meshes. But the general limitation
-   still applies.
+   named *Rennings2* (not CFL) to improve timestep selection
+   in non-uniform meshes. But the general limitation still
+   applies.
 
-   `Rennings2` is derived in the unpublished paper [11]_,
-   see :meth:`~openEMS.openEMS.SetTimeStepMethod` for details.
+   `Rennings2` is derived in an unpublished PhD thesis [1]_ (not
+   available online). For an abridged description, see research
+   publication [2]_.
 
    If you really need small cells
-   (e.g. to resolve some important feature of your structure) you
+   (e.g. to resolve important features of your structure) you
    will have to live with long execution times, or perhaps FDTD is
    not the right method for your problem. As a workaround, one may
    also try extracting the circuit parameters using a higher signal
    frequency, then using those equivalent-circuit parameters in a
    low-frequency simulation with a general-purpose linear circuit
    simulator.
+
+.. seealso::
+   To switch the timestep algorithm between *CFL* and *Rennings2*,
+   use :meth:`~openEMS.openEMS.SetTimeStepMethod`. To tune a
+   marginally stable simulation, timestep can be reduced manually
+   via :meth:`~openEMS.openEMS.SetTimeStepFactor`.
 
 Yee cells
 ---------
@@ -277,8 +284,8 @@ heart of the algorithm, they have some unintuitive properties, which are
 responsible for sampling artifacts. They must be understood to
 use FDTD successfully for simulations at intermediate and advanced levels.
 
-For simplicity, let's consider the FDTD algorithm along a 1D line. The 1D
-line is discretized into two meshes: the electric and the magnetic field
+For simplicity, let's consider the FDTD algorithm along a 1D line [3]_.
+The 1D line is discretized into two meshes: the electric and the magnetic field
 meshes. The electric mesh is also known as the *primary mesh*, the magnetic
 mesh is known as the *secondary mesh* (or *dual mesh*).
 
@@ -314,9 +321,15 @@ between ``E[0] (x = 0)`` and ``E[1] (x = 1)``, not ``x = 1.0``.
    the electric and magnetic fields are vectors orthogonal to each
    other (right-hand rule).
 
+2D and 3D Yee cells follow the same arrangement, and are constructed
+by generalizing all arrays to 2 and 3 dimensions, forming two nested
+grids ("staggered grids") in space. All numerical values are also
+generalized to 2 or 3 components (i.e. for all ``(i, j, k)`` there
+exists ``Ex, Ey, Ez``).
+
 This staggered grid is Yee's key insight that enables a straightforward
 *leapfrog* method to simulate the Maxwell's curl equations, by computing
-the left-hand side from the left-hand side.
+the left-hand side from the right-hand side.
 
 .. math::
    \begin{align}
@@ -324,31 +337,65 @@ the left-hand side from the left-hand side.
    \nabla \times \mathbf{B} &= \mu_0\varepsilon_0 \frac{\partial\mathbf E}{\partial t}
    \end{align}
 
-By numerically differentiating the two neighboring electric cells, the magnetic cell
-is re-calculated. By numerically differentiating the two neighboring
-magnetic cells, the electric cell is updated in the same manner. This
-process is called *time-marching* because every update moves the simulation
-forward in time.
+By numerically differentiating the two neighboring electric cells, the magnetic
+cell is re-calculated to the next step, and vice versa. This process
+is called *time-marching*, because every update moves the simulation forward in time.
 
-Essetially, 2D and 3D Yee cells follow the same arrangement, and are constructed
-by generalizing each arrays and vector field value to 2 and 3 dimensions.
+Sampling Artifacts
+--------------------
 
-.. important::
-   The staggered grid of FDTD is a powerful solution, but with two limitations.
+The staggered grid of FDTD is a powerful solution, but with the peculiar feature
+that the magnetic field is never known exactly at the same point in space or time
+as the electric field, it always lags by a half-interval, which is responsible
+to the following limitations.
 
-   1. Only the electric field is known at an exact mesh line. The magnetic field
-   cell is known at a position with a half-step offset (``x + 0.5``). It's
-   located in the middle of the two mesh lines.  All mesh lines, coordinates, and
-   CSXCAD visualization are based on the primary mesh. Current probes placed at
-   a mesh line is automatically snapped to the nearest secondary mesh line. Thus,
-   naive current probe placements create a slight error due to this misalignment.
+When using raw voltage or current probes, or running field dumps, users must be
+aware which placement strategy or interpolation method is used.
 
-   2. Only the electric field is known at an exact timestep, the magnetic field
-   is known with a half-timestep offset (``t + 0.5``). This error is always
-   neglected.
+Spatial Artifacts
+~~~~~~~~~~~~~~~~~~~
 
+Only the electric field is known at an exact mesh line. The magnetic field
+cell is known at a position with a half-step offset (``x + 0.5``). It's
+located in the middle of the two mesh lines. All mesh lines, coordinates, and
+CSXCAD visualization are based on the primary mesh. Current probes placed at
+a mesh line is automatically snapped to the nearest secondary mesh line. Thus,
+naive current probe placements create a slight error due to this misalignment.
+
+To reduce this error, place a voltage probe on an exact mesh line (such as
+``U(x, t)``), and two current probes half-way to the left and right of the
+voltage probe (such as ``I(x - dx / 2, t)``, ``I(x + dx / 2, t)``), and
+average both readings in post-processing to interpolate for ``I(x)``.
+
+.. note::
    If Port-based excitation are used (for simple use cases), openEMS
    automatically handles this low-level technical detail by correcting placing
-   the voltage and current probes and performing interpolation. However, when
-   using a raw voltage or current probes, or running field dumps, users must
-   be aware which placement strategy or interpolation method is used.
+   the voltage and current probes and performing spatial interpolation.
+
+Temporal Artifacts
+~~~~~~~~~~~~~~~~~~~
+
+Only the electric field is known at an exact timestep, the magnetic field
+is known with a half-timestep offset (``t + 0.5``). When probing both voltages
+and currents, or dumping both electric and magnetic fields, users must explicitly
+take this simulation artifact into account.
+
+.. warning::
+   Since temporal interpolation is unsupported, analyzing both physical quantities
+   at the same timestep is difficult, and best be avoided without a strong FDTD
+   background.
+
+Bibliography
+---------------
+
+.. [1] Andreas Rennings, Elektromagnetische Zeitbereichssimulationen innovativer
+   Antennen auf Basis von Metamaterialien. PhD Thesis, University of Duisburg-Essen,
+   2008, pp. 76, eq. 4.77
+
+.. [2] Andreas Rennings, et, al.,
+   `Equivalent Circuit (EC) FDTD Method for Dispersive Materials: Derivation,
+   Stability Criteria and Application Examples
+   <https://www.researchgate.net/publication/227133697_Equivalent_Circuit_EC_FDTD_Method_for_Dispersive_Materials_Derivation_Stability_Criteria_and_Application_Examples>`_, Time Domain Methods in Electrodynamics.
+
+.. [3] John B. Schneider. `Understanding the FDTD Method <https://eecs.wsu.edu/~schneidj/ufdtd/index.php>`_,
+   Chapter 3, page 36.

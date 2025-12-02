@@ -153,14 +153,14 @@ value from the conventional value (two values in total), it's known as *uniaxial
 anisotropy*. If two axes have different values (three values in total), it's known
 as *biaxial anisotropy*.
 
-In optics, many crystals exhibits a phenomenon known as *birefringence* due
+In optics, many crystals exhibit a phenomenon known as *birefringence* due
 to the anisotropic refractive indexes. In high-speed eletronics, the propagation
 delays of signals on an FR-4 circuit board have measurable differences depending
 on the excitation mode (single-ended vs. differential) due to anisotropic
 permittivity of the fiberglass-epoxy mixture.
 
-If one must model anisotropic effects, set the respective material property
-as an array ``[x, y, z]``::
+To model anisotropic effects, set the respective material property as
+an array ``[x, y, z]``::
 
     % Matlab/Octave
     csx = InitCSX();

@@ -278,6 +278,11 @@ faces, and the radius of the cylinder. The axis of the cylinder will be
 along the start - stop points with the two cylinder faces being perpendicular
 to this axis.
 
+.. note::
+
+   If the mesh already uses the Cylindrical coordinate system, use ``AddBox()``
+   instead.
+
 Matlab/Octave
 '''''''''''''''
 
@@ -338,6 +343,11 @@ Cylindrical Shell
 
 A cylindrical shell primitive is defined by its midpoints of the first and last
 faces, the radius of the cylinder, and shell thickness.
+
+.. note::
+
+   If the mesh already uses the Cylindrical coordinate system, use ``AddBox()``
+   instead.
 
 Matlab/Octave
 ''''''''''''''
