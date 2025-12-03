@@ -28,25 +28,42 @@ Variables
 
   - ``pi``, ``e``
 
+  - These constants are CSXCAD / openEMS extensions.
+
 - Temporal variables 
 
-  - Only for :func:`SetCustomExcite`.
   - ``t``: simulation time (seconds).
+  - Only for :func:`SetCustomExcite`.
   
 - Spatial variables
 
+    - ``x``, ``y``, ``z``: Cartesian coordinates :math:`(x, y, z)`.
+
+       - In Cylindrical coordinates: :math:`[\rho \cos(\alpha), \rho \sin(\alpha), z]`
+
+    - ``rho``, ``a``, ``z``: Cylindrical coordinates :math:`(\rho, \alpha, z)`.
+
+       - In Cartesian coordinates: :math:`[\sqrt{x ^ 2 + y ^ 2}, \mathrm{atan2}(y, x), z]`
+
+    - ``r``: distance to the origin :math:`(0, 0, 0)`.
+
+      - In Cartesian coordinates: :math:`\sqrt{x^2 + y^2 + z^2}`
+
+        (distance to the intersection point of the X, Y, Z axes).
+
+      - In Cylindrical coordinates: :math:`\sqrt{\rho ^ 2 + z ^ 2}`
+
+        (distance to the center of the cylinder's base).
+
+    - ``t``: polar angle :math:`\theta` in Spherical coordinates: :math:`\arcsin(1) - \arctan(\frac{z}{\rho})`
+
   - Only for :func:`SetMaterialWeight` or :func:`SetExcitationWeight`.
 
-  - Cartesian mesh only:
+.. tip::
 
-    - ``x``, ``y``, ``z``
-
-  - Cylindrical mesh only:
-
-    - ``r``: distance to the origin.
-    - ``rho``: distance to the Z axis.
-    - ``a``: phase angle.
-    - ``z``: height (with respect to the base of the cylinder).
+   All spatial variables are always defined in all coordinate systems,
+   internally converted if necessary. To avoid confusion, it's recommended
+   to use the current simulation's native coordinate system.
 
 Syntax
 --------
@@ -85,6 +102,15 @@ Math Functions
   - ``abs(x)``, ``sqrt(x)``, ``cbrt(x)``, ``exp(x)``, ``exp2(x)``,
     ``pow(x, y)``, ``log(x)``, ``log2(x)``, ``log10(x)``, ``max(x, y)``,
     ``min(x, y)``.
+
+- Bessel functions of the first and second kinds
+
+  - ``j0(x)``, ``j1(x)``, ``jn(n, x)``
+
+  - ``y0(x)``, ``y1(x)``, ``yn(n, x)``
+
+  - These functions are CSXCAD extensions, for weighting functions
+    only.
 
 Other Syntax
 ~~~~~~~~~~~~~
