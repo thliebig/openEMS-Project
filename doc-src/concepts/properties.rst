@@ -3,7 +3,7 @@
 Properties
 ============
 
-*Properties* defines the material or simulation properties of geometrical
+*Properties* define the material or simulation behaviors of geometrical
 shapes (known as *primitives*). A *property* can be a metal, a thin
 conducting sheet, a dielectric metarial, a magnetic material, or a lumped
 element (resistor, capacitor, inductor).
@@ -78,8 +78,12 @@ The resistive loss in metals is simulated using a simplified, behavioral model
 to "fit" the observed loss rather than the full physics.
 
 .. important::
+
    * A Thin Conducting Sheet can only be used to create a zero-thickness
-     geometrical object, the created 3D shape (primitive) mush be a plane.
+     geometrical object, the created 3D shape (primitive) must degenerate
+     to a 2D plane (i.e. having the same start and stop coordinates on one
+     axis, such as ``[-10, -10, 5], [10, 10, 5]`` for a XY plane at ``z == 5``).
+
    * Surface roughness modeling is currently not supported.
 
 Example
@@ -98,7 +102,7 @@ This is typical for a 1-oz circuit board:
    .. code-tab:: octave
 
       csx = InitCSX();
-      csx = AddConductingSheet(csx, 'copper', 59.6e6, 35e-6);
+      csx = AddConductingSheet(csx, 'copper_foil', 59.6e6, 35e-6);
       % derive primitives via AddBox(), AddCylinder(), etc.
 
    .. code-tab:: python
@@ -166,13 +170,25 @@ anisotropy*. If two axes have different values (three values in total), it's kno
 as *biaxial anisotropy*.
 
 In optics, many crystals exhibit a phenomenon known as *birefringence* due
-to the anisotropic refractive indexes. In high-speed eletronics, the propagation
+to the anisotropic refractive indexes. In high-speed electronics, the propagation
 delays of signals on an FR-4 circuit board have measurable differences depending
 on the excitation mode (single-ended vs. differential) due to anisotropic
 permittivity of the fiberglass-epoxy mixture.
 
 To model anisotropic effects, set the respective material property as
-an array ``[x, y, z]``:
+an array ``[x, y, z]``.
+
+.. important::
+
+   A material can be anisotropic and dispersive (described later)
+   at the same time, but the simultaneous use of both material models
+   is currently untested.
+
+Example
+'''''''
+
+The Y2SiO5 (YSO) crystal is a dielectric material with biaxial anisotropy
+at both microwave and optical frequencies [1]_.
 
 .. tabs::
 
@@ -195,11 +211,6 @@ an array ``[x, y, z]``:
       # source: https://arxiv.org/abs/1503.04089
       yso = csx.AddMaterial("YSO", epsilon=[9.60, 11.22, 10.39])
       # derive primitives via yso.AddBox(), yso.AddCylinder(), etc.
-
-.. important::
-
-   A material can be anisotropic and dispersive (described later)
-   at the same time, but this usage is currently untested.
 
 Weighting Function
 """"""""""""""""""""
@@ -409,8 +420,10 @@ To learn more, see :ref:`concept_excitations` and :ref:`concept_fielddump`.
 Bibliography
 --------------
 
-.. [1] fparser, `fparser project documentation
-   <http://warp.povusers.org/FunctionParser/fparser.html#literals>`_.
+.. [1] N. C. Carvalho, J.-M. L. Floch, J. Krupka, and M. E. Tobar,
+   “`Multi-mode technique for the determination of the biaxial Y2SiO5
+   permittivity tensor from 300 to 6 Kelvin
+   <https://doi.org/10.48550/ARXIV.1503.04089>`_,” arXiv, 2015.
 
 .. [2] John B. Schneider. `Understanding the FDTD Method.
    <https://eecs.wsu.edu/~schneidj/ufdtd/index.php>`_,
