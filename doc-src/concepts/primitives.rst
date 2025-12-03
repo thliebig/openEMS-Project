@@ -421,9 +421,9 @@ faces, the radius of the cylinder, and shell thickness.
       :meth:`~CSXCAD.CSProperties.CSProperties.AddCylindricalShell` method
       definition::
 
-          cylinder_shell = material.AddCylindericalShell(start, stop, radius, shell_width, **kw)
+          cylinder_shell = material.AddCylindricalShell(start, stop, radius, shell_width, **kw)
 
-      * ``cylinder_shell``: An instance of :class:`~CSXCAD.CSPrimitives.CSPrimCylindericalShell`.
+      * ``cylinder_shell``: An instance of :class:`~CSXCAD.CSPrimitives.CSPrimCylindricalShell`.
       * ``material``: An instance of :class:`~CSXCAD.CSProperties.CSPropMaterial`.
       * ``start``: ``[x y z]`` start point of the cylinder (midpoint of the first cylinder face).
       * ``stop``: ``[x y z]`` stop point of the cylinder (midpoint of the second cylinder face).
@@ -1399,10 +1399,10 @@ Exceptions:
 
 * Non-physical properties, such as dump boxes, probe boxes, etc.
   are not affected by the priority system.
-* Excitations (AddExcitation) are not affected as well, since
-  multiple (super positioned) excitations are possible.
-* The curve primitive as a 1D line element is not affected
-* Lumped elements are not affected
+* :ref:`concept_excitations` are not affected as well, since
+  multiple (superpositioned) excitations are possible.
+* The curve primitive as a 1D line element is not affected.
+* Lumped elements are not affected.
 
 Example: Metal Sheet With Cylindrical Holes
 """"""""""""""""""""""""""""""""""""""""""""

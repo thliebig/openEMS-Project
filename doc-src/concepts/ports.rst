@@ -4,8 +4,11 @@ Ports
 ===========
 
 At the start of a simulation, electric or magnetic fields are introduced
-into the simulation box, helping establish initial conditions for the
-system. This is done by setting the numerical values of the field at
+into the simulation box, applying an initial energy and signal input to
+the system. Some excitations only last one timestep, while most excitations
+are gradually applied over many timesteps.
+
+This is done by setting the numerical values of the field at
 specified Yee cells, according to the specified field type, distribution,
 weighting functions, and signal waveform. This is the purpose of the
 :func:`AddExcitation` (Python),
@@ -36,7 +39,7 @@ by the port, and setting the numerical values of the electric fields in
 these cells based on the excitation waveform.
 Thus, a
 port can be understood as a source that injects electromagnetic energy
-into the simulation, helping establish initial conditions for the system.
+into the simulation, providing an initial stimulus for the system.
 Simultaneously, a lumped resistor and a probe are also created at the
 same location as the port, allowing it to provide a matched load for the
 signal, or to measure the voltage or current at this region.

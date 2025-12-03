@@ -221,6 +221,8 @@ between 1 and 2 in space is defined:
 
       csx = AddMaterial(csx, 'material');
       csx = SetMaterialProperty(csx, 'material', 'Epsilon', 1);
+
+      % '(x > 0)' is a fparser expression, evaluates to 0 or 1
       csx = SetMaterialWeight(csx, 'material', 'Epsilon', ['(sin(4 * z / 1000 * 2 * pi) > 0) + 1']);
 
    .. code-tab:: python
@@ -228,23 +230,13 @@ between 1 and 2 in space is defined:
       import CSXCAD
       csx = CSXCAD.ContinuousStructure()
       material = csx.AddMaterial("material", epsilon=1)
+
+      # '(x > 0)' is a fparser expression, evaluates to 0 or 1
       material.SetMaterialWeight(epsilon='(sin(4 * z / 1000 * 2 * pi) > 0) + 1')
 
-.. tip::
+.. seealso::
 
-   Three built-in coordinates are defined.
-   In Cartesian coordinates they're ``x``, ``y``, and ``z``. In cylindrical
-   coordinates they're ``r`` (distance to the origin), ``rho`` (distance to
-   the Z axis), ``a`` (phase angle), and ``z`` (height).
-   Two special constants ``pi`` and ``e`` are pre-defined and recognized as well
-   by openEMS.
-
-   fparser supports a complete set of built-in functions, including
-   trigonometry functions such as ``sin(x)``, conditional functions
-   such as ``if(cond, eval_when_true, eval_when_false)``, and Boolean
-   expressions such as ``(x > 0)``. This makes functions
-   expressive if tricky. See the fparser project documentation [1]_
-   for syntax.
+   See :ref:`concept_fparser` for weighting function syntax.
 
 .. _concept_magnetic_conductivity:
 
