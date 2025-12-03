@@ -264,16 +264,10 @@ symbolic expression.
 The argument ``f_str`` is a string that contains the expression with
 an independent variable ``t``, representing time. It's parsed by the ``fparser``
 library, so the string should be a legal ``fparser`` expression with proper syntax.
-A complete set of built-in functions (including trigonometry functions such as
-``sin(x)``, as well as conditional functions such as
-``if(cond, eval_when_true, eval_when_false)``) are available, making it expressive
-if tricky.
-Two special constants ``pi`` and ``e`` are pre-defined and recognized as well
-by openEMS, even though they don't appear in the ``fparser`` documentation.
 
 .. seealso::
 
-   See the fparser project documentation [2]_ for syntax.
+   See :ref:`concept_fparser` for syntax.
 
 In Python, the signal's frequency and bandwidth is specified by two parameters:
 ``f0`` and ``f_max``. ``f0`` is the base frequency of the excitation signal, which
@@ -568,8 +562,5 @@ for clarity. For technical details, see [1]_.
 Bibliography
 --------------
 
-.. [1] fparser, `fparser project documentation
-   <http://warp.povusers.org/FunctionParser/fparser.html#literals>`_.
-
-.. [2] Ted Yapo, `A Note on Gaussian Steps in openEMS.
+.. [1] Ted Yapo, `A Note on Gaussian Steps in openEMS.
    <https://cdn.hackaday.io/files/1656277086185568/gaussian_step_v11.pdf>`_
