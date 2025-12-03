@@ -230,6 +230,7 @@ between 1 and 2 in space is defined:
 
    .. code-tab:: octave
 
+      csx = InitCSX();
       csx = AddMaterial(csx, 'material');
       csx = SetMaterialProperty(csx, 'material', 'Epsilon', 1);
 
