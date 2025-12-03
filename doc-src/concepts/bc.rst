@@ -56,9 +56,9 @@ Example
 
    .. code-tab:: octave
 
-      FDTD = InitFDTD();
-      BC = {'PML_8' 'PML_8' 'PML_8' 'PML_8' 'PML_8' 'PML_8'};
-      FDTD = SetBoundaryCond(FDTD, BC);
+      fdtd = InitFDTD();
+      bc = {'PML_8' 'PML_8' 'PML_8' 'PML_8' 'PML_8' 'PML_8'};
+      fdtd = SetBoundaryCond(fdtd, bc);
 
    .. code-tab:: python
 
