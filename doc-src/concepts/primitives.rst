@@ -485,12 +485,12 @@ A 1D curve is defined by its coordinate arrays.
       * ``propName``: Name of the assigned property.
       * ``prio``: Priority of the primitive, see :ref:`concept_priority`.
       * ``points``: Two-dimensional coordinates of the base polygon.
-         Array column refers to point number, array row refers to its
-         ``x``, ``y``, ``z`` positions.
+        Array column refers to point number, array row refers to its
+        ``x``, ``y``, ``z`` positions.
 
-         * ``points(1, point_number)``: position ``x`` of ``point_number``.
-         * ``points(2, point_number)``: position ``y`` of ``point_number``.
-         * ``points(3, point_number)``: position ``z`` of ``point_number``.
+        * ``points(1, point_number)``: position ``x`` of ``point_number``.
+        * ``points(2, point_number)``: position ``y`` of ``point_number``.
+        * ``points(3, point_number)``: position ``z`` of ``point_number``.
 
       * ``varargin``: A key/value list of primitives variable arguments.
 
@@ -507,12 +507,12 @@ A 1D curve is defined by its coordinate arrays.
       * ``curve``: An instance of :class:`~CSXCAD.CSPrimitives.CSPrimCurve`.
       * ``material``: An instance of :class:`~CSXCAD.CSProperties.CSPropMaterial`.
       * ``points``: Two-dimensional coordinates of the base polygon.
-         Array column refers to point number, array row refers to its
-         ``x``, ``y``, ``z`` positions.
+        Array column refers to point number, array row refers to its
+        ``x``, ``y``, ``z`` positions.
 
-         * ``points[0, point_number]``: position ``x`` of ``point_number``.
-         * ``points[1, point_number]``: position ``y`` of ``point_number``.
-         * ``points[2, point_number]``: position ``z`` of ``point_number``.
+        * ``points[0, point_number]``: position ``x`` of ``point_number``.
+        * ``points[1, point_number]``: position ``y`` of ``point_number``.
+        * ``points[2, point_number]``: position ``z`` of ``point_number``.
 
       * ``**kw``: Optional keyword arguments:
 
@@ -595,12 +595,12 @@ Define a cylinder-like wire by its coordinate arrays and radius.
       * ``propName``: Name of the assigned property.
       * ``prio``: Priority of the primitive, see :ref:`concept_priority`.
       * ``points``: Two-dimensional coordinates of the base polygon.
-         Array column refers to point number, array row refers to its
-         ``x``, ``y``, ``z`` positions.
+        Array column refers to point number, array row refers to its
+        ``x``, ``y``, ``z`` positions.
 
-         * ``points(1, point_number)``: position ``x`` of ``point_number``.
-         * ``points(2, point_number)``: position ``y`` of ``point_number``.
-         * ``points(3, point_number)``: position ``z`` of ``point_number``.
+        * ``points(1, point_number)``: position ``x`` of ``point_number``.
+        * ``points(2, point_number)``: position ``y`` of ``point_number``.
+        * ``points(3, point_number)``: position ``z`` of ``point_number``.
 
       * ``wire_rad``: Wire radius.
       * ``varargin``: A key/value list of primitives variable arguments.
@@ -618,12 +618,12 @@ Define a cylinder-like wire by its coordinate arrays and radius.
       * ``wire``: An instance of :class:`~CSXCAD.CSPrimitives.CSPrimWire`.
       * ``material``: An instance of :class:`~CSXCAD.CSProperties.CSPropMaterial`.
       * ``points``: Two-dimensional coordinates of the base polygon.
-         Array column refers to point number, array row refers to its
-         ``x``, ``y``, ``z`` positions.
+        Array column refers to point number, array row refers to its
+        ``x``, ``y``, ``z`` positions.
 
-         * ``points(1, point_number)``: position ``x`` of ``point_number``.
-         * ``points(2, point_number)``: position ``y`` of ``point_number``.
-         * ``points(3, point_number)``: position ``z`` of ``point_number``.
+        * ``points(1, point_number)``: position ``x`` of ``point_number``.
+        * ``points(2, point_number)``: position ``y`` of ``point_number``.
+        * ``points(3, point_number)``: position ``z`` of ``point_number``.
 
       * ``radius``: Wire radius.
       * ``**kw``: Optional keyword arguments:
