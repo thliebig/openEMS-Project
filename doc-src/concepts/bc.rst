@@ -49,17 +49,22 @@ discouraged due to poor readability, but one may encounter them in older example
 |                             |           |    | For radiating structures, λ / 4 away.            |
 +-----------------------------+-----------+----+--------------------------------------------------+
 
-Matlab/Octave example::
+Example
+~~~~~~~~~~
 
-    FDTD = InitFDTD();
-    BC = {'PML_8' 'PML_8' 'PML_8' 'PML_8' 'PML_8' 'PML_8'};
-    FDTD = SetBoundaryCond(FDTD, BC);
+.. tabs::
 
-Python example::
+   .. code-tab:: octave
 
-    fdtd = openEMS.openEMS()
-    bc = ["PML_8", "PML_8", "PML_8", "PML_8", "PML_8", "PML_8"]
-    fdtd.SetBoundaryCond(bc)
+      FDTD = InitFDTD();
+      BC = {'PML_8' 'PML_8' 'PML_8' 'PML_8' 'PML_8' 'PML_8'};
+      FDTD = SetBoundaryCond(FDTD, BC);
+
+   .. code-tab:: python
+
+      fdtd = openEMS.openEMS()
+      bc = ["PML_8", "PML_8", "PML_8", "PML_8", "PML_8", "PML_8"]
+      fdtd.SetBoundaryCond(bc)
 
 Reflecting (Dirichlet) Boundary Conditions
 --------------------------------------------

@@ -39,19 +39,22 @@ near-zero.
 Usage
 """""""
 
-Matlab/Octave::
+.. tabs::
 
-    f_carrier = 10e9;
+   .. code-tab:: octave
 
-    fdtd = InitFDTD();
-    fdtd = SetSinusExcite(fdtd, f_carrier)
+      f_carrier = 10e9;
 
-Python::
+      fdtd = InitFDTD();
+      fdtd = SetSinusExcite(fdtd, f_carrier)
 
-    f_carrier = 10e9;
 
-    fdtd = openEMS.openEMS()
-    fdtd.SetSinusExcite(f_carrier)
+   .. code-tab:: python
+
+      f_carrier = 10e9
+
+      fdtd = openEMS.openEMS()
+      fdtd.SetSinusExcite(f_carrier)
 
 Dirac Impulse
 ---------------
@@ -62,7 +65,7 @@ amplitude in the next timestep. It can be expressed as:
 
 .. math::
 
-  e[t] = 
+  e[t] =
   \begin{cases}
   0, & t \le 0 \\
   1, & t = \Delta t \\
@@ -97,21 +100,23 @@ bandwidth.
 Usage
 """"""
 
-Matlab/Octave::
+.. tabs::
 
-    # bandwidth limitation is not implemented, it's ignored by the simulation!
-    f_max = 10e9;
+   .. code-tab:: octave
 
-    fdtd = InitFDTD();
-    fdtd = SetDiracExcite(fdtd, f_max);
+      # bandwidth limitation is not implemented, it's ignored by the simulation!
+      f_max = 10e9;
 
-Python::
+      fdtd = InitFDTD();
+      fdtd = SetDiracExcite(fdtd, f_max);
 
-    # bandwidth limitation is not implemented, it's ignored by the simulation!
-    f_max = 10e9
+   .. code-tab:: python
 
-    fdtd = openEMS.openEMS()
-    fdtd.SetDiracExcite(f_max)
+      # bandwidth limitation is not implemented, it's ignored by the simulation!
+      f_max = 10e9
+
+      fdtd = openEMS.openEMS()
+      fdtd.SetDiracExcite(f_max)
 
 Heaviside Step
 ---------------
@@ -122,7 +127,7 @@ next timesteps. It can be expressed as:
 
 .. math::
 
-  e[t] = 
+  e[t] =
   \begin{cases}
   0, & t \lt 0 \\
   1, & t \ge 0 \\
@@ -165,25 +170,27 @@ bandwidth.
 Usage
 """"""
 
-Matlab/Octave::
+.. tabs::
 
-    # bandwidth limitation is not implemented, it's ignored by the simulation!
-    f_max = 10e9;
+   .. code-tab:: octave
 
-    % Limit the maximum simulation to 10000 timesteps,
-    % otherwise it never terminates.
-    fdtd = InitFDTD('NrTS', 10000);
-    fdtd = SetStepExcite(fdtd, f_max);
+      # bandwidth limitation is not implemented, it's ignored by the simulation!
+      f_max = 10e9;
 
-Python::
+      % Limit the maximum simulation to 10000 timesteps,
+      % otherwise it never terminates.
+      fdtd = InitFDTD('NrTS', 10000);
+      fdtd = SetStepExcite(fdtd, f_max);
 
-    # bandwidth limitation is not implemented, it's ignored by the simulation!
-    f_max = 10e9
+   .. code-tab:: python
 
-    # Limit the maximum simulation to 10000 timesteps,
-    # otherwise it never terminates.
-    fdtd = openEMS.openEMS(NrTS=10000)
-    fdtd.SetStepExcite(f_max)
+      # bandwidth limitation is not implemented, it's ignored by the simulation!
+      f_max = 10e9
+
+      # Limit the maximum simulation to 10000 timesteps,
+      # otherwise it never terminates.
+      fdtd = openEMS.openEMS(NrTS=10000)
+      fdtd.SetStepExcite(f_max)
 
 Gaussian Pulse
 -----------------
@@ -224,27 +231,29 @@ frequency target:
 .. image:: images/port1_vt_fft.svg
    :width: 49%
 
-Matlab/Octave::
+.. tabs::
 
-    # Centered around 5 GHz with a 5 GHz 20 dB bandwidth.
-    # Lower sideband covers 0 - 5 GHz, upper sideband covers 5 - 10 GHz.
-    f_max = 10e9;
-    f0 = f_max / 2;
-    f0_bw = f_max / 2;
+   .. code-tab:: octave
 
-    fdtd = InitFDTD();
-    fdtd = SetGaussExcite(fdtd, f0, f0_bw);
+      # Centered around 5 GHz with a 5 GHz 20 dB bandwidth.
+      # Lower sideband covers 0 - 5 GHz, upper sideband covers 5 - 10 GHz.
+      f_max = 10e9;
+      f0 = f_max / 2;
+      f0_bw = f_max / 2;
 
-Python::
+      fdtd = InitFDTD();
+      fdtd = SetGaussExcite(fdtd, f0, f0_bw);
 
-    # Centered around 5 GHz with a 5 GHz 20 dB bandwidth.
-    # Lower sideband covers 0 - 5 GHz, upper sideband covers 5 - 10 GHz.
-    f_max = 10e9
-    f0 = f_max / 2
-    f0_bw = f_max / 2
+   .. code-tab:: python
 
-    fdtd = openEMS.openEMS()
-    fdtd.SetGaussExcite(f0, f0_bw)
+      # Centered around 5 GHz with a 5 GHz 20 dB bandwidth.
+      # Lower sideband covers 0 - 5 GHz, upper sideband covers 5 - 10 GHz.
+      f_max = 10e9
+      f0 = f_max / 2
+      f0_bw = f_max / 2
+
+      fdtd = openEMS.openEMS()
+      fdtd.SetGaussExcite(f0, f0_bw)
 
 Custom Signal
 ---------------
@@ -290,7 +299,7 @@ twice of a signal's bandwidth (i.e. its Nyquist rate).
    signal's highest frequency component. Conceptually, sampling is performed as
    infrequently as possible, just sufficient to reconstruct the signal's spectrum
    up to ``f_0``.
-   
+
    **Impulse and step visualization**. However, if field dumps are enabled to
    visualize the propagation of wavefronts of an impulse or step signal, this
    sampling rate can be too low (even if the signals are bandwidth-limited).
@@ -300,46 +309,48 @@ twice of a signal's bandwidth (i.e. its Nyquist rate).
 Usage
 """"""
 
-Matlab/Octave::
+.. tabs::
 
-    % Limit the maximum simulation to 10000 timesteps,
-    % otherwise the excitation waveform would exhaust system memory.
-    fdtd = InitFDTD('NrTS', 10000);
+   .. code-tab:: octave
 
-    % Define signal waveform as a ramped sinusoid.
-    f0 = 500e6;
-    T = 1 / f0;
-    f_str = '(1 - exp(-1 * (t / T^2)) * sin(2 * pi * f0 * t)';
-    f_str = strrep(f_str, "T", num2str(T));
-    f_str = strrep(f_str, "f0", num2str(f0));
+      % Limit the maximum simulation to 10000 timesteps,
+      % otherwise the excitation waveform would exhaust system memory.
+      fdtd = InitFDTD('NrTS', 10000);
 
-    fdtd = SetCustomExcite(fdtd, f0 * 2, f_str);
+      % Define signal waveform as a ramped sinusoid.
+      f0 = 500e6;
+      T = 1 / f0;
+      f_str = '(1 - exp(-1 * (t / T^2)) * sin(2 * pi * f0 * t)';
+      f_str = strrep(f_str, "T", num2str(T));
+      f_str = strrep(f_str, "f0", num2str(f0));
 
-    % If visualization of field dumps is needed, use a much higher
-    % cutoff frequency to force openEMS to dump the fields more often.
-    fdtd = SetOverSampling(fdtd, 50);
+      fdtd = SetCustomExcite(fdtd, f0 * 2, f_str);
 
-Python::
+      % If visualization of field dumps is needed, use a much higher
+      % cutoff frequency to force openEMS to dump the fields more often.
+      fdtd = SetOverSampling(fdtd, 50);
 
-    # Limit the maximum simulation to 10000 timesteps,
-    # otherwise the excitation waveform would exhaust system memory.
-    fdtd = openEMS.openEMS(NrTS=10000)
+   .. code-tab:: python
 
-    # Define signal waveform as a ramped sinusoid.
-    f0 = 500e6;
-    T = 1 / f0;
-    f_str = '(1 - exp(-1 * (t / T^2)) * sin(2 * pi * f0 * t)'
-    f_str = f_str.replace("T", str(T))
-    f_str = f_str.replace("f0", str(f0))
+      # Limit the maximum simulation to 10000 timesteps,
+      # otherwise the excitation waveform would exhaust system memory.
+      fdtd = openEMS.openEMS(NrTS=10000)
 
-    # API bug workaround: SetCustomExcite() only accepts bytes, not a Python string.
-    f_bytes = f_str.encode("UTF-8")
+      # Define signal waveform as a ramped sinusoid.
+      f0 = 500e6;
+      T = 1 / f0;
+      f_str = '(1 - exp(-1 * (t / T^2)) * sin(2 * pi * f0 * t)'
+      f_str = f_str.replace("T", str(T))
+      f_str = f_str.replace("f0", str(f0))
 
-    fdtd.SetCustomExcite(f_bytes, f0 * 2, f0 * 2)
+      # API bug workaround: SetCustomExcite() only accepts bytes, not a Python string.
+      f_bytes = f_str.encode("UTF-8")
 
-    # If visualization of field dumps is needed, use a much higher
-    # cutoff frequency to force openEMS to dump the fields more often.
-    fdtd.SetOverSampling(50)
+      fdtd.SetCustomExcite(f_bytes, f0 * 2, f0 * 2)
+
+      # If visualization of field dumps is needed, use a much higher
+      # cutoff frequency to force openEMS to dump the fields more often.
+      fdtd.SetOverSampling(50)
 
 .. warning::
    Custom excitation signals values are precalculated before running the simulation.
@@ -389,168 +400,170 @@ for clarity. For technical details, see [1]_.
    term, which may improve model quality. It also allows one to study
    early reflections without completing a full simulation.
 
-Matlab/Octave::
+.. tabs::
 
-    % This technique is originally published by:
-    %
-    %   Ted Yapo, in "A Note on Gaussian Steps in openEMS."
-    %   https://cdn.hackaday.io/files/1656277086185568/gaussian_step_v11.pdf
-    %
-    % Code reimplemented here for clarity. Copying and distribution of this file,
-    % with or without modification, are permitted in any medium without royalty.
-    % This file is offered as-is, without any warranty.
-    function [excitation_str, f_nyquist] = CalcGaussianStep(tr_10_90, tolerance, cutoff_db)
-        % Calculate parameter sigma to get a Gaussian step with wanted rise time.
-        sigma = tr_10_90 / (2 * erfinv(0.8));
-    
-        % calculate the maximum frequency content at cutoff
-        f_max = sqrt((cutoff_db / 20 * log(10)) / (pi ** 2 * sigma ** 2));
-        f_nyquist = f_max * 2;
-    
-        % The raw Gaussian step function has y = 0.5 at the origin,
-        % we need to time-shift it based on the wanted tolerance
-        % (e.g. y = 0.01 at the origin).
-        shift = sigma * erfinv((1 - tolerance - 0.5) * 2);
-    
-        variables = struct(
-            % erf() approximation 7.1.25 from Abramowitz and Stegun. The original
-            % helper function t(x) is renamed to b(x), since t is used by openEMS
-            % as the time variable.
-            %
-            % This approximation is only valid for t >= 0, we use the fparser's
-            % "if()" function to evaluate erf(t) and -erf(-t) for non-negative
-            % and negative inputs.
-            % See: https://personal.math.ubc.ca/~cbm/aands/page_299.htm
-            "erf_t", [
-    	        "if(x >= 0," ...
-                    " (1 - (a1 * b_pos + a2 * b_pos^2 + a3 * b_pos^3) * e^(-t^2))," ...
-                    " -(1 - (a1 * b_neg + a2 * b_neg^2 + a3 * b_neg^3) * e^(-t^2)))"
-    	    ],
-            "b_pos", "(1 / (1 + p * t))",
-            "b_neg", "(1 / (1 + p * -t))",
-            "p",     "0.47047",
-            "a1",    "0.3480242",
-            "a2",    "-0.0958798",
-            "a3",    "0.7478556",
-    
-            % input value t to erf_t
-            "t",     "((t - shift) / sigma)",
-    
-            % calculate parameter sigma to get a Gaussian step with wanted rise time
-            "sigma", num2str(sigma),
-    
-            % shift the center of the Gaussian step from the origin
-            "shift", num2str(shift)
-        );
-    
-        excitation_str = "0.5 + 0.5 * (erf_t)";
-    
-        % Generate a string representation of the Gaussian error function
-        % with all variables substituted.
-        fields = fieldnames(variables);
-        for i = 1:numel(fields)
-            excitation_str = strrep(excitation_str, fields{i}, variables.(fields{i}));
-        end
-    end
+   .. code-tab:: octave
 
-    % Limit the maximum simulation to 10000 timesteps,
-    % otherwise the excitation waveform would exhaust system memory.
-    fdtd = InitFDTD('NrTS', 10000);
+      % This technique is originally published by:
+      %
+      %   Ted Yapo, in "A Note on Gaussian Steps in openEMS."
+      %   https://cdn.hackaday.io/files/1656277086185568/gaussian_step_v11.pdf
+      %
+      % Code reimplemented here for clarity. Copying and distribution of this file,
+      % with or without modification, are permitted in any medium without royalty.
+      % This file is offered as-is, without any warranty.
+      function [excitation_str, f_nyquist] = CalcGaussianStep(tr_10_90, tolerance, cutoff_db)
+          % Calculate parameter sigma to get a Gaussian step with wanted rise time.
+          sigma = tr_10_90 / (2 * erfinv(0.8));
 
-    % Step excitation with 1 nanosecond 10%-90% risetime.
-    % at t = 0, e[t] is at 1% of the final value,
-    % calculate the maximum frequency content (20 dB down)
-    [f_str, f_nyquist] = CalcGaussianStep(1e-9, 0.01, 20);
+          % calculate the maximum frequency content at cutoff
+          f_max = sqrt((cutoff_db / 20 * log(10)) / (pi ** 2 * sigma ** 2));
+          f_nyquist = f_max * 2;
 
-    fdtd = SetCustomExcite(fdtd, f_nyquist, f_str);
+          % The raw Gaussian step function has y = 0.5 at the origin,
+          % we need to time-shift it based on the wanted tolerance
+          % (e.g. y = 0.01 at the origin).
+          shift = sigma * erfinv((1 - tolerance - 0.5) * 2);
 
-    % If visualization of field dumps is needed, use a much higher
-    % cutoff frequency to force openEMS to dump the fields more often.
-    fdtd = SetOverSampling(fdtd, 50);
+          variables = struct(
+              % erf() approximation 7.1.25 from Abramowitz and Stegun. The original
+              % helper function t(x) is renamed to b(x), since t is used by openEMS
+              % as the time variable.
+              %
+              % This approximation is only valid for t >= 0, we use the fparser's
+              % "if()" function to evaluate erf(t) and -erf(-t) for non-negative
+              % and negative inputs.
+              % See: https://personal.math.ubc.ca/~cbm/aands/page_299.htm
+              "erf_t", [
+                  "if(x >= 0," ...
+                      "  (1 - (a1 * b_pos + a2 * b_pos^2 + a3 * b_pos^3) * e^(-t^2))," ...
+                      " -(1 - (a1 * b_neg + a2 * b_neg^2 + a3 * b_neg^3) * e^(-t^2)))"
+              ],
+              "b_pos", "(1 / (1 + p * t))",
+              "b_neg", "(1 / (1 + p * -t))",
+              "p",     "0.47047",
+              "a1",    "0.3480242",
+              "a2",    "-0.0958798",
+              "a3",    "0.7478556",
 
-Python::
+              % input value t to erf_t
+              "t",     "((t - shift) / sigma)",
 
-    import math
-    from scipy.special import erfinv
+              % calculate parameter sigma to get a Gaussian step with wanted rise time
+              "sigma", num2str(sigma),
 
+              % shift the center of the Gaussian step from the origin
+              "shift", num2str(shift)
+          );
 
-    # This technique is originally published by:
-    #
-    #   Ted Yapo, in "A Note on Gaussian Steps in openEMS."
-    #   https://cdn.hackaday.io/files/1656277086185568/gaussian_step_v11.pdf
-    #
-    # Code reimplemented here for clarity. Copying and distribution of this file,
-    # with or without modification, are permitted in any medium without royalty.
-    # This file is offered as-is, without any warranty.
-    def CalcGaussianStep(tr_10_90, tolerance=0.01, cutoff_db=20):
-        # Calculate parameter sigma to get a Gaussian step with wanted rise time.
-        sigma = tr_10_90 / (2 * erfinv(0.8))
-    
-        # calculate the maximum frequency content at cutoff
-        f_max = math.sqrt((cutoff_db / 20 * math.log(10)) / (math.pi ** 2 * sigma ** 2))
-        f_nyquist = f_max * 2
-    
-        # The raw Gaussian step function has y = 0.5 at the origin,
-        # we need to time-shift it based on the wanted tolerance
-        # (e.g. y = 0.01 at the origin).
-        shift = sigma * erfinv((1 - tolerance - 0.5) * 2)
-    
-        variables = {
-            # erf() approximation 7.1.25 from Abramowitz and Stegun. The original
-            # helper function t(x) is renamed to b(x), since t is used by openEMS
-            # as the time variable.
-            #
-            # This approximation is only valid for t >= 0, we use the fparser's
-            # "if()" function to evaluate erf(t) and -erf(-t) for non-negative
-            # and negative inputs.
-            # See: https://personal.math.ubc.ca/~cbm/aands/page_299.htm
-            "erf_t": "if(t >= 0,"
-                     " (1 - (a1 * b_pos + a2 * b_pos^2 + a3 * b_pos^3) * e^(-t^2)),"
-                     " -(1 - (a1 * b_neg + a2 * b_neg^2 + a3 * b_neg^3) * e^(-t^2)))",
-            "b_pos": "(1 / (1 + p * t))",
-            "b_neg": "(1 / (1 + p * -t))",
-            "p":     "0.47047",
-            "a1":    "0.3480242",
-            "a2":    "-0.0958798",
-            "a3":    "0.7478556",
-    
-            # input value t to erf_t
-            "t":     "((t - shift) / sigma)",
-    
-            # calculate parameter sigma to get a Gaussian step with wanted rise time
-            "sigma": sigma,
-    
-            # shift the center of the Gaussian step from the origin
-            "shift": shift
-        }
-    
-        excitation_str = "0.5 + 0.5 * (erf_t)"
-    
-        # Generate a string representation of the Gaussian error function
-        # with all variables substituted.
-        for key in variables.keys():
-            excitation_str = excitation_str.replace(key, str(variables[key]))
-    
-        # API bug workaround: SetCustomExcite() only accepts bytes, not a Python string.
-        excitation_str = excitation_str.encode("UTF-8")
+          excitation_str = "0.5 + 0.5 * (erf_t)";
 
-        return excitation_str, f_nyquist
+          % Generate a string representation of the Gaussian error function
+          % with all variables substituted.
+          fields = fieldnames(variables);
+          for i = 1:numel(fields)
+              excitation_str = strrep(excitation_str, fields{i}, variables.(fields{i}));
+          end
+      end
+
+      % Limit the maximum simulation to 10000 timesteps,
+      % otherwise the excitation waveform would exhaust system memory.
+      fdtd = InitFDTD('NrTS', 10000);
+
+      % Step excitation with 1 nanosecond 10%-90% risetime.
+      % at t = 0, e[t] is at 1% of the final value,
+      % calculate the maximum frequency content (20 dB down)
+      [f_str, f_nyquist] = CalcGaussianStep(1e-9, 0.01, 20);
+
+      fdtd = SetCustomExcite(fdtd, f_nyquist, f_str);
+
+      % If visualization of field dumps is needed, use a much higher
+      % cutoff frequency to force openEMS to dump the fields more often.
+      fdtd = SetOverSampling(fdtd, 50);
+
+   .. code-tab:: python
+
+      import math
+      from scipy.special import erfinv
 
 
-    # Limit the maximum simulation to 10000 timesteps,
-    # otherwise the excitation waveform would exhaust system memory.
-    fdtd = openEMS.openEMS(NrTS=10000)
+      # This technique is originally published by:
+      #
+      #   Ted Yapo, in "A Note on Gaussian Steps in openEMS."
+      #   https://cdn.hackaday.io/files/1656277086185568/gaussian_step_v11.pdf
+      #
+      # Code reimplemented here for clarity. Copying and distribution of this file,
+      # with or without modification, are permitted in any medium without royalty.
+      # This file is offered as-is, without any warranty.
+      def CalcGaussianStep(tr_10_90, tolerance=0.01, cutoff_db=20):
+          # Calculate parameter sigma to get a Gaussian step with wanted rise time.
+          sigma = tr_10_90 / (2 * erfinv(0.8))
 
-    # Step excitation with 1 nanosecond 10%-90% risetime.
-    # By default, at t = 0, e[t] is at 1% of the final value.
-    # By default, calculate the maximum frequency content (20 dB down)
-    f_str, f_nyquist = CalcGaussianStep(1e-9)
+          # calculate the maximum frequency content at cutoff
+          f_max = math.sqrt((cutoff_db / 20 * math.log(10)) / (math.pi ** 2 * sigma ** 2))
+          f_nyquist = f_max * 2
 
-    fdtd.SetCustomExcite(f_bytes, f_nyquist, f_nyquist)
+          # The raw Gaussian step function has y = 0.5 at the origin,
+          # we need to time-shift it based on the wanted tolerance
+          # (e.g. y = 0.01 at the origin).
+          shift = sigma * erfinv((1 - tolerance - 0.5) * 2)
 
-    # If visualization of field dumps is needed, use a much higher
-    # cutoff frequency to force openEMS to dump the fields more often.
-    fdtd.SetOverSampling(50)
+          variables = {
+              # erf() approximation 7.1.25 from Abramowitz and Stegun. The original
+              # helper function t(x) is renamed to b(x), since t is used by openEMS
+              # as the time variable.
+              #
+              # This approximation is only valid for t >= 0, we use the fparser's
+              # "if()" function to evaluate erf(t) and -erf(-t) for non-negative
+              # and negative inputs.
+              # See: https://personal.math.ubc.ca/~cbm/aands/page_299.htm
+              "erf_t": "if(t >= 0,"
+                       " (1 - (a1 * b_pos + a2 * b_pos^2 + a3 * b_pos^3) * e^(-t^2)),"
+                       " -(1 - (a1 * b_neg + a2 * b_neg^2 + a3 * b_neg^3) * e^(-t^2)))",
+              "b_pos": "(1 / (1 + p * t))",
+              "b_neg": "(1 / (1 + p * -t))",
+              "p":     "0.47047",
+              "a1":    "0.3480242",
+              "a2":    "-0.0958798",
+              "a3":    "0.7478556",
+
+              # input value t to erf_t
+              "t":     "((t - shift) / sigma)",
+
+              # calculate parameter sigma to get a Gaussian step with wanted rise time
+              "sigma": sigma,
+
+              # shift the center of the Gaussian step from the origin
+              "shift": shift
+          }
+
+          excitation_str = "0.5 + 0.5 * (erf_t)"
+
+          # Generate a string representation of the Gaussian error function
+          # with all variables substituted.
+          for key in variables.keys():
+              excitation_str = excitation_str.replace(key, str(variables[key]))
+
+          # API bug workaround: SetCustomExcite() only accepts bytes, not a Python string.
+          excitation_str = excitation_str.encode("UTF-8")
+
+          return excitation_str, f_nyquist
+
+
+      # Limit the maximum simulation to 10000 timesteps,
+      # otherwise the excitation waveform would exhaust system memory.
+      fdtd = openEMS.openEMS(NrTS=10000)
+
+      # Step excitation with 1 nanosecond 10%-90% risetime.
+      # By default, at t = 0, e[t] is at 1% of the final value.
+      # By default, calculate the maximum frequency content (20 dB down)
+      f_str, f_nyquist = CalcGaussianStep(1e-9)
+
+      fdtd.SetCustomExcite(f_bytes, f_nyquist, f_nyquist)
+
+      # If visualization of field dumps is needed, use a much higher
+      # cutoff frequency to force openEMS to dump the fields more often.
+      fdtd.SetOverSampling(50)
 
 Bibliography
 --------------
