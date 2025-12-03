@@ -81,8 +81,9 @@ to "fit" the observed loss rather than the full physics.
 
    * A Thin Conducting Sheet can only be used to create a zero-thickness
      geometrical object, the created 3D shape (primitive) must degenerate
-     to a 2D plane (i.e. having the same start and stop coordinates on one
-     axis, such as ``[-10, -10, 5], [10, 10, 5]`` for a XY plane at ``z == 5``).
+     to a 2D plane (i.e. the same start and stop coordinates must be identical
+     on one axis, such as ``[-10, -10, 5], [10, 10, 5]`` for a XY plane at
+     ``z == 5``).
 
    * Surface roughness modeling is currently not supported.
 
