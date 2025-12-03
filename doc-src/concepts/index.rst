@@ -20,5 +20,6 @@ Basic concepts of openEMS simulation.
    dump
    lumped
    dispersive
+   fparser
    simulation
    postproc
