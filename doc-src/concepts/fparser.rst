@@ -1,7 +1,7 @@
 .. _concept_fparser:
 
-fparser
-==========
+Symbolic Expression Parser: ``fparser``
+=======================================
 
 In openEMS, user-defined symbolic mathematical expressions are used to customize
 the simulation for three different purposes.
@@ -18,8 +18,14 @@ the simulation for three different purposes.
    field pattern to minimize artifacts due an abrupt field input.
 
 These symbolic expressions are accepted as strings, which is evaluated by the
-C++ engine using the ``fparser`` library. This, all strings must be legal
-``fparser`` expressions with proper variables and syntax.
+C++ engine using the ``fparser`` library. Thus, all strings for the purposes
+above must be legal ``fparser`` expressions.
+
+``fparser`` expressions are governed by its own syntax and rules, like a
+mini-programming language that works independently from the outer programming
+language (a *Domain-Specific Language*), thus, C++, Matlab/Octave or
+Python does not apply here - making a crash course of the ``fparser``
+language necessary here.
 
 Variables
 ----------
@@ -30,40 +36,85 @@ Variables
 
   - These constants are CSXCAD / openEMS extensions.
 
-- Temporal variables 
+- Temporal variables (:func:`SetCustomExcite` only)
 
   - ``t``: simulation time (seconds).
-  - Only for :func:`SetCustomExcite`.
-  
-- Spatial variables
 
-    - ``x``, ``y``, ``z``: Cartesian coordinates :math:`(x, y, z)`.
+- Spatial variables (:func:`SetMaterialWeight`, :func:`SetExcitationWeight` only)
 
-       - In Cylindrical coordinates: :math:`[\rho \cos(\alpha), \rho \sin(\alpha), z]`
+  - ``x``, ``y``, ``z``: Cartesian coordinates :math:`(x, y, z)`.
 
-    - ``rho``, ``a``, ``z``: Cylindrical coordinates :math:`(\rho, \alpha, z)`.
+  - ``rho``, ``a``, ``z``: Cylindrical coordinates :math:`(\rho, \alpha, z)`.
 
-       - In Cartesian coordinates: :math:`[\sqrt{x ^ 2 + y ^ 2}, \mathrm{atan2}(y, x), z]`
+  - ``r``, ``a``, ``t``: Spherical coordinates: :math:`(r, \alpha, \theta)`
 
-    - ``r``: distance to the origin :math:`(0, 0, 0)`.
+Temporal variables can only be used in temporal expressions with
+:func:`SetCustomExcite`, spatial variables can only be used in
+spatial expressions with :func:`SetMaterialWeight`,
+:func:`SetExcitationWeight`. Spatial variables cannot used in
+temporal variables, temporal variables cannot be used in spatial
+variables.
 
-      - In Cartesian coordinates: :math:`\sqrt{x^2 + y^2 + z^2}`
+.. warning::
 
-        (distance to the intersection point of the X, Y, Z axes).
+   The meaning of ``t`` is context-dependent, it's time in temporal
+   expressions, and a coordinate in spatial expressions.
 
-      - In Cylindrical coordinates: :math:`\sqrt{\rho ^ 2 + z ^ 2}`
+Coordinate Conversions
+---------------------------
 
-        (distance to the center of the cylinder's base).
+All spatial variables are always defined in all coordinate systems by internal
+conversion in the software, regardless of the coordinate system of the mesh.
+It's acceptable to use Cylindrical or Spherical coordinates in Cartesian simulations,
+and vice versa.
 
-    - ``t``: polar angle :math:`\theta` in Spherical coordinates: :math:`\arcsin(1) - \arctan(\frac{z}{\rho})`
+For reference, the software conversion rules are given in the following table:
 
-  - Only for :func:`SetMaterialWeight` or :func:`SetExcitationWeight`.
++-------------+----------------------------------------+-----------------------------------------------------------+----------------------------------------+
+|  Variable   |               Definition               |                         Cartesian                         |            Cylindrical                 |
++=============+========================================+===========================================================+========================================+
+|  ``x``      |  X-axis Distance to Origin             | :math:`x`                                                 | :math:`\rho \cos(\alpha)`              |
++-------------+----------------------------------------+-----------------------------------------------------------+----------------------------------------+
+|  ``y``      |  Y-axis Distance to Origin             | :math:`y`                                                 | :math:`\rho \sin(\alpha)`              |
++-------------+----------------------------------------+-----------------------------------------------------------+----------------------------------------+
+| ``rho``     |       Distance to Z-axis               | :math:`\sqrt{x ^ 2 + y ^ 2}`                              | :math:`\rho`                           |
+|             |                                        |                                                           |                                        |
+|             |       (Radius)                         |                                                           |                                        |
++-------------+----------------------------------------+-----------------------------------------------------------+----------------------------------------+
+|  ``a``      |   Azimuthal Angle                      | :math:`\mathrm{atan2}(y, x)`                              | :math:`\alpha`                         |
++-------------+----------------------------------------+-----------------------------------------------------------+----------------------------------------+
+|  ``z``      |  Z-axis Distance to Origin             | :math:`z`                                                 | :math:`z`                              |
+|             |                                        |                                                           |                                        |
+|             |  (Cylinder Cross-Section Height)       |                                                           |                                        |
++-------------+----------------------------------------+-----------------------------------------------------------+----------------------------------------+
+|  ``r``      |      Distance to Origin                | :math:`\sqrt{x^2 + y^2 + z^2}`                            | :math:`\sqrt{\rho^2+z^2}`              |
++-------------+----------------------------------------+-----------------------------------------------------------+----------------------------------------+
+|  ``a``      |    Azimuthal Angle                     | :math:`\mathrm{atan2}(y, x)`                              | :math:`\alpha`                         |
++-------------+----------------------------------------+-----------------------------------------------------------+----------------------------------------+
+|  ``t``      |    Elevation Angle                     | :math:`\pi / 2 - \arctan(z / \sqrt{x ^ 2 + y ^ 2})`       | :math:`\pi / 2 - \arctan(z / \rho)`    |
++-------------+----------------------------------------+-----------------------------------------------------------+----------------------------------------+
 
-.. tip::
+.. hint::
 
-   All spatial variables are always defined in all coordinate systems,
-   internally converted if necessary. To avoid confusion, it's recommended
-   to use the current simulation's native coordinate system.
+   It's useful to start from a 2D plane: ``(x, y)`` or ``(rho, a)``
+   describe a point's location in 2D Cartesian or 2D polar coordinates.
+   Adding the third coordinate ``z`` determines its height, thus
+   forming the 3D Cartesian or 3D Cylindrical coordinate system.
+
+.. warning::
+
+   * Although all spatial variables are always defined in all coordinate
+     systems, they're not interchangeable because of vector component
+     (field polarization) differences.
+     In a Cartesian simulation, the weighting functions ``[E_1, E_2, E_3]``
+     apply to :math:`E_x`, :math:`E_y`, :math:`E_z`. But in a Cylindrical
+     simulation, they're applied to :math:`E_\rho`, :math:`E_\alpha`,
+     :math:`E_z`. Changing the simulation mesh's coordinate system requires
+     changing all weighting functions.
+
+   * Spherical coordinates are defined for convenience for use with Cartesian
+     and Cylindrical coordinates only, the simulator itself does not support
+     spherical mesh coordinates.
 
 Syntax
 --------
@@ -109,8 +160,8 @@ Math Functions
 
   - ``y0(x)``, ``y1(x)``, ``yn(n, x)``
 
-  - These functions are CSXCAD extensions, for weighting functions
-    only.
+  - These functions are CSXCAD extensions for spatial expressions
+    only. It's currently unimplemented for temporal expressions.
 
 Other Syntax
 ~~~~~~~~~~~~~
