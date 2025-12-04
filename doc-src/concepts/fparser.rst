@@ -3,8 +3,13 @@
 Symbolic Expression Parser: ``fparser``
 =======================================
 
-In openEMS, user-defined symbolic mathematical expressions are used to customize
-the simulation for three different purposes.
+In openEMS, user-defined symbolic mathematical expressions are used to
+customize the simulation. These symbolic expressions are accepted as
+strings, which is evaluated by the C++ engine using the ``fparser``
+library. Thus, all strings for the purposes above must be legal
+``fparser`` expressions.
+
+These custom expressions are used for three purposes.
 
 1. Vary a material's property in space, using a weighting function.
 
@@ -17,15 +22,10 @@ the simulation for three different purposes.
    mode.  Transmission lines such as coaxial cables also work best with a custom
    field pattern to minimize artifacts due an abrupt field input.
 
-These symbolic expressions are accepted as strings, which is evaluated by the
-C++ engine using the ``fparser`` library. Thus, all strings for the purposes
-above must be legal ``fparser`` expressions.
-
-``fparser`` expressions are governed by its own syntax and rules, like a
-mini-programming language that works independently from the outer programming
-language (a *Domain-Specific Language*), thus, C++, Matlab/Octave or
-Python does not apply here - making a crash course of the ``fparser``
-language necessary here.
+``fparser`` expressions are written in an independent mini-programming language
+(a *Domain-Specific Language*), and its syntax differs from the outer C++,
+Matlab/Octave, or Python interface. It's necessary to have a quick review of
+its syntax.
 
 Variables
 ----------
@@ -46,7 +46,7 @@ Variables
 
   - ``rho``, ``a``, ``z``: Cylindrical coordinates :math:`(\rho, \alpha, z)`.
 
-  - ``r``, ``a``, ``t``: Spherical coordinates: :math:`(r, \alpha, \theta)`
+  - ``r``, ``t``, ``a``: Spherical coordinates: :math:`(r, \theta, \alpha)`
 
 Temporal variables can only be used in temporal expressions with
 :func:`SetCustomExcite`, spatial variables can only be used in
@@ -65,13 +65,18 @@ Coordinate Conversions
 
 All spatial variables are always defined in all coordinate systems by internal
 conversion in the software, regardless of the coordinate system of the mesh.
-It's acceptable to use Cylindrical or Spherical coordinates in Cartesian simulations,
+It's acceptable to use Cylindrical coordinates in Cartesian simulations,
 and vice versa.
 
-For reference, the software conversion rules are given in the following table:
+For reference, the exact software conversion rules from the native mesh
+coordinates inputs to ``fparser`` output variables are given in the following
+table. All formulas are identical to the actual code.
+Note that Spherical coordinates are never used as inputs, as the simulator does
+not support spherical mesh coordinates. They're defined for convenience in
+Cartesian and Cylindrical simulations only.
 
 +-------------+----------------------------------------+-----------------------------------------------------------+----------------------------------------+
-|  Variable   |               Definition               |                         Cartesian                         |            Cylindrical                 |
+|  Output     |               Definition               |                Cartesian                                  |        Cylindrical                     |
 +=============+========================================+===========================================================+========================================+
 |  ``x``      |  X-axis Distance to Origin             | :math:`x`                                                 | :math:`\rho \cos(\alpha)`              |
 +-------------+----------------------------------------+-----------------------------------------------------------+----------------------------------------+
@@ -89,9 +94,7 @@ For reference, the software conversion rules are given in the following table:
 +-------------+----------------------------------------+-----------------------------------------------------------+----------------------------------------+
 |  ``r``      |      Distance to Origin                | :math:`\sqrt{x^2 + y^2 + z^2}`                            | :math:`\sqrt{\rho^2+z^2}`              |
 +-------------+----------------------------------------+-----------------------------------------------------------+----------------------------------------+
-|  ``a``      |    Azimuthal Angle                     | :math:`\mathrm{atan2}(y, x)`                              | :math:`\alpha`                         |
-+-------------+----------------------------------------+-----------------------------------------------------------+----------------------------------------+
-|  ``t``      |    Elevation Angle                     | :math:`\pi / 2 - \arctan(z / \sqrt{x ^ 2 + y ^ 2})`       | :math:`\pi / 2 - \arctan(z / \rho)`    |
+|  ``t``      |      Polar Angle                       | :math:`\pi / 2 - \arctan(z / \sqrt{x ^ 2 + y ^ 2})`       | :math:`\pi / 2 - \arctan(z / \rho)`    |
 +-------------+----------------------------------------+-----------------------------------------------------------+----------------------------------------+
 
 .. hint::
@@ -112,9 +115,12 @@ For reference, the software conversion rules are given in the following table:
      :math:`E_z`. Changing the simulation mesh's coordinate system requires
      changing all weighting functions.
 
-   * Spherical coordinates are defined for convenience for use with Cartesian
-     and Cylindrical coordinates only, the simulator itself does not support
-     spherical mesh coordinates.
+   * The azimuthal angle is always safe to use, :math:`\mathrm{atan2}(y, x)`
+     is defined everywhere.
+
+   * The polar angle ``t`` is singular (``t = NaN``) at the origin ``(0, 0, 0)``, but
+     it's otherwise safe to use if :math:`x = y = 0` because
+     :math:`\arctan(z / 0) = \arctan(\pm \infty) = \pm \pi` in IEEE-754.
 
 Syntax
 --------
