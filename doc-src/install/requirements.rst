@@ -660,6 +660,12 @@ macOS
 
       brew install cmake boost hdf5 cgal vtk
 
+- To use AppCSXCAD to visualize 3D models (recommended):
+
+  .. code-block:: bash
+
+      brew install qt5compat
+
 - openEMS also depends on TinyXML, which is unmaintained since 2011 and has
   been removed from Homebrew (TinyXML2 is not API-compatible). As a workaround,
   ``update_openEMS.sh`` will automatically download TinyXML and patches online,
