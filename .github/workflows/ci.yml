@@ -428,7 +428,7 @@ jobs:
           # the command is invalid.
           printf "\n%s\n" "set -euo pipefail" >> ~/.bash_profile
 
-          brew install cmake boost hdf5 cgal vtk octave \
+          brew install cmake boost hdf5 cgal vtk octave qt5compat \
                        python3 \
                        python-setuptools numpy python-matplotlib cython
 
