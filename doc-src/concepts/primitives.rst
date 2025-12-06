@@ -891,7 +891,7 @@ Example
          # in Cartesian coordinate. Optional if the mesh is Cartesian.
          linpoly.SetCoordinateSystem(0)
 
-   .. figure:: images/star-rot-poly.png
+   .. figure:: images/star-lin-poly.png
       :class: with-border
       :width: 50%
 
