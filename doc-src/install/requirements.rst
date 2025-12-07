@@ -160,6 +160,15 @@ AlmaLinux
       sudo dnf install git gcc gcc-c++ cmake \
                        boost-devel tinyxml-devel hdf5-devel vtk-devel CGAL-devel
 
+  .. warning::
+
+     On AlmaLinux 10, at the time of writing, packages ``vtk-devel``, ``vtk-qt``
+     and ``octave`` doesn't exist, openEMS cannot be installed on AlmaLinux 10.
+     See:
+
+     * https://bugzilla.redhat.com/show_bug.cgi?id=2374130
+     * https://bugzilla.redhat.com/show_bug.cgi?id=2419727
+
 - To use AppCSXCAD to visualize 3D models (recommended):
 
   .. code-block:: bash
@@ -186,7 +195,7 @@ AlmaLinux
 
   .. code-block:: bash
 
-      sudo dnf install python3-setuptools python3-setuptools_scm \
+      sudo dnf install python3-setuptools python3-wheel python3-setuptools_scm \
                        python3-Cython python3-numpy python3-h5py \
                        python3-matplotlib
 

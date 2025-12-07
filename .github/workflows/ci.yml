@@ -72,10 +72,19 @@ jobs:
             ancient: false
             docker-image: "almalinux:8"
 
-          - name: "AlmaLinux Latest"
+          - name: "AlmaLinux 9"
             libc: "GNU"
             ancient: false
-            docker-image: "almalinux:latest"
+            docker-image: "almalinux:9"
+
+          # Waiting for upstream packages:
+          # https://bugzilla.redhat.com/show_bug.cgi?id=2374130
+          # https://bugzilla.redhat.com/show_bug.cgi?id=2419727
+          #
+          #- name: "AlmaLinux Latest"
+          #  libc: "GNU"
+          #  ancient: false
+          #  docker-image: "almalinux:latest"
 
           # GUI is not supported on Alpine as VTK is built without Qt
           - name: "Alpine, No GUI"
@@ -133,7 +142,7 @@ jobs:
             dnf install -y git
             dnf install -y gcc gcc-c++ cmake git boost-devel tinyxml-devel vtk-devel hdf5-devel \
                            CGAL-devel vtk-qt octave python3-pip \
-                           python3-setuptools python3-setuptools_scm \
+                           python3-setuptools python3-wheel python3-setuptools_scm \
                            python3-Cython python3-numpy python3-h5py python3-matplotlib
 
             # only for CI/CD test builds without networks.
