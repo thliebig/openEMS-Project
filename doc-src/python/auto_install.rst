@@ -355,6 +355,20 @@ and openEMS installations to coexist without polluting ``~/.local`` (e.g.
    as possible, meaning that all Python packages marked as optional in the
    :ref:`install_requirements_src` page are recommended be installed.
 
+Q: I'm debugging ``./update_openEMS.sh --python``, but the Python errors are incomprehensible
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Try :ref:`pyinstall_manual` instead to manually perform the Python extension
+installation process to better understand the context of the error message.
+Check if the relevant error message is documented in the
+:ref:`pyinstall_manual_troubleshooting` subsection.
+
+If you are unable to solve the problem, create a post in the
+`discussion forum <https://github.com/thliebig/openEMS-Project/discussions>`_.
+Make sure to provide detailed information about your system
+(operating systems name and version, any error messages, logs,
+and debugging outputs).
+
 Q: ``./update_openEMS.sh`` is a black box, I need explicit control over the installation.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

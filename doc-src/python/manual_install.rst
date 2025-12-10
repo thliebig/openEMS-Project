@@ -693,6 +693,8 @@ install at ``C:\opt\openEMS``, run from a working Python command prompt
    openEMS-Project.git if you have success using the modern ``pip`` method
    on Windows.
 
+.. _pyinstall_manual_troubleshooting:
+
 Troubleshooting
 ----------------
 
@@ -800,6 +802,25 @@ ModuleNotFoundError: No module named 'openEMS.openEMS'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 See *ModuleNotFoundError: No module named 'CSXCAD.CSXCAD'*.
+
+error: invalid command 'bdist_wheel'
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Under ``--no-build-isolation``, one may encounter the following error:
+
+.. code-block:: bash
+
+    creating '/tmp/pip-modern-metadata-laicgdq2/CSXCAD.dist-info'
+    error: invalid command 'bdist_wheel'
+    Preparing metadata (pyproject.toml) ... error
+
+On some systems, the command ``bdist_wheel`` is not provided by ``setuptools``
+but an additional package named ``wheel``, such as ``python3-wheel``.
+
+This shouldn't happen if all dependencies listed in the latest documentation
+have been correctly installed. If you need to manually install the package
+``wheel`` not already mentioned by :ref:`install_requirements_src`, it means
+the documentation is outdated, please submit a bug report.
 
 CSXCAD Tests and Examples
 ---------------------------
