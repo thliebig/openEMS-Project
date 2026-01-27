@@ -10,6 +10,7 @@ Contents:
 
    install/index
    development/index
+   concepts/index
    python/openEMS/Tutorials/index
 
    python/python

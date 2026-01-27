@@ -63,6 +63,8 @@ extensions = [
     'sphinx.ext.mathjax',
     'numpydoc',
     'sphinx.ext.autosummary',
+    'sphinxcontrib.video',
+    'sphinx_tabs.tabs',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -163,12 +165,21 @@ html_theme_options = {
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-#html_logo = None
+html_logo = "../other/openEMS.svg"
 
 # The name of an image file (relative to this directory) to use as a favicon of
 # the docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
 #html_favicon = None
+
+# A list of CSS files. The entry must be a filename string or a tuple containing
+# the filename string and the attributes dictionary. The filename must be relative
+# to the html_static_path, or a full URI with scheme like
+# 'https://example.org/style.css'. The attributes dictionary is used for the <link>
+# tag’s attributes.
+html_css_files = [
+    'css/custom.css'
+]
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
