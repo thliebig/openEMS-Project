@@ -714,6 +714,43 @@ jobs:
           cmake --build ./ --parallel
           cmake --install ./ --parallel 8
 
+      - name: Build and install QCSXCAD
+        run: |
+          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+
+          cd "$env:GITHUB_WORKSPACE/QCSXCAD"
+          mkdir build && cd build
+          cmake ../ -GNinja `
+                    -DCMAKE_BUILD_TYPE=Release `
+                    -DCMAKE_INSTALL_PREFIX="$HOME/opt" `
+                    -DCSXCAD_ROOT_DIR="$HOME/opt" `
+                    -DVCPKG_INSTALLED_DIR="D:/vi" `
+                    -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
+                    -DVCPKG_HOST_TRIPLET="x64-windows-release" `
+                    -DVCPKG_TARGET_TRIPLET="x64-windows-release"
+
+          cmake --build ./ --parallel
+          cmake --install ./ --parallel 8
+
+      - name: Build and install AppCSXCAD
+        run: |
+          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+
+          cd "$env:GITHUB_WORKSPACE/AppCSXCAD"
+          mkdir build && cd build
+          cmake ../ -GNinja `
+                    -DCMAKE_BUILD_TYPE=Release `
+                    -DCMAKE_INSTALL_PREFIX="$HOME/opt" `
+                    -DCSXCAD_ROOT_DIR="$HOME/opt" `
+                    -DQCSXCAD_ROOT_DIR="$HOME/opt" `
+                    -DVCPKG_INSTALLED_DIR="D:/vi" `
+                    -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
+                    -DVCPKG_HOST_TRIPLET="x64-windows-release" `
+                    -DVCPKG_TARGET_TRIPLET="x64-windows-release"
+
+          cmake --build ./ --parallel
+          cmake --install ./ --parallel 8
+
       - name: Save vcpkg cache
         if: always()  # save even after a build failure.
         uses: actions/cache/save@v5
