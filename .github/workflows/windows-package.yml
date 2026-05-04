@@ -10,6 +10,8 @@ on:
   push:
     tags:
       - 'v*'
+    branches:
+      - CI_testing
 
 jobs:
   package:
@@ -134,6 +136,13 @@ jobs:
           if (Test-Path "D:\vi\x64-windows-release\bin") {
             Copy-Item "D:\vi\x64-windows-release\bin\*.dll" "$HOME\opt\bin\" -ErrorAction SilentlyContinue
           }
+          # Preserve Qt6 plugins — windeployqt6 reads them from this tree at package
+          # time, but AppCSXCAD's vcpkg.json may trigger orphan removal of Qt packages.
+          if (Test-Path "D:\vi\x64-windows-release\Qt6\plugins") {
+            Copy-Item "D:\vi\x64-windows-release\Qt6\plugins" `
+                      "$HOME\opt\Qt6-plugins" -Recurse -Force
+            Write-Host "Preserved Qt6 plugins"
+          }
 
       - name: Build and install AppCSXCAD
         run: |
@@ -234,29 +243,125 @@ jobs:
           if (Test-Path "$HOME/opt/bin") {
             Copy-Item "$HOME/opt/bin/*" $pkg -Recurse
           }
-          # vcpkg runtime DLLs (HDF5, VTK, TinyXML, Boost, etc.)
-          # Boost may be sourced from the runner's pre-installed vcpkg rather than
-          # D:/vi, so copy from all known vcpkg bin locations.
-          foreach ($vcpkgBin in @(
-            "D:\vi\x64-windows-release\bin",
-            "C:\vcpkg\installed\x64-windows-release\bin",
-            "$env:VCPKG_ROOT\installed\x64-windows-release\bin"
+
+          # Qt plugins — deploy into a plugins/ subdirectory and write qt.conf so
+          # Qt finds them.  Plugins live under plugins/ rather than flat next to the
+          # executable to keep the package root tidy.
+          $qtPluginsDir = "$pkg\plugins"
+          New-Item -ItemType Directory -Force $qtPluginsDir | Out-Null
+
+          # Locate windeployqt6 — check vcpkg install dir first, then fallback paths.
+          $wdq = $null
+          foreach ($candidate in @(
+            "D:\vi\x64-windows-release\tools\Qt6\bin\windeployqt6.exe",
+            "C:\vcpkg\installed\x64-windows-release\tools\Qt6\bin\windeployqt6.exe",
+            "$env:VCPKG_ROOT\installed\x64-windows-release\tools\Qt6\bin\windeployqt6.exe"
           )) {
-            if (Test-Path $vcpkgBin) {
-              Copy-Item "$vcpkgBin\*.dll" $pkg -ErrorAction SilentlyContinue
+            if (Test-Path $candidate) { $wdq = $candidate; break }
+          }
+
+          if ($wdq) {
+            # --plugindir puts all Qt plugins into plugins/ so qt.conf can find them.
+            & $wdq --release --no-translations --plugindir $qtPluginsDir "$pkg\AppCSXCAD.exe"
+            # windeployqt6 exits non-zero on warnings about optional Qt modules — not fatal.
+            $global:LASTEXITCODE = 0
+            # Keep only the plugin categories AppCSXCAD needs.
+            $keepPlugins = @("platforms", "styles", "iconengines")
+            Get-ChildItem $qtPluginsDir -Directory |
+              Where-Object { $_.Name -notin $keepPlugins } |
+              Remove-Item -Recurse -Force
+          } else {
+            Write-Warning "windeployqt6 not found — falling back to manual plugin copy"
+          }
+
+          # Fallback: copy needed plugin categories from the preserved tree.
+          if (-not (Test-Path "$qtPluginsDir\platforms")) {
+            foreach ($src in @("$HOME\opt\Qt6-plugins",
+                               "D:\vi\x64-windows-release\Qt6\plugins")) {
+              if (Test-Path "$src\platforms") {
+                foreach ($cat in @("platforms", "styles", "iconengines")) {
+                  if (Test-Path "$src\$cat") {
+                    Copy-Item "$src\$cat" "$qtPluginsDir\$cat" -Recurse -Force
+                  }
+                }
+                Write-Host "Copied Qt plugins from $src"
+                break
+              }
             }
           }
 
-          # Qt plugins and additional DLLs via windeployqt6
-          $wdq = "D:/vi/x64-windows-release/tools/Qt6/bin/windeployqt6.exe"
-          if (Test-Path $wdq) {
-            & $wdq --release --no-translations "$pkg/AppCSXCAD.exe"
-            # windeployqt6 exits non-zero when it encounters warnings about optional
-            # Qt modules (e.g. Qt6Core5Compat not installed). That is not a hard error;
-            # reset LASTEXITCODE so it does not propagate to the step exit code.
-            $global:LASTEXITCODE = 0
+          # qt.conf: tell Qt where plugins/ lives relative to the executable.
+          "[Paths]`nPlugins = plugins" | Set-Content "$pkg\qt.conf" -Encoding UTF8
+
+          # ── vcpkg runtime DLLs via dependency walk ────────────────────────────
+          # Use dumpbin to recursively resolve imports of every EXE/DLL already
+          # staged in $pkg (our binaries + Qt DLLs from windeployqt6), then pull
+          # in only the required DLLs from vcpkg — no more copy-everything.
+          $vcpkgSearchDirs = @(
+            "D:\vi\x64-windows-release\bin",
+            "C:\vcpkg\installed\x64-windows-release\bin",
+            "$env:VCPKG_ROOT\installed\x64-windows-release\bin"
+          ) | Where-Object { Test-Path $_ }
+
+          $dumpbin = Get-ChildItem "${env:VS_ROOT_DIR}VC\Tools\MSVC" `
+              -Recurse -Filter "dumpbin.exe" -ErrorAction SilentlyContinue |
+            Where-Object { $_.FullName -match 'Hostx64\\x64' } |
+            Select-Object -First 1 -ExpandProperty FullName
+
+          if ($dumpbin -and $vcpkgSearchDirs) {
+            $processed = [System.Collections.Generic.HashSet[string]]::new(
+              [System.StringComparer]::OrdinalIgnoreCase)
+            $queue = [System.Collections.Generic.Queue[string]]::new()
+
+            # Seed with only the top-level EXEs — DLL dependencies are
+            # discovered transitively, so seeding DLLs would pull in everything
+            # already staged (including unreferenced vcpkg DLLs).
+            Get-ChildItem $pkg -Filter "*.exe" |
+              ForEach-Object { $queue.Enqueue($_.FullName) }
+
+            while ($queue.Count -gt 0) {
+              $bin = $queue.Dequeue()
+              if (-not $processed.Add([IO.Path]::GetFileName($bin))) { continue }
+
+              $imports = & $dumpbin /dependents $bin 2>$null |
+                Where-Object { $_ -match '^\s{4}\S+\.dll\s*$' } |
+                ForEach-Object { $_.Trim() }
+
+              foreach ($dep in $imports) {
+                if ($processed.Contains($dep)) { continue }
+                # Already staged flat in $pkg?
+                if (Test-Path "$pkg\$dep") {
+                  $queue.Enqueue("$pkg\$dep"); continue
+                }
+                # Search vcpkg dirs and copy if found.
+                foreach ($dir in $vcpkgSearchDirs) {
+                  if (Test-Path "$dir\$dep") {
+                    Copy-Item "$dir\$dep" $pkg
+                    $queue.Enqueue("$pkg\$dep")
+                    Write-Host "  + $dep"
+                    break
+                  }
+                }
+                # Not found = Windows system DLL, silently skip.
+              }
+            }
+            Write-Host "Dependency walk done — $($processed.Count) imports resolved."
+
+            # Remove every DLL in $pkg that is not reachable from the EXEs.
+            # $processed is exactly the transitive import closure, so anything
+            # outside it is unused — vcpkg surplus, stale preserves, etc.
+            # Our own DLLs (CSXCAD.dll, openEMS.dll, …) are always in $processed
+            # because the EXEs import them, so they are never removed here.
+            $removed = 0
+            Get-ChildItem "$pkg\*.dll" | Where-Object {
+              -not $processed.Contains($_.Name)
+            } | ForEach-Object { Remove-Item $_.FullName -Force; $removed++ }
+            Write-Host "Removed $removed unreferenced DLLs."
           } else {
-            Write-Warning "windeployqt6 not found at $wdq — Qt plugins may be missing"
+            Write-Warning "dumpbin not found — falling back to copy-all vcpkg DLLs"
+            foreach ($dir in $vcpkgSearchDirs) {
+              Copy-Item "$dir\*.dll" $pkg -ErrorAction SilentlyContinue
+            }
           }
 
           # ── matlab/: merged Octave/Matlab interface ───────────────────────────
@@ -323,6 +428,9 @@ jobs:
             "",
             "Project page: https://openEMS.de"
           ) | Set-Content "$pkg/README.txt" -Encoding UTF8
+
+          # ── strip debug symbols ───────────────────────────────────────────────
+          Get-ChildItem $pkg -Recurse -Filter "*.pdb" | Remove-Item -Force
 
           # ── ZIP ───────────────────────────────────────────────────────────────
           Compress-Archive -Path $pkg `
