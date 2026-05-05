@@ -57,6 +57,16 @@ jobs:
             ancient: false
             docker-image: "debian:latest"
 
+          - name: "Ubuntu 22.04"
+            libc: "GNU"
+            ancient: false
+            docker-image: "ubuntu:22.04"
+
+          - name: "Ubuntu 24.04"
+            libc: "GNU"
+            ancient: false
+            docker-image: "ubuntu:24.04"
+
           - name: "Ubuntu"
             libc: "GNU"
             ancient: false
@@ -76,6 +86,12 @@ jobs:
             libc: "GNU"
             ancient: false
             docker-image: "almalinux:9"
+
+          # AlmaLinux 10: vtk-devel, vtk-qt and octave not yet packaged for el10.
+          #- name: "AlmaLinux 10"
+          #  libc: "GNU"
+          #  ancient: false
+          #  docker-image: "almalinux:10"
 
           # Waiting for upstream packages:
           # https://bugzilla.redhat.com/show_bug.cgi?id=2374130
@@ -148,6 +164,7 @@ jobs:
             # only for CI/CD test builds without networks.
             dnf install -y iproute
           elif grep -q "ID=debian" /etc/os-release || grep -q "ID=ubuntu" /etc/os-release; then
+            export DEBIAN_FRONTEND=noninteractive
             # retry failed downloads 3 times
             echo 'Acquire::Retries "3";' > /etc/apt/apt.conf.d/80-retries
             apt-get update
@@ -158,6 +175,9 @@ jobs:
                                octave \
                                python3-pip \
                                python3-setuptools python3-numpy python3-matplotlib python3-h5py
+            # Qt6 Core5Compat is required by QCSXCAD when VTK uses Qt6 (Ubuntu 26.04+).
+            # Silently skip on older distros where the package does not exist.
+            apt-get install -y libqt6core5compat6-dev || true
 
             # VTK9 or VTK7, at least one must succeed (depending on Debian version)
             # VTK9,  VTK7, or VTK6, at least one must succeed (depending on Debian version)
