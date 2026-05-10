@@ -387,6 +387,31 @@ jobs:
           # ── python/: wheels + tutorials + Cython declarations ────────────────
           New-Item -ItemType Directory -Force "$pkg/python"
           Copy-Item "$env:GITHUB_WORKSPACE/wheels/*.whl" "$pkg/python/"
+          @(
+            "openEMS Python Interface - Quick Install",
+            "==========================================",
+            "",
+            "1. Check your Python version:",
+            "     python --version",
+            "   The wheel filenames encode the version (e.g. cp313 = Python 3.13).",
+            "   Pick the .whl files that match.",
+            "",
+            "2. Install CSXCAD first, then openEMS (order matters):",
+            "     pip install CSXCAD-*-cp313-cp313-win_amd64.whl",
+            "     pip install openEMS-*-cp313-cp313-win_amd64.whl",
+            "   Replace cp313 with your Python version tag.",
+            "",
+            "3. Set CSXCAD_INSTALL_PATH so Python can find the DLLs.",
+            "   Run once (opens a new prompt to take effect):",
+            "     setx CSXCAD_INSTALL_PATH `"C:\openEMS`"",
+            "   Replace C:\openEMS with the folder where you extracted this package.",
+            "",
+            "4. Verify in a new command prompt:",
+            "     python -c `"import CSXCAD; print(CSXCAD.ContinuousStructure())`"",
+            "     python -c `"import openEMS; print(openEMS.openEMS())`"",
+            "",
+            "Full documentation: https://docs.openems.de"
+          ) | Set-Content "$pkg/python/README.txt" -Encoding UTF8
           if (Test-Path "$env:GITHUB_WORKSPACE/openEMS/python/Tutorials") {
             Copy-Item "$env:GITHUB_WORKSPACE/openEMS/python/Tutorials" `
                       "$pkg/python/Tutorials" -Recurse

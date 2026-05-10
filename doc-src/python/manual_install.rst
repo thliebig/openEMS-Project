@@ -639,59 +639,105 @@ The following example assumes the CSXCAD/openEMS installation prefix is
       -L "$HOME/opt/openEMS/lib:/usr/local/lib" \
       -R "$HOME/opt/openEMS/lib"
 
+.. _Python Windows Install:
+
 Windows
 -------
 
-The python interface for CSXCAD & openEMS requires a build with a
-`MS Visual Compiler`_. Download the latest Windows build with the "msvc"
-label: openEMS_win_
+Pre-compiled ``.whl`` files are included in the Windows package — no
+compiler is required for a standard install.
 
-Install Pre-build Modules
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Step 1: Download the package
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For some python versions, pre-build wheel files can be found in the
-``python`` sub-directory. E.g. for Python 3.10 (using ``pip``):
+Download the latest Windows package from the
+`openEMS Project releases page <https://github.com/thliebig/openEMS-Project/releases>`__
+(stable release or the ``nightly`` pre-release).  Extract the ZIP to a
+folder of your choice, for example ``C:\openEMS``.
 
-.. code-block:: batch
+Step 2: Identify your Python version
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    cd C:\opt\openEMS\python
-    pip3 install CSXCAD-0.6.2-cp310-cp310-win_amd64.whl
-    pip3 install openEMS-0.0.33-cp310-cp310-win_amd64.whl
+Open a command prompt and run:
 
-Setup
-~~~~~~~
+.. code-block:: doscon
 
-**Important Note:** Python needs to find the dependent libraries (dll's) during module import.
-To allow this, it is necessary to set an environment variable (permantently, terminal restart my be necessary):
+    python --version
 
-.. code-block:: batch
+The output shows your Python version, e.g. ``Python 3.13.x``.  Wheel
+filenames encode the version — ``cp313`` in the name means CPython 3.13.
 
-    setx OPENEMS_INSTALL_PATH C:\opt\openEMS
+Step 3: Install the wheels
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``CSXCAD`` must be installed **before** ``openEMS``.  From the ``python\``
+sub-directory of the extracted package:
+
+.. code-block:: doscon
+
+    pip install C:\openEMS\python\CSXCAD-*-cp313-cp313-win_amd64.whl
+    pip install C:\openEMS\python\openEMS-*-cp313-cp313-win_amd64.whl
+
+Replace ``cp313`` with the tag matching your Python version.
+
+.. note::
+
+   Installing ``openEMS`` before ``CSXCAD`` causes pip to look for
+   CSXCAD from a path that does not exist on your machine and report a
+   ``No such file or directory`` error.  Always install CSXCAD first.
+
+Step 4: Set ``CSXCAD_INSTALL_PATH``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+At import time, Python must locate ``CSXCAD.dll``, ``openEMS.dll``, and
+their dependencies.  Set ``CSXCAD_INSTALL_PATH`` to the folder that
+contains the ``.dll`` files (the root of the extracted package) and
+open a **new** command prompt for the change to take effect:
+
+.. code-block:: doscon
+
+    setx CSXCAD_INSTALL_PATH "C:\openEMS"
+
+For a temporary, session-only setting use ``set`` instead of ``setx``,
+or in PowerShell:
+
+.. code-block:: powershell
+
+    $env:CSXCAD_INSTALL_PATH = "C:\openEMS"
+
+Step 5: Verify the installation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In a **new** command prompt (after ``setx``), run:
+
+.. code-block:: doscon
+
+    python -c "import CSXCAD; print(CSXCAD.ContinuousStructure())"
+    python -c "import openEMS; print(openEMS.openEMS())"
+
+Both commands should print an object representation without errors.
 
 Build Modules From Source
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Download the sources using ``git``. Assuming the MSVC binary build of openEMS is
-install at ``C:\opt\openEMS``, run from a working Python command prompt
-(e.g. using WinPython_):
+If no pre-built wheel matches your Python version, you can build from
+source.  A Microsoft Visual C++ compiler is required — see `MS Visual
+Compiler`_.
 
-.. code-block:: batch
+First follow the Windows C++ build steps in :ref:`clone_build_install_src`
+to compile and install CSXCAD and openEMS to a prefix (e.g. ``C:\openEMS``).
+Once the C++ libraries are in place, build the Python wheels:
 
-   git clone --recursive https://github.com/thliebig/openEMS-Project.git
-   cd openEMS-Project/CSXCAD/python
-   python3 setup.py build_ext -IC:\opt\openEMS\include -LC:\opt\openEMS
-   python3 setup.py install
+.. code-block:: doscon
 
-   cd ../../openEMS/python
-   python3 setup.py build_ext -IC:\opt\openEMS\include -LC:\opt\openEMS
-   python3 setup.py install
+    set CSXCAD_INSTALL_PATH=C:\openEMS
+    set OPENEMS_INSTALL_PATH=C:\openEMS
 
-.. warning::
+    cd openEMS-Project\CSXCAD\python
+    pip install .
 
-   This section has not been updated for the new ``pip`` method for Windows
-   due to lack of a test environment. Please submit a Pull Request against
-   openEMS-Project.git if you have success using the modern ``pip`` method
-   on Windows.
+    cd ..\..\openEMS\python
+    pip install .
 
 .. _pyinstall_manual_troubleshooting:
 
