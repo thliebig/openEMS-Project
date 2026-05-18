@@ -29,8 +29,10 @@ jobs:
           # ancient: true or false.
           #          true: incompatible with GitHub's actions/checkout due to
           #                node.js compatibility problem. Manual git checkout
-          #                required.
-          #          false: use standard GitHub's actions/checkout.
+          #                required. Full dependency install done inline before
+          #                checkout (scripts/install_deps.sh not yet available).
+          #          false: use standard GitHub's actions/checkout and
+          #                 scripts/install_deps.sh for dependency installation.
           # docker-image: string, image on DockerHub to use
           - name: "CentOS 7"
             libc: "GNU"
@@ -121,7 +123,13 @@ jobs:
         shell: sh
         run: (ls /.dockerenv && echo Found dockerenv) || exit 1
 
-      - name: Install dependencies
+      # ── EOL / ancient distros (CentOS 7, Ubuntu 14.04) ───────────────────
+      # These cannot use actions/checkout (node.js incompatibility) and require
+      # special package versions not handled by scripts/install_deps.sh. Keep
+      # the full inline install here; a manual git clone follows below.
+
+      - if: ${{ matrix.os.ancient }}
+        name: Install dependencies (EOL distros)
         shell: sh
         run: |
           cat /etc/os-release
@@ -142,105 +150,57 @@ jobs:
           echo 'export BASH_ENV="$HOME/.bash_env"' >> ~/.bash_profile
           echo 'export CXXFLAGS="-Wall -Wextra -Wno-error"' >> ~/.bash_profile
 
-          if grep -q "ID=fedora" /etc/os-release; then
-            dnf install -y git
-            dnf install -y gcc gcc-c++ cmake git boost-devel tinyxml-devel vtk-devel hdf5-devel \
-                           CGAL-devel vtk-qt octave python3-pip \
-                           python3-setuptools python3-setuptools_scm \
-                           python3-Cython python3-numpy python3-h5py python3-matplotlib
-
-            # only for CI/CD test builds without networks.
-            dnf install -y iproute
-          elif grep -q 'ID="almalinux"' /etc/os-release; then
-            dnf install -y epel-release
-            dnf config-manager --set-enabled powertools || dnf config-manager --set-enabled crb
-
-            dnf install -y git
-            dnf install -y gcc gcc-c++ cmake git boost-devel tinyxml-devel vtk-devel hdf5-devel \
-                           CGAL-devel vtk-qt octave python3-pip \
-                           python3-setuptools python3-wheel python3-setuptools_scm \
-                           python3-Cython python3-numpy python3-h5py python3-matplotlib
-
-            # only for CI/CD test builds without networks.
-            dnf install -y iproute
-          elif grep -q "ID=debian" /etc/os-release || grep -q "ID=ubuntu" /etc/os-release; then
+          if grep -q "ID=debian" /etc/os-release || grep -q "ID=ubuntu" /etc/os-release; then
             export DEBIAN_FRONTEND=noninteractive
             # retry failed downloads 3 times
             echo 'Acquire::Retries "3";' > /etc/apt/apt.conf.d/80-retries
             apt-get update
 
+            # Ubuntu 14.04: install base packages available on the old repo
             apt-get install -y build-essential git \
                                libhdf5-dev libtinyxml-dev \
                                qtbase5-dev \
                                octave \
                                python3-pip \
                                python3-setuptools python3-numpy python3-matplotlib python3-h5py
-            # Qt6 Core5Compat is required by QCSXCAD when VTK uses Qt6 (Ubuntu 26.04+).
-            # Silently skip on older distros where the package does not exist.
-            apt-get install -y libqt6core5compat6-dev || true
 
-            # VTK9 or VTK7, at least one must succeed (depending on Debian version)
-            # VTK9,  VTK7, or VTK6, at least one must succeed (depending on Debian version)
-            apt-get install -y libvtk9-dev libvtk9-qt-dev || \
-                apt-get install -y libvtk7-dev libvtk7-qt-dev || \
-                  apt-get install -y libvtk6-dev
+            apt-get install -y libvtk6-dev
 
             # only for CI/CD test builds without networks.
             apt-get install -y iproute2
 
-            if grep -q 'VERSION_ID="14.04"' /etc/os-release; then
-              # Ubuntu 14.04 has CMake 2 by default, but we require CMake 3
-              apt-get install -y cmake3
+            # Ubuntu 14.04 has CMake 2 by default, but we require CMake 3
+            apt-get install -y cmake3
 
-              # Ubuntu 14.04 ships Boost 1.54 and is required by libcgal-dev,
-              # but we need Boost 1.55, so we install Boost 1.55 first, then
-              # install CGAL from source.
-              apt-get install -y boost1.55 boost1.55-dev
+            # Ubuntu 14.04 ships Boost 1.54 and is required by libcgal-dev,
+            # but we need Boost 1.55, so we install Boost 1.55 first, then
+            # install CGAL from source.
+            apt-get install -y boost1.55 boost1.55-dev
 
-              # CGAL v4.14.3 was old enough to be compatible with GCC 4.8. Otherwise,
-              # you get: The compiler feature "cxx_decltype_auto" is not known
-              # to CXX compiler "GNU" version 4.8.5.
-              apt-get install -y libgmp-dev libmpfr-dev
-              git clone $GITHUB_SERVER_URL/CGAL/cgal.git --depth=1 --branch=v4.14.3
-              cd cgal && mkdir build && cd build
-              cmake ../ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/opt
-              make -j`nproc` && make install
+            # CGAL v4.14.3 was old enough to be compatible with GCC 4.8. Otherwise,
+            # you get: The compiler feature "cxx_decltype_auto" is not known
+            # to CXX compiler "GNU" version 4.8.5.
+            apt-get install -y libgmp-dev libmpfr-dev
+            git clone $GITHUB_SERVER_URL/CGAL/cgal.git --depth=1 --branch=v4.14.3
+            cd cgal && mkdir build && cd build
+            cmake ../ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/opt
+            make -j`nproc` && make install
 
-              # Must use Cython 3.0 or lower, since 3.1 uses f-string which is
-              # incompatible with Python 3.4.
-              pip3 install "cython<3.1"
+            # Must use Cython 3.0 or lower, since 3.1 uses f-string which is
+            # incompatible with Python 3.4.
+            pip3 install "cython<3.1"
 
-              # Ubuntu 14.04's matplotlib package is ancient, install the
-              # minimum version and its dependencies via pip. Note that the
-              # native build uses Python 3.4 while the venv build (tested
-              # later) uses Python 3.5 without these problems.
-              #
-              # pip's pyparsing is incompatible with Python 3.4
-              apt-get install -y python3-pyparsing
+            # Ubuntu 14.04's matplotlib package is ancient, install the
+            # minimum version and its dependencies via pip. Note that the
+            # native build uses Python 3.4 while the venv build (tested
+            # later) uses Python 3.5 without these problems.
+            #
+            # pip's pyparsing is incompatible with Python 3.4
+            apt-get install -y python3-pyparsing
 
-              # same, newer cycler has incompatible type annotation
-              pip3 install "cycler==0.10.0"
-              pip3 install "matplotlib==2.1.0"
-            else
-              apt-get install -y libboost-all-dev
-              apt-get install -y libcgal-dev
-              apt-get install -y cmake
-              apt-get install -y python3-setuptools-scm cython3 python3-matplotlib
-
-              # testing Python packages in isolated venv
-              apt-get install -y python3-venv
-            fi
-          elif grep -q "ID=alpine" /etc/os-release; then
-            apk add bash \
-                    build-base gmp-dev mpfr-dev git cmake \
-                    boost-dev tinyxml-dev hdf5-dev cgal-dev vtk-dev \
-                    octave \
-                    python3-dev py3-pip \
-                    py3-setuptools py3-setuptools_scm cython \
-                    py3-numpy py3-h5py py3-matplotlib
-
-            # only for CI/CD test builds without networks.
-            apk add iproute2
+            # same, newer cycler has incompatible type annotation
+            pip3 install "cycler==0.10.0"
+            pip3 install "matplotlib==2.1.0"
           elif [ -f /etc/centos-release ]; then
             # IPv6 on GitHub Actions is broken, causing random network failures
             # if a CDN rosolves to IPv6.
@@ -255,11 +215,8 @@ jobs:
                     s|^# baseurl|baseurl|g; s|mirror.centos.org|vault.centos.org|g' \
                 /etc/yum.repos.d/CentOS-SCLo-scl.repo \
                 /etc/yum.repos.d/CentOS-SCLo-scl-rh.repo
-            cat /etc/yum.repos.d/CentOS-SCLo-scl.repo
-            cat /etc/yum.repos.d/CentOS-SCLo-scl-rh.repo
 
             yum install -y epel-release
-            yum install -y git
             yum install -y gcc gcc-c++ gmp-devel mpfr-devel \
                            cmake3 git tinyxml-devel vtk-devel hdf5-devel octave \
                            python3-devel python3-pip \
@@ -306,11 +263,43 @@ jobs:
             cmake ../ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/opt
             make -j`nproc` && make install
           else
-            echo "Unknown system!"
+            echo "Unknown EOL system!"
             exit 1
           fi
 
           ip netns add no-network
+
+      # ── Modern distros: bootstrap before checkout ─────────────────────────
+      # Only git (and bash on Alpine) are needed at this stage. Everything else
+      # is installed via scripts/install_deps.sh after the repo is available.
+
+      - if: ${{ ! matrix.os.ancient }}
+        name: Set up environment and install git
+        # Must use sh: bash is not installed on Alpine yet
+        shell: sh
+        run: |
+          cat /etc/os-release
+
+          touch ~/.bash_profile ~/.bash_env
+          printf "%s\n" "set -euo pipefail" >> ~/.bash_profile
+          printf "%s\n" "set -euo pipefail" >> ~/.bash_env
+          echo 'export BASH_ENV="$HOME/.bash_env"' >> ~/.bash_profile
+          echo 'export CXXFLAGS="-Wall -Wextra -Wno-error"' >> ~/.bash_profile
+
+          if grep -q "ID=alpine" /etc/os-release; then
+            apk add bash git
+          elif grep -q "ID=fedora" /etc/os-release; then
+            dnf install -y git
+          elif grep -q 'ID="almalinux"' /etc/os-release; then
+            dnf install -y git
+          elif grep -q "ID=debian" /etc/os-release || grep -q "ID=ubuntu" /etc/os-release; then
+            echo 'Acquire::Retries "3";' > /etc/apt/apt.conf.d/80-retries
+            apt-get update
+            DEBIAN_FRONTEND=noninteractive apt-get install -y git
+          else
+            echo "Unknown system!"
+            exit 1
+          fi
 
       - if: ${{ ! matrix.os.ancient }}
         name: Checkout openEMS-Project.git
@@ -339,6 +328,30 @@ jobs:
           # update git submodules, because the Pull Request may change it
           git submodule init
           git submodule update
+
+      - if: ${{ ! matrix.os.ancient }}
+        name: Install build dependencies
+        run: |
+          source ~/.bash_profile
+          cd $GITHUB_WORKSPACE/openEMS-Project
+
+          # GUI is not supported on Alpine as VTK is built without Qt
+          if grep -q "ID=alpine" /etc/os-release; then
+            ./scripts/install_deps.sh --auto --python --with-ctb --disable-gui
+          else
+            ./scripts/install_deps.sh --auto --python --with-ctb
+          fi
+
+          # iproute: used for network namespace isolation in CI smoke tests
+          if grep -q "ID=alpine" /etc/os-release; then
+            apk add iproute2
+          elif grep -q "ID=debian" /etc/os-release || grep -q "ID=ubuntu" /etc/os-release; then
+            apt-get install -y iproute2
+          elif grep -q "ID=fedora" /etc/os-release || grep -q 'ID="almalinux"' /etc/os-release; then
+            dnf install -y iproute
+          fi
+
+          ip netns add no-network
 
       - name: Build and install openEMS with --python-use-network=disable
         run: |
@@ -432,7 +445,7 @@ jobs:
 
     runs-on: macos-latest
     steps:
-      - name: Install dependencies
+      - name: Set up build environment
         run: |
           # Use a strict shell, stop the interpreter on various errors,
           # so errors such as undefined variables are caught by CI/CD
@@ -457,10 +470,6 @@ jobs:
           # the command is invalid.
           printf "\n%s\n" "set -euo pipefail" >> ~/.bash_profile
 
-          brew install cmake boost hdf5 cgal vtk octave qt5compat \
-                       python3 \
-                       python-setuptools numpy python-matplotlib cython
-
       - name: Checkout openEMS-Project.git
         uses: actions/checkout@v4
         with:
@@ -470,6 +479,12 @@ jobs:
           # checkout must be deep, not shallow.
           # We need tags for "git describe", otherwise build fails.
           fetch-depth: 0
+
+      - name: Install build dependencies
+        run: |
+          source ~/.zprofile
+          cd $GITHUB_WORKSPACE/openEMS-Project
+          ./scripts/install_deps.sh --auto --python --with-ctb
 
       - name: Build and install openEMS with --python-use-network=disable
         run: |
@@ -561,18 +576,18 @@ jobs:
           run: |
             echo "Install dependencies..."
 
-            # use separate packages, not the meta-package "qt5" to save disk space
-            sudo pkg install -y bash cmake git boost-libs tinyxml vtk9 hdf5 cgal octave \
-                                qt5-core qt5-gui qt5-opengl qt5-xml \
-                                python3
-            # Derive the version prefix from whatever Python FreeBSD ships
-            # (e.g. "py311" for 3.11, "py313" for 3.13) so the CI doesn't
-            # break when FreeBSD bumps its default Python version.
-            PYVER=$(python3 -c "import sys; print('py{}{}'.format(*sys.version_info[:2]))")
-            sudo pkg install -y ${PYVER}-pip \
-                                ${PYVER}-setuptools ${PYVER}-wheel ${PYVER}-setuptools-scm \
-                                ${PYVER}-numpy ${PYVER}-h5py ${PYVER}-matplotlib
-            # cython3 package name varies across FreeBSD quarterly snapshots; use pip
+            # bash is required to run scripts/install_deps.sh
+            sudo pkg install -y bash
+
+            # Install core deps. python3 is included in core so that the second
+            # call can derive the version prefix for Python package names.
+            ./scripts/install_deps.sh --auto --with-ctb
+
+            # Python packages use a version prefix (py311-, py313-, …) that can
+            # only be determined after python3 is installed (done above).
+            ./scripts/install_deps.sh --auto --python
+
+            # Cython package name varies across FreeBSD quarterly snapshots; use pip
             pip install --user --break-system-packages cython
 
             echo "Build and install openEMS with --python-use-network=disable..."
@@ -602,6 +617,7 @@ jobs:
             echo "Build and install openEMS in venv..."
             # remove Python dependencies to see if venv really works
             pip uninstall -y CSXCAD openEMS cython --break-system-packages
+            PYVER=$(python3 -c "import sys; print('py{}{}'.format(*sys.version_info[:2]))")
             sudo pkg remove -y ${PYVER}-pip \
                                ${PYVER}-setuptools ${PYVER}-wheel ${PYVER}-setuptools-scm \
                                ${PYVER}-numpy ${PYVER}-h5py ${PYVER}-matplotlib
