@@ -656,7 +656,6 @@ jobs:
             CXX: "clang-cl"
 
     env:
-      VS_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/"
       CC: "${{ matrix.toolchain.CC }}"
       CXX: "${{ matrix.toolchain.CXX }}"
       CFLAGS: "/D_WIN32_WINNT=0x0601"
@@ -671,6 +670,15 @@ jobs:
     name: "Windows (${{ matrix.toolchain.name }}, latest)"
 
     steps:
+      - name: Locate Visual Studio installation
+        shell: pwsh
+        run: |
+          $vsPath = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
+            -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
+            -property installationPath
+          if (-not $vsPath) { throw "Visual Studio with VC tools not found via vswhere" }
+          echo "VS_ROOT_DIR=$vsPath" >> $env:GITHUB_ENV
+
       - name: Checkout openEMS-Project.git
         uses: actions/checkout@v4
         with:

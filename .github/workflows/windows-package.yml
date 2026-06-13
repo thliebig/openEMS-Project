@@ -19,7 +19,6 @@ jobs:
     runs-on: windows-latest
 
     env:
-      VS_ROOT_DIR: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/"
       CC: "cl"
       CXX: "cl"
       CFLAGS: "/D_WIN32_WINNT=0x0601"
@@ -32,6 +31,15 @@ jobs:
       X_VCPKG_ASSET_SOURCES: "x-azurl,file://${{ github.workspace }}/vcpkg-cache/asset,readwrite"
 
     steps:
+      - name: Locate Visual Studio installation
+        shell: pwsh
+        run: |
+          $vsPath = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
+            -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
+            -property installationPath
+          if (-not $vsPath) { throw "Visual Studio with VC tools not found via vswhere" }
+          echo "VS_ROOT_DIR=$vsPath" >> $env:GITHUB_ENV
+
       - name: Checkout openEMS-Project.git
         uses: actions/checkout@v4
         with:
@@ -303,7 +311,7 @@ jobs:
             "$env:VCPKG_ROOT\installed\x64-windows-release\bin"
           ) | Where-Object { Test-Path $_ }
 
-          $dumpbin = Get-ChildItem "${env:VS_ROOT_DIR}VC\Tools\MSVC" `
+          $dumpbin = Get-ChildItem "${env:VS_ROOT_DIR}\VC\Tools\MSVC" `
               -Recurse -Filter "dumpbin.exe" -ErrorAction SilentlyContinue |
             Where-Object { $_.FullName -match 'Hostx64\\x64' } |
             Select-Object -First 1 -ExpandProperty FullName
