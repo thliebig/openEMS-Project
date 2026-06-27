@@ -230,11 +230,19 @@ jobs:
           $stem = "openEMS_x64_${gitdesc}_msvc"
           echo "name=$stem" >> $env:GITHUB_OUTPUT
           if ("${{ github.ref }}" -match "^refs/tags/(.+)$") {
-            echo "tag=$($Matches[1])" >> $env:GITHUB_OUTPUT
-            echo "prerelease=false"   >> $env:GITHUB_OUTPUT
+            $tag = $Matches[1]
+            echo "tag=$tag"                              >> $env:GITHUB_OUTPUT
+            echo "title=openEMS $tag"                   >> $env:GITHUB_OUTPUT
+            # Tags containing '-rc' are pre-releases
+            if ($tag -match '-rc') {
+              echo "prerelease=true"  >> $env:GITHUB_OUTPUT
+            } else {
+              echo "prerelease=false" >> $env:GITHUB_OUTPUT
+            }
           } else {
-            echo "tag=nightly"      >> $env:GITHUB_OUTPUT
-            echo "prerelease=true"  >> $env:GITHUB_OUTPUT
+            echo "tag=nightly"                           >> $env:GITHUB_OUTPUT
+            echo "title=openEMS nightly (Windows MSVC)" >> $env:GITHUB_OUTPUT
+            echo "prerelease=true"                       >> $env:GITHUB_OUTPUT
           }
 
       - name: Assemble package
@@ -514,7 +522,16 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.pkg.outputs.tag }}
-          name: ${{ steps.pkg.outputs.name }}
+          name: ${{ steps.pkg.outputs.title }}
           prerelease: ${{ steps.pkg.outputs.prerelease }}
           files: ${{ steps.pkg.outputs.name }}.zip
-          generate_release_notes: ${{ startsWith(github.ref, 'refs/tags/') }}
+          body: |
+            Windows 64-bit binary package for **openEMS ${{ steps.pkg.outputs.tag }}** (MSVC build).
+
+            The ZIP archive contains the openEMS binary, CSXCAD, AppCSXCAD, Octave/Matlab scripts, Python wheels (cp313/cp314), and C++ headers and import libraries for building extensions. See `README.txt` inside the archive for installation instructions.
+
+            **Change history:**
+            - openEMS: https://github.com/thliebig/openEMS/commits/master
+            - CSXCAD: https://github.com/thliebig/CSXCAD/commits/master
+
+            **Documentation:** https://docs.openems.de
