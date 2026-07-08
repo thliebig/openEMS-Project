@@ -73,8 +73,8 @@ def generate_doc(subproject):
         func_usage, rest = modify_helptext(text)
         func_usage = func_usage.lstrip()
 
-        func_prototype = func_usage.split("=")[-1]
-        func_prototype.replace("function ", "")
+        func_prototype = func_usage.split("=")[-1].strip()
+        func_prototype = func_prototype.replace("function ", "")
 
         with open(out_fn, "w") as f:
             f.write(funcname + "\n")
