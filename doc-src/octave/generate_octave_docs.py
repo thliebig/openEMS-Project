@@ -15,6 +15,17 @@ def get_octave_helptext(cwd, funcname):
     return retval.stdout.decode("UTF-8")
 
 
+_BOILERPLATE = [
+    "openEMS matlab/octave interface",
+    "openEMS matlab interface",
+    "openEMS Matlab/Octave interface",
+    "CSXCAD matlab interface",
+    "adding openEMS+CSXCAD path",
+    "disable recursive rmdir confirmation",
+    "set page screen output to",
+]
+
+
 def modify_helptext(helptext):
     helptext_lines = helptext.split("\n")
 
@@ -23,16 +34,23 @@ def modify_helptext(helptext):
         if line and line[0] == ' ':
             helptext_lines[idx] = line[1:]
 
+        stripped = helptext_lines[idx].strip()
         if (
-            "openEMS matlab/octave interface" in line or
-            "openEMS matlab interface" in line or
-            "openEMS Matlab/Octave interface" in line or
-            "CSXCAD matlab interface" in line
+            any(pat in stripped for pat in _BOILERPLATE) or
+            (stripped.startswith("openEMS_root") and "=" in stripped)
         ):
-            helptext_lines[idx] = "\n"
+            helptext_lines[idx] = ""
 
-    func_prototype = helptext_lines[0]
-    rest = "\n".join(helptext_lines[1:])
+    # skip leading blank lines to find the first meaningful line (func prototype)
+    func_prototype = ""
+    start_idx = 0
+    for idx, line in enumerate(helptext_lines):
+        if line.strip():
+            func_prototype = line.strip()
+            start_idx = idx + 1
+            break
+
+    rest = "\n".join(helptext_lines[start_idx:])
     return func_prototype, rest
 
 
