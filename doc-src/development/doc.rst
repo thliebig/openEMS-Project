@@ -33,7 +33,7 @@ Before proceeding...
 2. Refer to :ref:`clone_build_install_src` and :ref:`pyinstall_auto` to
    install CSXCAD, openEMS, and Python extensions automatically.
 
-3. Alternatively, refer to :ref:`manual_install` and :ref:`pyinstall_manual`
+3. Alternatively, refer to :ref:`manual_build` and :ref:`pyinstall_manual`
    to install CSXCAD, openEMS, and Python extensions manually.
 
 .. important::
