@@ -67,7 +67,7 @@ API Reference
 
    * - Curved
      - :func:`AddCurvePort()`
-     -
+     - :meth:`~openEMS.ports.CurvePort`
 
    * - Microstrip
      - :func:`AddMSLPort()`
@@ -75,15 +75,15 @@ API Reference
 
    * - Stripline
      - :func:`AddStripLinePort()`
-     -
+     - :meth:`~openEMS.ports.StripLinePort`
 
    * - Coplanar Waveguide
      - :func:`AddCPWPort()`
-     -
+     - :meth:`~openEMS.ports.CPWPort`
 
    * - Coaxial
      - :func:`AddCoaxialPort()`
-     -
+     - :meth:`~openEMS.ports.CoaxialPort`
 
    * - Generic Waveguide
      - :func:`AddWaveGuidePort()`
@@ -95,10 +95,7 @@ API Reference
 
    * - Circular Waveguide
      - :func:`AddCircWaveGuidePort()`
-     -
-
-.. note::
-   Some port types are not *ported* to Python yet.
+     - :meth:`~openEMS.ports.CircWGPort`
 
 Lumped Ports
 ~~~~~~~~~~~~
