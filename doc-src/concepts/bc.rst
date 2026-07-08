@@ -193,3 +193,9 @@ Two kinds of Absorbing Boundary Conditions are implemented in openEMS.
       fields) can create numerical instability. When in doubt, make a secondary
       simulation with the PML further away. If nothing changes, the original
       clearance was sufficient.
+
+.. seealso::
+   * :ref:`tutorial_rect_waveguide` — uses PEC boundary conditions to model
+     the metallic walls of a rectangular waveguide.
+   * :ref:`tutorial_msl_notchfilter` — uses PML absorbing boundaries for an
+     open microstrip structure.

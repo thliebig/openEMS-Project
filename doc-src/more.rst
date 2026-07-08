@@ -1,19 +1,18 @@
 Learn More
 =============
 
-Documentation and Q&A
------------------------------
-
-Currently, openEMS's documentation is still in the process of migrating from
-the legacy Wiki to the new GitHub repository. Thus, many documents are
-currently missing here. For now, please visit:
-
-* https://wiki.openems.de/index.php/Main_Page.html
+Questions and Community
+---------------------------
 
 If you have any question on the use of openEMS, you can post a thread at GitHub
 Discussion:
 
 * https://github.com/thliebig/openEMS-Project/discussions
+
+Additional community resources and legacy documentation can be found on the
+openEMS wiki:
+
+* https://wiki.openems.de/index.php/Main_Page.html
 
 FDTD
 ---------

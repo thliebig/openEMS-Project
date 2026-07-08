@@ -28,6 +28,19 @@ openEMS is licensed under the GNU General Public License, Version 3 or later,
 CSXCAD is licensed under the GNU Lesser General Public License, Version 3 or
 later.
 
+Where to Start
+================
+
+* **New to openEMS?** Begin with :ref:`install_src`, then work through the
+  :ref:`tutorials` to run your first simulation.
+* **Learning the underlying concepts?** The :ref:`concepts_src` section
+  explains FDTD fundamentals, meshing, ports, excitations, boundary
+  conditions, and post-processing.
+* **Looking up API functions?** See the :ref:`python_interface` or
+  :ref:`octave_interface` reference.
+* **Building from source or contributing?** See the :ref:`development_src`
+  section.
+
 Features
 ================
 

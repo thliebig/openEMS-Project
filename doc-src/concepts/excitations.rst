@@ -421,3 +421,7 @@ Example
 
      This is why choosing the correct coordinate system is important
      in electromagnetic problems!
+
+.. seealso::
+   :ref:`tutorial_rcs_sphere` — demonstrates the Total-Field/Scattered-Field
+   plane wave excitation for radar cross section simulation.

@@ -136,7 +136,7 @@ Setup the Octave/Matlab or Python Interfaces
 -----------------------------------------------
 
 - **Optional:** Setup the Octave/Matlab environment, see :ref:`Octave Interface Install <octave_install>`.
-- **Optional:** Install the Python modules, see :ref:`python_binding_build_manual`.
+- **Optional:** Install the Python modules, see :ref:`pyinstall_manual`.
 
 .. _special_requirements:
 

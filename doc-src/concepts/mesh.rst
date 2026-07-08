@@ -399,3 +399,7 @@ Bibliography
 
 .. [3] John B. Schneider. `Understanding the FDTD Method <https://eecs.wsu.edu/~schneidj/ufdtd/index.php>`_,
    Chapter 3, page 36.
+
+.. seealso::
+   :ref:`tutorial_msl_notchfilter` — demonstrates non-uniform meshing and the
+   1/3-2/3 rule on a practical microstrip structure.

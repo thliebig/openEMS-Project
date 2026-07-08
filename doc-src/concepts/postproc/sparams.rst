@@ -489,3 +489,7 @@ writes a new line with parameter order of ``frequency``, ``s11_real``,
 Finally, beware that for 3-port, 4-port, or more ports, the parameters order is
 different. The `Microwaves101 <https://www.microwaves101.com/encyclopedias/s-parameter-notation>`_
 website contains useful information here.
+
+.. seealso::
+   :ref:`tutorial_msl_notchfilter` — a complete worked example of S-parameter
+   extraction from a microstrip notch filter simulation.

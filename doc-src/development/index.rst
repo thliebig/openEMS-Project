@@ -11,3 +11,4 @@ including its dependencies and documentation.
    cpp
    doc
    python_todo
+   ../concepts/fparser

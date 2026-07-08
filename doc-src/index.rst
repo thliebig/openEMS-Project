@@ -9,7 +9,6 @@ Contents:
    intro
 
    install/index
-   development/index
    concepts/index
    python/openEMS/Tutorials/index
 
@@ -18,6 +17,8 @@ Contents:
 
    more
    publications
+
+   development/index
 
 
 Indices and tables

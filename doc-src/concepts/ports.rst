@@ -453,3 +453,7 @@ Python::
     plt.ylabel('Voltage (V)')
     plt.show()
 
+.. seealso::
+   * :ref:`tutorial_msl_notchfilter` — lumped port setup on a microstrip structure.
+   * :ref:`tutorial_rect_waveguide` — waveguide port with mode profile excitation.
+

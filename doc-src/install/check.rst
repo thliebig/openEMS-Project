@@ -34,10 +34,10 @@ The output should be similar to:
 
 .. code-block:: console
 
-     ---------------------------------------------------------------------- 
-     | openEMS 64bit -- version v0.0.33
-     | (C) 2010-2015 Thorsten Liebig <thorsten.liebig@gmx.de>  GPL license
-     ---------------------------------------------------------------------- 
+     ----------------------------------------------------------------------
+     | openEMS 64bit -- version v0.37.0
+     | (C) 2010-2026 Thorsten Liebig <thorsten.liebig@gmx.de>  GPL license
+     ----------------------------------------------------------------------
     [...]
 
 If the command is not found, please include the folder to the openEMS installation
@@ -59,9 +59,9 @@ The output should be similar to:
 
 .. code-block:: console
 
-     -------------------------------------------------------------------- 
-     | openEMS 32bit -- version v0.0.23
-     | (C) 2010 Thorsten Liebig <thorsten.liebig@gmx.de>  GPL license
+     --------------------------------------------------------------------
+     | openEMS 64bit -- version v0.37.0
+     | (C) 2010-2026 Thorsten Liebig <thorsten.liebig@gmx.de>  GPL license
      --------------------------------------------------------------------
     [...]
 
