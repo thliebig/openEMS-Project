@@ -65,6 +65,7 @@ by the following options.
   by default, use "venv" subdirectory of the installation path.
 
 - ``--python-use-network`` Download needed Python pip packages from Internet
+
   - ``auto``: use Internet when needed (default)
   - ``disable``: all dependencies must be manually installed, or installation
     fails (create venv with ``--system-site-packages``, run pip with
