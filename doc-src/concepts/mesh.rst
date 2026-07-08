@@ -55,7 +55,7 @@ method to obtain the ``mesh`` object::
 Unit of Measurement
 ~~~~~~~~~~~~~~~~~~~
 
-All CSXCAD :ref:`primitives` such as lines, planes or solids are
+All CSXCAD :ref:`concept_primitives` such as lines, planes or solids are
 created using unitless numerical coordinates, without specifying
 their physical unit of measurements. To use a model meaningfully,
 a dimensionless model must be associated with a *physical* unit of
@@ -332,10 +332,10 @@ This staggered grid is Yee's key insight that enables a straightforward
 the left-hand side from the right-hand side.
 
 .. math::
-   \begin{align}
+   \begin{aligned}
    \nabla \times \mathbf{E} &= - \frac{\partial\mathbf B}{\partial t} \\
    \nabla \times \mathbf{B} &= \mu_0\varepsilon_0 \frac{\partial\mathbf E}{\partial t}
-   \end{align}
+   \end{aligned}
 
 By numerically differentiating the two neighboring electric cells, the magnetic
 cell is re-calculated to the next step, and vice versa. This process

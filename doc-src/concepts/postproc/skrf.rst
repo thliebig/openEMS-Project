@@ -165,8 +165,8 @@ accurately model real-world effects.
 .. seealso::
    The features introduced in this manual are only the tip of the
    iceberg, it's not possible to cover all of its aspects here. See
-   the full manual [12]_ for usage. Here we mention three important
-   use cases.
+   the `scikit-rf documentation <https://scikit-rf.readthedocs.io/>`_
+   for full usage. Here we mention three important use cases.
 
    **Calibration and de-embedding.** If a port mismatch is unavoidable,
    post-processing techniques commonly used in Vector Network Analyzers
@@ -174,7 +174,8 @@ accurately model real-world effects.
    calibration algorithm, or the newer IEEE P370 de-embedding algorithm.
    This involves making additional measurements (simulations) with known
    loads or structures at the port, so that the port or the test fixture's
-   influence can be solved and removed. See [15]_ [16]_.
+   influence can be solved and removed. See the scikit-rf documentation
+   for the calibration and de-embedding modules.
 
    **Time-gating.** An alternative possibility is working in the time
    domain using the equivalent TDR responses. If we transform the
@@ -183,7 +184,8 @@ accurately model real-world effects.
    late reflections by the ports. This gated waveform can then be transformed
    back to the frequency domain to "clean" our S-parameters. This is
    not a rigorous solution in comparison to applying proper calibration
-   algorithms, but is a quick-and-dirty solution. See [17]_.
+   algorithms, but is a quick-and-dirty solution. See the scikit-rf
+   time-gating documentation for details.
 
    **Passivity and causality.** For time-domain simulations using
    S-parameters, the measured data must satisfy two criteria. The
@@ -194,4 +196,5 @@ accurately model real-world effects.
    time machines are often created when S-parameters from measurements
    or simulations contain artifacts and noise, resulting in unphysical
    time-domain responses. This necessitates data quality checks and
-   post-processing if violations are found. See [18]_ [19]_ [20]_.
+   post-processing if violations are found. See the scikit-rf
+   documentation on passivity and causality enforcement.

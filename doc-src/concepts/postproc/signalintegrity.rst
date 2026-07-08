@@ -8,12 +8,12 @@ input signals, so there's no loss of generality. In fact, performing
 a time-domain transient simulation using frequency-domain S-parameters
 is a common feature in many proprietary commercial circuit simulators,
 such as :program:`HyperLynx`, :program:`ADS`, or :program:`AWR`. A
-third-party tool also exists for PSpice. [4]_
+third-party tool also exists for PSpice.
 
 However, in the free and open source world, few (if any) free and
 open source circuit simulators have this capability. For example,
 Ngspice supports S-parameter calculation but not transient
-simulation. [5]_ :program:`Qucs`, too, doesn't support transient
+simulation. :program:`Qucs`, too, doesn't support transient
 simulation with S-parameters, although it's possible to define
 devices using them.
 
@@ -24,7 +24,7 @@ integrity expert at LeCroy.
 
 .. seealso::
    **Book.** The software's internal theory of operation is also published almost
-   in full in the textbook *S-Parameters for Signal Integrity* [6]_. Each
+   in full in the textbook *S-Parameters for Signal Integrity* [1]_. Each
    concept is accomplished by both formulas and executable code, making
    it an invaluable reference in this field. The author of this tutorial
    recommends everyone who simulates or measures RF/microwave devices to
@@ -32,7 +32,7 @@ integrity expert at LeCroy.
 
    **PyBERT.** It's another circuit simulator designed with time-domain
    S-parameter simulation and signal integrity in mind, developed by David
-   Banas. See [23]_.
+   Banas. See `PyBERT on GitHub <https://github.com/capn-freako/PyBERT>`_.
 
 Install
 ''''''''
@@ -249,4 +249,7 @@ of this result at the end of this tutorial.
 of interest.  One can see that the overshoots, undershoots and
 rise-time degradation is similar to the previous impulse signal
 analysis.
+
+.. [1] Pete Pupalaikis, *S-Parameters for Signal Integrity*,
+   Cambridge University Press, 2020.
 

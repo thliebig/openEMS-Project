@@ -75,7 +75,8 @@ it and change it to `Qucsator`.
    If the option :guilabel:`Qucsator` does not exist (it usually
    disappears when one quits and restarts the application), it
    means you're affected by a bug in the AppImage version of
-   Qucs-S. See :ref:`qucsator_bug` for the solution.
+   Qucs-S. In this case, close Qucs-S and re-open it; then switch the
+   engine back to Qucsator before starting a simulation.
 
 S-Parameter Simulation Skeleton
 ''''''''''''''''''''''''''''''''

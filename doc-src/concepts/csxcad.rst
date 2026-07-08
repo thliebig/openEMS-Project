@@ -437,7 +437,7 @@ a more difficult problem.
    should be considered advanced applications. Beginners are
    *not recommended* to try them before familiarizing themselves
    with the CSXCAD/openEMS workflow first via basic simulations,
-   as described in :ref:`first_lessons`.
+   as described in the :ref:`tutorials`.
    Trying to import a circuit board without understanding the
    concept of ports, boundary conditions or meshing rules leads
    to failures, especially when most of these tools are highly

@@ -20,9 +20,21 @@ Several kinds of dump boxes exist.
    total current density :math:`\mathrm{\nabla} \times \mathbf{H}`, electric
    displacement field :math:`\mathbf{D}`, and magnetic flux density
    :math:`\mathbf{B}`, with their ``dump_type`` numbered from ``0`` to ``5``.
+
+   .. warning::
+      Time-domain dumps generate one output file per timestep, which can
+      result in very large amounts of data and noticeably slow down the
+      simulation. Use them sparingly, and prefer frequency-domain dumps
+      when only the steady-state response is needed.
+
 #. Frequency-domain dumps of electric field, magnetic field,
    electric conduction current, total current density, electric displacement
    field, and magnetic flux density, numbered from ``10`` to ``15``.
+
+   .. note::
+      Frequency-domain dumps require at least one simulation frequency to
+      be specified — they produce no output otherwise.
+
 #. Specific Absorption Rate (SAR) for biological EM radiation exposure analysis.
 #. Near-Field to Far-Field Transformation (NF2FF) for antenna analysis
    (special setup required, via :meth:`openEMS.openEMS.CreateNF2FFBox` and a
@@ -42,6 +54,18 @@ In Python,
 use the :meth:`CSXCAD.ContinuousStructure.AddDump` method (see
 :class:`~CSXCAD.CSProperties.CSPropDumpBox` for a detailed list of
 parameters).
+
+The key parameters are:
+
+* **DumpType** / ``dump_type``: selects the field quantity and domain
+  (time-domain ``0``–``5``, frequency-domain ``10``–``15``, SAR ``20``–``22``).
+* **FileType** / ``file_type``: output file format — ``0`` for VTK (default),
+  ``1`` for HDF5. Both formats are supported for time-domain and
+  frequency-domain dumps.
+* **DumpMode** / ``dump_mode``: interpolation mode — ``0`` no interpolation,
+  ``1`` node interpolation (default), ``2`` cell interpolation.
+* **Frequency** / ``frequency``: list of frequencies required for frequency-domain
+  dump types (``10``–``22``); no output is produced if omitted.
 
 .. important::
    Like all CSXCAD :ref:`concept_properties`, field dumps

@@ -11,7 +11,7 @@ or understanding the physical behavior of a structure, this is especially helpfu
 as one can identify the problematic region directly by visualization.
 
 We continue our total current density visualization example, introduced
-as an optional step in :ref:`fielddump`. If the simulation finishes with
+as an optional step in :ref:`concept_fielddump`. If the simulation finishes with
 field dump enabled, a series of `vtr` files (which is a type of the VTK
 file format) is created under the simulation directory.
 
@@ -117,5 +117,5 @@ satisfactory video below.
 
 .. seealso::
    ParaView is a large program used in many scientific applications,
-   it's impossible to cover all of its aspects here. See the full
-   manual [13]_ for usage.
+   it's impossible to cover all of its aspects here. See the
+   `ParaView documentation <https://docs.paraview.org/>`_ for full usage.
