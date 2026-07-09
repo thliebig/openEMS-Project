@@ -16,6 +16,7 @@ Contents:
    octave/octave
 
    more
+   faq
    publications
 
    development/index
