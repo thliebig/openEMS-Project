@@ -11,6 +11,7 @@ Contents:
    install/index
    concepts/index
    python/openEMS/Tutorials/index
+   octave/Tutorials/index
 
    python/python
    octave/octave

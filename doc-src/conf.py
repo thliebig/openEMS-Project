@@ -41,6 +41,12 @@ def run_before_docs(app):
     )
     retval.check_returncode()
 
+    retval = subprocess.run(
+        ["python3", "convert_tutorials.py"],
+        cwd=str(docroot / "../openEMS/matlab/doc/")
+    )
+    retval.check_returncode()
+
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
