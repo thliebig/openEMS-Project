@@ -11,6 +11,7 @@ Basic concepts of openEMS simulation.
 
    csxcad
    properties
+   disc_material
    primitives
    mesh
    bc

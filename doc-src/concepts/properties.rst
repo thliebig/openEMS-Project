@@ -135,7 +135,11 @@ it produces acceptable results in simpler applications, and has no simulation
 overhead.
 
 .. seealso::
-   :ref:`dispersive_materials`
+
+   :ref:`dispersive_materials` — frequency-dependent material models
+
+   :ref:`concept_disc_material` — spatially varying material from a voxel
+   (HDF5) file, for heterogeneous tissue, body models, and CT/MRI data
 
 Example
 """"""""
