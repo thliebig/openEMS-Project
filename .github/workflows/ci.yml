@@ -365,10 +365,19 @@ jobs:
             gui_opt=""
           fi
 
+          # Ancient systems install their dependencies from the inline
+          # package lists above; scripts/install_deps.sh does not support
+          # them, so its check would only produce a spurious warning.
+          if [ "${{ matrix.os.ancient }}" = "true" ]; then
+            dep_opt="--skip-dep-check"
+          else
+            dep_opt=""
+          fi
+
           run_without_network="ip netns exec no-network"
 
           if $run_without_network \
-             ./update_openEMS.sh ~/opt --python $gui_opt \
+             ./update_openEMS.sh ~/opt --python $gui_opt $dep_opt \
              --python-venv-mode=disable --python-use-network=disable
           then
             cat build_*.log
@@ -402,6 +411,13 @@ jobs:
             gui_opt=""
           fi
 
+          # see the note on --skip-dep-check in the previous build step
+          if [ "${{ matrix.os.ancient }}" = "true" ]; then
+            dep_opt="--skip-dep-check"
+          else
+            dep_opt=""
+          fi
+
           if grep -q "ID=ubuntu" /etc/os-release && \
             grep -q 'VERSION_ID="14.04"' /etc/os-release; then
               # Use Python 3.5 instead of the default Python 3.4 because
@@ -423,7 +439,7 @@ jobs:
           # set it here because "source ~/venv/bin/activate" is
           # incompatible with set -euo pipefail
           source ~/.bash_profile
-          if ./update_openEMS.sh ~/opt --python $gui_opt; then
+          if ./update_openEMS.sh ~/opt --python $gui_opt $dep_opt; then
             cat build_*.log
           else
             cat build_*.log

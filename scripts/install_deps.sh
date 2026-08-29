@@ -120,10 +120,10 @@ case "$PM" in
     )
     PKGS_VTK=( "libvtk9-dev|libvtk7-dev|libvtk6-dev" )
     PKGS_VTK_QT=( "libvtk9-qt-dev|libvtk7-qt-dev" )
-    # libqt6core5compat6-dev: required by QCSXCAD on distros where VTK uses Qt6
+    # qt6-5compat-dev: required by QCSXCAD on distros where VTK uses Qt6
     # (Ubuntu 26.04+). Marked optional ('?') so older distros that don't carry
     # the package are not penalised.
-    PKGS_GUI=( qtbase5-dev "?libqt6core5compat6-dev" )
+    PKGS_GUI=( qtbase5-dev "?qt6-5compat-dev" )
     PKGS_PYTHON=(
       python3-pip python3-setuptools python3-setuptools-scm
       cython3 python3-numpy python3-h5py python3-matplotlib python3-venv

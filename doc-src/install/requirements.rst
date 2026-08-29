@@ -341,6 +341,13 @@ Debian/Ubuntu
 
       sudo apt-get install qtbase5-dev libvtk9-qt-dev
 
+  On distributions where VTK is built against Qt6 (Ubuntu 26.04 and newer),
+  QCSXCAD needs the Qt6 Core5Compat module in addition:
+
+  .. code-block:: bash
+
+      sudo apt-get install qt6-5compat-dev
+
 - To use Octave scripting (recommended):
 
   .. code-block:: bash

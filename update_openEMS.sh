@@ -28,6 +28,7 @@ function help_msg {
   echo "	--with-CTB		enable circuit toolbox"
   echo "	--disable-GUI		disable GUI build (AppCSXCAD)"
   echo "	--with-MPI		enable MPI"
+  echo "	--skip-dep-check	do not check for missing build dependencies"
   echo "        --with-tinyxml          download and build custom TinyXML from source,"
   echo "                                enabled by default on macOS as TinyXML is desupported"
   echo "                                (need network access to SourceForge & GitHub)"
@@ -206,6 +207,10 @@ function parse_args {
         echo "enabling MPI"
         WITH_MPI=1
         ;;
+      --skip-dep-check)
+        echo "skipping build dependency check"
+        SKIP_DEP_CHECK=1
+        ;;
       --with-tinyxml)
         echo "enabling custom TinyXML download and build"
         BUILD_TINYXML=1
@@ -244,6 +249,49 @@ function parse_args {
     printf "%s\n" "--python must be enabled for ${PYTHON_ARGS[*]}"
     exit $EINVAL
   fi
+}
+
+function dependency_check {
+  # Check the build dependencies up front, so a missing package is reported
+  # here instead of surfacing as a cryptic CMake error deep inside a
+  # submodule configure run.
+  #
+  # This is advisory only and never aborts: dependencies may be satisfied
+  # outside the system package manager (locally built VTK/CGAL, paths set
+  # via localConfig.cmake, ...), and install_deps.sh does not know every
+  # distribution.
+  if [ "$SKIP_DEP_CHECK" -eq 1 ]; then
+    return 0
+  fi
+
+  if [ ! -x ./scripts/install_deps.sh ]; then
+    return 0
+  fi
+
+  local dep_args=()
+  if [ "$BUILD_GUI" = "NO" ]; then dep_args+=("--disable-gui"); fi
+  if [ "$BUILD_PY_EXT" -eq 1 ]; then dep_args+=("--python"); fi
+  if [ "$WITH_MPI" -eq 1 ]; then dep_args+=("--with-mpi"); fi
+  if [ "$BUILD_CTB" -eq 1 ]; then dep_args+=("--with-ctb"); fi
+
+  if ./scripts/install_deps.sh --check ${dep_args[@]+"${dep_args[@]}"}; then
+    return 0
+  fi
+
+  local dep_hint="./scripts/install_deps.sh --install"
+  if [ ${#dep_args[@]} -gt 0 ]; then
+    dep_hint="$dep_hint ${dep_args[*]}"
+  fi
+
+  echo ""
+  echo "WARNING: the dependency check above did not pass. The build is"
+  echo "         started anyway, but it may fail. To install what is"
+  echo "         missing, run:"
+  echo ""
+  echo "         $dep_hint"
+  echo ""
+  echo "         Pass --skip-dep-check to suppress this check."
+  echo ""
 }
 
 function preinstall_python_dry_run {
@@ -303,6 +351,7 @@ BUILD_GUI="YES"
 WITH_MPI=0
 BUILD_PY_EXT=0
 BUILD_TINYXML=0
+SKIP_DEP_CHECK=0
 INSTALL_PATH=
 PYTHON_ARGS=()
 LOG_FILE="$BASEDIR/build_$(date +%Y%m%d_%H%M%S).log"
@@ -315,6 +364,8 @@ fi
 
 # modifies global variables above
 parse_args "$@"
+
+dependency_check
 
 echo "setting install path to: $INSTALL_PATH"
 echo "logging build output to: $LOG_FILE"
