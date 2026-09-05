@@ -35,16 +35,24 @@ Several kinds of dump boxes exist.
       Frequency-domain dumps require at least one simulation frequency to
       be specified — they produce no output otherwise.
 
-#. Specific Absorption Rate (SAR) for biological EM radiation exposure analysis.
-#. Near-Field to Far-Field Transformation (NF2FF) for antenna analysis
-   (special setup required, via :meth:`openEMS.openEMS.CreateNF2FFBox` and a
-   separate post-processing tool).
+#. Specific Absorption Rate (SAR) for biological EM radiation exposure
+   analysis, numbered ``20`` to ``22``, plus ``29`` for the raw data needed to
+   compute SAR in post-processing instead of during the simulation
+   (see :ref:`concept_sar`).
 
 .. note::
    openEMS calculates the total current density via Ampere-Maxwell's
    law :math:`\mathrm{\nabla} \times \mathbf{H}`, which is
    :math:`\mathbf{J} + \frac{\partial \mathbf{D}}{\partial t}`
    (i.e. the sum of conduction current and displacement current).
+
+The Near-Field to Far-Field Transformation (NF2FF) is **not** a dump type of
+its own. ``CreateNF2FFBox`` in Octave/Matlab, or
+:meth:`openEMS.openEMS.CreateNF2FFBox` in Python, sets up six ordinary E- and
+H-field dumps on the faces of a box enclosing the antenna — ``dump_type``
+``0``/``1`` for time-domain, or ``10``/``11`` if a frequency is given, always
+in HDF5 format. The far field is computed from those recordings afterwards, by
+a separate post-processing step. See :ref:`concept_nf2ff`.
 
 Usage
 -------
@@ -73,15 +81,98 @@ The key parameters are:
    with one or more :ref:`concept_primitives` (i.e. geometric shapes) as
    well.
 
-Example
+Examples
 -----------
 
-Dump the total current density (``dump_type=3``) on a 2D surface from
-(-100, -100) to (100, 100) at Z = 8::
+All coordinates below are in the drawing unit set for the mesh, not in
+metres.
 
-    % Octave
-    %TODO
+Time-domain field animation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    # Python
-    dump = csx.AddDump("curl_H_upper", dump_type=3)
-    dump.AddBox(start=[-100, -100, 8], stop=[100, 100, 8])
+Record the E-field over the whole simulation domain in HDF5 format. Sampling
+every second line in each direction keeps the output to an eighth of the full
+size — a full-domain time-domain dump is by far the most expensive kind:
+
+.. tabs::
+
+   .. code-tab:: octave
+
+      csx = AddDump(csx, 'Et', 'FileType', 1, 'SubSampling', '2,2,2');
+
+      start = [mesh.x(1)   mesh.y(1)   mesh.z(1)];
+      stop  = [mesh.x(end) mesh.y(end) mesh.z(end)];
+      csx = AddBox(csx, 'Et', 0, start, stop);
+
+   .. code-tab:: python
+
+      et = csx.AddDump('Et', file_type=1, sub_sampling=[2, 2, 2])
+
+      start = [mesh.GetLine('x', 0),  mesh.GetLine('y', 0),  mesh.GetLine('z', 0)]
+      stop  = [mesh.GetLine('x', -1), mesh.GetLine('y', -1), mesh.GetLine('z', -1)]
+      et.AddBox(start, stop)
+
+Frequency-domain dump on a plane
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Record the steady-state H-field at 2.4 GHz on the plane ``z = 8``. Because the
+dump box is flat in z, only that one plane is recorded. Unlike the time-domain
+dump above, the cost does not grow with the number of timesteps — one dataset
+per frequency is accumulated as the simulation runs:
+
+.. tabs::
+
+   .. code-tab:: octave
+
+      csx = AddDump(csx, 'Hf', 'DumpType', 11, 'FileType', 1, ...
+                    'Frequency', [2.4e9]);
+      csx = AddBox(csx, 'Hf', 0, [-100 -100 8], [100 100 8]);
+
+   .. code-tab:: python
+
+      hf = csx.AddDump('Hf', dump_type=11, file_type=1, frequency=[2.4e9])
+      hf.AddBox([-100, -100, 8], [100, 100, 8])
+
+Note that ``dump_type=11`` is the frequency-domain counterpart of the
+time-domain ``dump_type=1``; the frequency-domain types are simply the
+time-domain ones plus ten.
+
+Surface current density
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Record the total current density :math:`\mathrm{\nabla} \times \mathbf{H}`
+(``dump_type=3``) on the same plane. On a metal surface this visualizes the
+current distribution, which is a useful diagnostic for antenna and patch
+designs:
+
+.. tabs::
+
+   .. code-tab:: octave
+
+      csx = AddDump(csx, 'Jt_patch', 'DumpType', 3, 'FileType', 1);
+      csx = AddBox(csx, 'Jt_patch', 0, [-100 -100 8], [100 100 8]);
+
+   .. code-tab:: python
+
+      jt = csx.AddDump('Jt_patch', dump_type=3, file_type=1)
+      jt.AddBox([-100, -100, 8], [100, 100, 8])
+
+.. note::
+   The Octave ``SubSampling`` and ``OptResolution`` arguments take a string
+   such as ``'2,2,2'``, while their Python counterparts take a list of three
+   numbers, ``[2, 2, 2]``.
+
+Reading the results
+~~~~~~~~~~~~~~~~~~~~~
+
+VTK dumps (``file_type=0``) open directly in :program:`ParaView`. HDF5 dumps
+(``file_type=1``) are read with :class:`openEMS.utilities.HDF5Dump` in Python
+or ``ReadHDF5Dump`` in Octave/Matlab; see :ref:`concept_dump_hdf5`.
+
+.. seealso::
+
+   :ref:`concept_dump_hdf5` — HDF5 file format reference for all dump types
+
+   :ref:`concept_sar` — SAR post-processing from raw dumps (``dump_type=29``)
+
+   :ref:`concept_nf2ff` — near-field to far-field transformation
