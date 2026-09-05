@@ -748,8 +748,8 @@ Alternatively, MinGW-w64 and MSYS2 can be used.
 
 .. _build_deps_from_source:
 
-Build From Source
-------------------
+Build Dependencies From Source
+-------------------------------
 
 .. important::
 
