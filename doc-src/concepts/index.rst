@@ -19,6 +19,9 @@ Basic concepts of openEMS simulation.
    excitations
    signals
    dump
+   dump_hdf5
+   nf2ff
+   sar
    lumped
    dispersive
    simulation
