@@ -347,4 +347,8 @@ texinfo_documents = [
 
 numpydoc_show_class_members = False
 
+# generate anchors for '#' and '##' headings in Markdown sources, so that
+# individual changelog versions can be linked to from other pages
+myst_heading_anchors = 2
+
 # Example configuration for intersphinx: refer to the Python standard library.

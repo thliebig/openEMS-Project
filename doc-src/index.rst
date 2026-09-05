@@ -17,6 +17,7 @@ Contents:
    octave/octave
 
    more
+   changelog/index
    faq
    publications
 
