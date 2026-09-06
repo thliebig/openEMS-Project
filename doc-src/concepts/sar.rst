@@ -110,9 +110,9 @@ Usage::
    Averaging mass in **grams**. ``0`` selects local SAR regardless of method.
 
 ``-a``, ``--autorange`` *(default: disabled)*
-   Restrict averaging to cells whose local power density is within this many
-   dB of the peak. Speeds up computation on large meshes with a localised hot
-   spot.
+   Restrict averaging to the cells whose local SAR is within this many dB of
+   the peak local SAR. Speeds up computation on large meshes with a localised
+   hot spot, see `Auto range`_.
 
 ``-n``, ``--numThreads`` *(default: all CPUs)*
    Number of worker threads.
@@ -207,8 +207,8 @@ has the following structure.
 
 **Mesh group** ``/Mesh``
 
-Node coordinates of the output mesh (may be a subset of the input mesh if
-``autorange`` trimmed air-only regions):
+Node coordinates of the output mesh (a subset of the input mesh if
+``autorange`` trimmed the low SAR regions):
 
 ``/Mesh/x``, ``/Mesh/y``, ``/Mesh/z`` — same unit as the simulation.
 
@@ -232,6 +232,10 @@ Group attributes:
      - Cells where no averaging cube could be constructed
    * - ``air_cubes``
      - Cells skipped because density is zero (air/background)
+   * - ``autorange``
+     - Only with ``--autorange``: the requested range below the peak in dB
+   * - ``autorange_padding``
+     - Only with ``--autorange``: padding added around the retained region, in m
 
 **SAR datasets** — one per frequency index *n* (0-based):
 
@@ -262,6 +266,9 @@ Dataset attributes on each ``/FieldData/FD/f{n}``:
      - Peak SAR value in W/kg
    * - ``maxSAR_idx``
      - 3-element index ``[ix, iy, iz]`` of the peak SAR cell
+   * - ``autorange_threshold``
+     - Only with ``--autorange``: the local SAR threshold in W/kg that was
+       applied
 
 Averaging cube statistics
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -378,6 +385,38 @@ cube in a second pass.
 
 The target mass is set with ``--mass`` (in grams). Typical values are 1 g
 (``--mass 1``) or 10 g (``--mass 10``).
+
+Auto range
+----------
+
+Averaging is by far the most expensive part of the calculation, and on a large
+dump box most of that work is spent on cells that are nowhere near the peak.
+``--autorange N`` (``autoRange`` in Octave and Python) restricts the
+calculation to the region around the hot spot: every cell whose local SAR is
+within *N* dB of the peak local SAR is collected, and only the bounding box of
+those cells is averaged. The result is written on that reduced mesh, so the
+output covers a smaller region than the input.
+
+The averaged SAR of a cube is the mass-weighted mean of the local SAR of its
+cells and can never exceed the largest local value inside it, so cells below
+the threshold cannot produce an averaged peak above it. An averaging cube
+centred just outside the bounding box can still reach into it though, so the
+box is padded by the half-width of an air-free averaging cube built from the
+lightest tissue present (recorded as the ``autorange_padding`` attribute).
+Cubes containing a lot of air grow larger than that, which makes the padding an
+estimate rather than a hard bound.
+
+.. warning::
+
+   The auto range is a speedup, not a guarantee that the global peak is found.
+   It is not part of any exposure standard — for a compliance calculation,
+   leave it disabled.
+
+A warning is printed when the peak averaged SAR comes out *below* the
+threshold, in which case the result cannot be trusted; increase *N* or disable
+the auto range. Note that averaging drops the peak relative to the local SAR —
+for a 10 g cube typically by several dB — so *N* must comfortably exceed that
+drop. Ranges around 10 to 20 dB are a reasonable starting point.
 
 How ``CalcSAR`` drives the binary
 -----------------------------------
