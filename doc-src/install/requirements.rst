@@ -389,9 +389,8 @@ Debian/Ubuntu
 Legacy Debian/Ubuntu
 ^^^^^^^^^^^^^^^^^^^^^^
 
-openEMS continues to support legacy systems when it's practical, including
-Debian ``oldoldstable`` and Ubuntu 14.04. These additional steps are
-required.
+openEMS continues to support legacy systems when it's practical, currently
+down to Ubuntu 14.04. These additional steps are required.
 
 Debian/Ubuntu
 """""""""""""""
