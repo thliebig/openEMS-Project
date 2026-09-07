@@ -66,16 +66,16 @@ The control file is an XML document with a single root element ``<nf2ff>``.
 
 .. code-block:: xml
 
-    <nf2ff freq="2.4e9 5e9"
+    <nf2ff freq="2.4e9,5e9"
            Outfile="nf2ff_result.h5"
-           Center="0 0 0"
+           Center="0,0,0"
            Radius="1"
            Eps_r="1"
            Mue_r="1"
            NumThreads="0"
            Verbose="0">
-        <theta>0 0.0175 0.0349 ... 3.1416</theta>
-        <phi>0 1.5708 3.1416 4.7124</phi>
+        <theta>0,0.0175,0.0349, ... ,3.1416</theta>
+        <phi>0,1.5708,3.1416,4.7124</phi>
 
         <Planes E_Field="nf2ff_E_xn.h5" H_Field="nf2ff_H_xn.h5"/>
         <Planes E_Field="nf2ff_E_xp.h5" H_Field="nf2ff_H_xp.h5"/>
@@ -99,7 +99,7 @@ The control file is an XML document with a single root element ``<nf2ff>``.
      - Description
    * - ``freq``
      - (required)
-     - Space-separated list of frequencies in Hz at which to evaluate the
+     - Comma-separated list of frequencies in Hz at which to evaluate the
        far field.
    * - ``Outfile``
      - (required)
@@ -115,7 +115,7 @@ The control file is an XML document with a single root element ``<nf2ff>``.
    * - ``Eps_r``
      - ``1``
      - Relative electric permittivity of the medium surrounding the antenna.
-       Can be a single value or a space-separated list matching ``freq``.
+       Can be a single value or a comma-separated list matching ``freq``.
    * - ``Mue_r``
      - ``1``
      - Relative magnetic permeability. Same format as ``Eps_r``.
@@ -126,12 +126,22 @@ The control file is an XML document with a single root element ``<nf2ff>``.
    * - ``Verbose``
      - ``0``
      - Verbosity level: ``0`` = silent, ``1`` = progress, ``2`` = detailed.
+   * - ``LegacyHDF5``
+     - ``0``
+     - Write the far field in the legacy format, see
+       :ref:`below <nf2ff_result_format>`. ``CalcNF2FF`` sets it, because
+       Octave cannot read the compound complex type.
 
 ``<theta>`` and ``<phi>``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Text content is a space-separated list of angles **in radians** defining the
+Text content is a comma-separated list of angles **in radians** defining the
 evaluation grid on the far-field sphere.
+
+.. warning::
+   Every list in the control file is split on commas only. A space-separated
+   list is not rejected — only its first value is used, and the calculation
+   then runs on a grid of a single angle.
 
 ``theta`` runs from 0 (z+ pole) to π (z− pole).
 ``phi`` runs from 0 to 2π in the x-y plane.
@@ -177,11 +187,15 @@ and frequency-domain dumps (``dump_type=10/11``; frequencies must match
 exactly). If FD data is present and matches the requested frequencies it is
 used directly; otherwise it falls back to DFT of the TD data.
 
+.. _nf2ff_result_format:
+
 Output HDF5 result format
 --------------------------
 
 The result file is written to the path given in ``Outfile``. It contains both
-the far-field pattern and scalar summary quantities.
+the far-field pattern and scalar summary quantities, and carries the root
+attribute ``openEMS_HDF5_version`` of the shared
+:ref:`HDF5 layout <concept_dump_hdf5>`.
 
 **Mesh group** ``/Mesh``
 
@@ -241,30 +255,50 @@ For each frequency index *n* (0-based):
    * - Dataset
      - Shape
      - Contents
-   * - ``/nf2ff/E_theta/FD/f{n}_real``
+   * - ``/nf2ff/E_theta/FD/f{n}``
+     - ``(Nθ, Nφ)``
+     - Theta component of the far electric field (V/m at radius r), complex
+   * - ``/nf2ff/E_phi/FD/f{n}``
+     - ``(Nθ, Nφ)``
+     - Phi component of the far electric field, complex
+   * - ``/nf2ff/P_rad/FD/f{n}``
+     - ``(Nθ, Nφ)``
+     - Radiated power density in W/sr (Poynting vector magnitude × r²), real
+
+The complex datasets use the compound ``{r, i}`` type of the
+:ref:`field dump format <concept_dump_hdf5>`, so ``h5py`` returns them as
+native complex arrays and no axis has to be swapped after reading.
+
+Legacy format
+~~~~~~~~~~~~~
+
+With the ``LegacyHDF5`` attribute set, the complex data is split into two
+real datasets and every dataset is stored transposed:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 40 15 45
+
+   * - Dataset
+     - Shape
+     - Contents
+   * - ``/nf2ff/E_theta/FD/f{n}_real``, ``…_imag``
      - ``(Nφ, Nθ)``
-     - Real part of the theta component of the far electric field (V/m at radius r)
-   * - ``/nf2ff/E_theta/FD/f{n}_imag``
+     - Real and imaginary part of E_theta
+   * - ``/nf2ff/E_phi/FD/f{n}_real``, ``…_imag``
      - ``(Nφ, Nθ)``
-     - Imaginary part of E_theta
-   * - ``/nf2ff/E_phi/FD/f{n}_real``
-     - ``(Nφ, Nθ)``
-     - Real part of the phi component
-   * - ``/nf2ff/E_phi/FD/f{n}_imag``
-     - ``(Nφ, Nθ)``
-     - Imaginary part of E_phi
+     - Real and imaginary part of E_phi
    * - ``/nf2ff/P_rad/FD/f{n}``
      - ``(Nφ, Nθ)``
-     - Radiated power density in W/sr (Poynting vector magnitude × r²)
+     - Radiated power density
 
-.. note::
-   Datasets are stored **phi-major** (outer index φ, inner index θ) — this
-   matches the column-major convention expected by Octave/Matlab readers and
-   is a historical artefact of the format. Both the Python reader
-   (``np.swapaxes``) and the Octave reader transpose on load, so the returned
-   array always follows ``[theta_idx, phi_idx]`` regardless of language. The
-   on-disk axis order may be normalised to match the rest of the field dump
-   format in a future release.
+The file then carries the root attribute ``legacy_fmt``, as a field dump
+written with ``--legacyHDF5Dumps`` does. ``CalcNF2FF`` requests this format
+because Octave reads a compound complex dataset as zeros without any error;
+``ReadNF2FF`` reads both formats under Matlab, but only the legacy one under
+Octave. Result files written before openEMS |version| always use it.
+
+Readers of either format return the far field as ``[theta_idx, phi_idx]``.
 
 Derived quantities
 ~~~~~~~~~~~~~~~~~~
