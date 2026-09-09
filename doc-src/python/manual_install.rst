@@ -745,6 +745,23 @@ Once the C++ libraries are in place, build the Python wheels:
 Troubleshooting
 ----------------
 
+ImportError: DLL load failed while importing CSXCAD (Windows)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: doscon
+
+    >>> import CSXCAD
+    ImportError: DLL load failed while importing CSXCAD: The specified module could not be found.
+
+Windows could not find ``CSXCAD.dll``: ``CSXCAD_INSTALL_PATH`` does not
+point at the folder holding the DLLs.  It must be the root of the extracted
+package — the folder that contains ``CSXCAD.dll`` and ``openEMS.exe`` — not
+its ``python\`` sub-directory, and watch out for an extra directory level if
+the ZIP was extracted into a folder of the same name (``C:\openEMS\openEMS``).
+The variable is read once, at import time, so after ``setx`` a new command
+prompt is needed.  Running ``openEMS.exe`` from that folder is a quick check
+that the path is the right one.
+
 AttributeError: module 'CSXCAD.CSRectGrid' has no attribute...
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

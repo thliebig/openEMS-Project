@@ -325,6 +325,26 @@ jobs:
           # qt.conf: tell Qt where plugins/ lives relative to the executable.
           "[Paths]`nPlugins = plugins" | Set-Content "$pkg\qt.conf" -Encoding UTF8
 
+          # ── MSVC C++ runtime ─────────────────────────────────────────────────────
+          # Ship the CRT next to the binaries. Without it the package needs the
+          # (matching, i.e. latest) "Microsoft Visual C++ Redistributable"
+          # installed system wide — python.org's Python ships vcruntime140*.dll
+          # but not msvcp140.dll, so importing the extensions fails with
+          # "DLL load failed" on a machine that does not have it.
+          # Copied before the dependency walk below, so the walk keeps exactly
+          # the CRT DLLs that are actually imported and prunes the rest.
+          $crtDir = Get-ChildItem "${env:VS_ROOT_DIR}\VC\Redist\MSVC" -Directory `
+                        -Filter "Microsoft.VC*.CRT" -Recurse -ErrorAction SilentlyContinue |
+            Where-Object { $_.FullName -match '\\x64\\Microsoft\.VC' -and
+                           $_.FullName -notmatch 'onecore' } |
+            Sort-Object FullName | Select-Object -Last 1 -ExpandProperty FullName
+          if ($crtDir) {
+            Copy-Item "$crtDir\*.dll" $pkg -Force
+            Write-Host "Copied MSVC runtime from $crtDir"
+          } else {
+            Write-Warning "MSVC redistributable not found — package will require the VC++ redistributable"
+          }
+
           # ── vcpkg runtime DLLs via dependency walk ────────────────────────────
           # Use dumpbin to recursively resolve imports of every EXE/DLL already
           # staged in $pkg (our binaries + Qt DLLs from windeployqt6), then pull
@@ -442,6 +462,10 @@ jobs:
             "     python -c `"import CSXCAD; print(CSXCAD.ContinuousStructure())`"",
             "     python -c `"import openEMS; print(openEMS.openEMS())`"",
             "",
+            "If that fails with `"ImportError: DLL load failed`", CSXCAD_INSTALL_PATH",
+            "is not the folder holding CSXCAD.dll -- mind an extra directory level",
+            "if the ZIP was extracted into a folder of the same name.",
+            "",
             "Full documentation: https://docs.openems.de"
           ) | Set-Content "$pkg/python/README.txt" -Encoding UTF8
           if (Test-Path "$env:GITHUB_WORKSPACE/openEMS/python/Tutorials") {
@@ -501,6 +525,14 @@ jobs:
           foreach ($dll in @("hdf5.dll", "hdf5_hl.dll")) {
             if (Test-Path "$pkg\$dll") {
               Write-Error "$dll must not be part of the package"
+              exit 1
+            }
+          }
+          # The CRT has to be shipped app-local, otherwise the package (and the
+          # python extensions in particular) needs the VC++ redistributable.
+          foreach ($dll in @("msvcp140.dll", "vcruntime140.dll", "vcruntime140_1.dll")) {
+            if (-not (Test-Path "$pkg\$dll")) {
+              Write-Error "$dll is missing from the package"
               exit 1
             }
           }
