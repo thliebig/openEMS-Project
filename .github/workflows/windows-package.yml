@@ -89,10 +89,23 @@ jobs:
                     -DFPARSER_ROOT_DIR="$HOME/opt" `
                     -DVCPKG_INSTALLED_DIR="D:/vi" `
                     -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
-                    -DVCPKG_HOST_TRIPLET="x64-windows-release" `
-                    -DVCPKG_TARGET_TRIPLET="x64-windows-release"
+                    -DVCPKG_OVERLAY_TRIPLETS="$env:GITHUB_WORKSPACE/.github/vcpkg-triplets" `
+                    -DVCPKG_HOST_TRIPLET="x64-windows-openems" `
+                    -DVCPKG_TARGET_TRIPLET="x64-windows-openems"
           cmake --build ./ --parallel
           cmake --install ./
+
+      - name: Check that HDF5 was linked statically
+        run: |
+          # The overlay triplet builds HDF5 as a static library so that the
+          # package ships no hdf5.dll -- h5py brings its own under that name and
+          # only one of them can be loaded per process. Fail here rather than
+          # four hours later in the smoke test.
+          if (Test-Path "D:\vi\x64-windows-openems\bin\hdf5.dll") {
+            Write-Error "hdf5.dll built as a DLL — the overlay triplet did not apply"
+            exit 1
+          }
+          Write-Host "OK: vcpkg built HDF5 as a static library"
 
       - name: Build and install openEMS
         run: |
@@ -106,8 +119,9 @@ jobs:
                     -DCSXCAD_ROOT_DIR="$HOME/opt" `
                     -DVCPKG_INSTALLED_DIR="D:/vi" `
                     -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
-                    -DVCPKG_HOST_TRIPLET="x64-windows-release" `
-                    -DVCPKG_TARGET_TRIPLET="x64-windows-release"
+                    -DVCPKG_OVERLAY_TRIPLETS="$env:GITHUB_WORKSPACE/.github/vcpkg-triplets" `
+                    -DVCPKG_HOST_TRIPLET="x64-windows-openems" `
+                    -DVCPKG_TARGET_TRIPLET="x64-windows-openems"
           cmake --build ./ --parallel
           cmake --install ./
 
@@ -116,9 +130,9 @@ jobs:
           # QCSXCAD/AppCSXCAD vcpkg.json does not list boost or HDF5, so vcpkg
           # removes them from D:/vi when those projects configure. Copy all vcpkg
           # DLLs to $HOME/opt/bin now, before that happens.
-          if (Test-Path "D:\vi\x64-windows-release\bin") {
-            Copy-Item "D:\vi\x64-windows-release\bin\*.dll" "$HOME\opt\bin\" -ErrorAction SilentlyContinue
-            Write-Host "Preserved $(( Get-ChildItem 'D:\vi\x64-windows-release\bin\*.dll' ).Count) vcpkg DLLs"
+          if (Test-Path "D:\vi\x64-windows-openems\bin") {
+            Copy-Item "D:\vi\x64-windows-openems\bin\*.dll" "$HOME\opt\bin\" -ErrorAction SilentlyContinue
+            Write-Host "Preserved $(( Get-ChildItem 'D:\vi\x64-windows-openems\bin\*.dll' ).Count) vcpkg DLLs"
           }
 
       - name: Build and install QCSXCAD
@@ -132,8 +146,9 @@ jobs:
                     -DCSXCAD_ROOT_DIR="$HOME/opt" `
                     -DVCPKG_INSTALLED_DIR="D:/vi" `
                     -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
-                    -DVCPKG_HOST_TRIPLET="x64-windows-release" `
-                    -DVCPKG_TARGET_TRIPLET="x64-windows-release"
+                    -DVCPKG_OVERLAY_TRIPLETS="$env:GITHUB_WORKSPACE/.github/vcpkg-triplets" `
+                    -DVCPKG_HOST_TRIPLET="x64-windows-openems" `
+                    -DVCPKG_TARGET_TRIPLET="x64-windows-openems"
           cmake --build ./ --parallel
           cmake --install ./
 
@@ -141,13 +156,13 @@ jobs:
         run: |
           # QCSXCAD installs Qt6Core5Compat and other Qt DLLs into D:/vi that
           # AppCSXCAD's vcpkg.json may not list, causing them to be orphan-removed.
-          if (Test-Path "D:\vi\x64-windows-release\bin") {
-            Copy-Item "D:\vi\x64-windows-release\bin\*.dll" "$HOME\opt\bin\" -ErrorAction SilentlyContinue
+          if (Test-Path "D:\vi\x64-windows-openems\bin") {
+            Copy-Item "D:\vi\x64-windows-openems\bin\*.dll" "$HOME\opt\bin\" -ErrorAction SilentlyContinue
           }
           # Preserve Qt6 plugins — windeployqt6 reads them from this tree at package
           # time, but AppCSXCAD's vcpkg.json may trigger orphan removal of Qt packages.
-          if (Test-Path "D:\vi\x64-windows-release\Qt6\plugins") {
-            Copy-Item "D:\vi\x64-windows-release\Qt6\plugins" `
+          if (Test-Path "D:\vi\x64-windows-openems\Qt6\plugins") {
+            Copy-Item "D:\vi\x64-windows-openems\Qt6\plugins" `
                       "$HOME\opt\Qt6-plugins" -Recurse -Force
             Write-Host "Preserved Qt6 plugins"
           }
@@ -164,8 +179,9 @@ jobs:
                     -DQCSXCAD_ROOT_DIR="$HOME/opt" `
                     -DVCPKG_INSTALLED_DIR="D:/vi" `
                     -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
-                    -DVCPKG_HOST_TRIPLET="x64-windows-release" `
-                    -DVCPKG_TARGET_TRIPLET="x64-windows-release"
+                    -DVCPKG_OVERLAY_TRIPLETS="$env:GITHUB_WORKSPACE/.github/vcpkg-triplets" `
+                    -DVCPKG_HOST_TRIPLET="x64-windows-openems" `
+                    -DVCPKG_TARGET_TRIPLET="x64-windows-openems"
           cmake --build ./ --parallel
           cmake --install ./
 
@@ -269,9 +285,9 @@ jobs:
           # Locate windeployqt6 — check vcpkg install dir first, then fallback paths.
           $wdq = $null
           foreach ($candidate in @(
-            "D:\vi\x64-windows-release\tools\Qt6\bin\windeployqt6.exe",
-            "C:\vcpkg\installed\x64-windows-release\tools\Qt6\bin\windeployqt6.exe",
-            "$env:VCPKG_ROOT\installed\x64-windows-release\tools\Qt6\bin\windeployqt6.exe"
+            "D:\vi\x64-windows-openems\tools\Qt6\bin\windeployqt6.exe",
+            "C:\vcpkg\installed\x64-windows-openems\tools\Qt6\bin\windeployqt6.exe",
+            "$env:VCPKG_ROOT\installed\x64-windows-openems\tools\Qt6\bin\windeployqt6.exe"
           )) {
             if (Test-Path $candidate) { $wdq = $candidate; break }
           }
@@ -293,7 +309,7 @@ jobs:
           # Fallback: copy needed plugin categories from the preserved tree.
           if (-not (Test-Path "$qtPluginsDir\platforms")) {
             foreach ($src in @("$HOME\opt\Qt6-plugins",
-                               "D:\vi\x64-windows-release\Qt6\plugins")) {
+                               "D:\vi\x64-windows-openems\Qt6\plugins")) {
               if (Test-Path "$src\platforms") {
                 foreach ($cat in @("platforms", "styles", "iconengines")) {
                   if (Test-Path "$src\$cat") {
@@ -314,9 +330,9 @@ jobs:
           # staged in $pkg (our binaries + Qt DLLs from windeployqt6), then pull
           # in only the required DLLs from vcpkg — no more copy-everything.
           $vcpkgSearchDirs = @(
-            "D:\vi\x64-windows-release\bin",
-            "C:\vcpkg\installed\x64-windows-release\bin",
-            "$env:VCPKG_ROOT\installed\x64-windows-release\bin"
+            "D:\vi\x64-windows-openems\bin",
+            "C:\vcpkg\installed\x64-windows-openems\bin",
+            "$env:VCPKG_ROOT\installed\x64-windows-openems\bin"
           ) | Where-Object { Test-Path $_ }
 
           $dumpbin = Get-ChildItem "${env:VS_ROOT_DIR}\VC\Tools\MSVC" `
@@ -480,6 +496,14 @@ jobs:
       - name: Smoke test
         run: |
           $pkg = "$env:GITHUB_WORKSPACE\pkgstage\openEMS"
+          # HDF5 is linked statically: a hdf5.dll here would be picked up by
+          # h5py as well and break it (see .github/vcpkg-triplets/).
+          foreach ($dll in @("hdf5.dll", "hdf5_hl.dll")) {
+            if (Test-Path "$pkg\$dll") {
+              Write-Error "$dll must not be part of the package"
+              exit 1
+            }
+          }
           # Run with no arguments: openEMS prints usage and exits -1.
           # A Windows loader failure (missing DLL) produces 0xC0000135 (-1073741515
           # as signed int32) instead — $LASTEXITCODE is always signed in PowerShell.
@@ -502,6 +526,24 @@ jobs:
           # CSXCAD is already installed from the 3.14 wheel build step.
           Set-Location "$env:GITHUB_WORKSPACE/CSXCAD/python/tests"
           python -m unittest
+
+      - name: Set up Python 3.13 for the h5py interoperability test
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Test h5py interoperability
+        run: |
+          $env:CSXCAD_INSTALL_PATH = "$env:GITHUB_WORKSPACE\pkgstage\openEMS"
+          $env:OPENEMS_INSTALL_PATH = "$env:GITHUB_WORKSPACE\pkgstage\openEMS"
+          python -m pip install --upgrade pip
+          # Deliberately an h5py that still bundles HDF5 1.14: it is the
+          # combination that fails when the package ships its own hdf5.dll.
+          python -m pip install numpy "h5py<3.16"
+          $csxcad  = Get-ChildItem "$env:GITHUB_WORKSPACE/wheels/CSXCAD-*cp313*.whl"  | Select-Object -Last 1
+          $openems = Get-ChildItem "$env:GITHUB_WORKSPACE/wheels/openEMS-*cp313*.whl" | Select-Object -Last 1
+          python -m pip install $csxcad.FullName $openems.FullName
+          python -c "import openEMS, h5py; print('openEMS', openEMS.__version__, '- h5py', h5py.__version__, 'with HDF5', h5py.version.hdf5_version)"
 
       - name: Save vcpkg cache
         if: always()
