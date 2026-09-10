@@ -431,6 +431,13 @@ jobs:
                       "$pkg/matlab/Tutorials" -Recurse -Force
           }
 
+          # ── resources/: data files used by the octave tutorials ───────────────
+          # Found via matlab/openEMS_resource_path.m, i.e. one level above the
+          # interface directory -- as in the source tree and in an installation.
+          if (Test-Path "$HOME/opt/share/openEMS/resources") {
+            Copy-Item "$HOME/opt/share/openEMS/resources" "$pkg/resources" -Recurse -Force
+          }
+
           # ── CTB/: Circuit Toolbox (*.m and *.txt only) ───────────────────────────
           New-Item -ItemType Directory -Force "$pkg/CTB"
           Copy-Item "$env:GITHUB_WORKSPACE/CTB/*.m"   "$pkg/CTB/"
@@ -576,6 +583,21 @@ jobs:
           $openems = Get-ChildItem "$env:GITHUB_WORKSPACE/wheels/openEMS-*cp313*.whl" | Select-Object -Last 1
           python -m pip install $csxcad.FullName $openems.FullName
           python -c "import openEMS, h5py; print('openEMS', openEMS.__version__, '- h5py', h5py.__version__, 'with HDF5', h5py.version.hdf5_version)"
+
+      - name: Check the bundled tutorial resources
+        run: |
+          # The MRI phantoms have to be inside the wheel and inside the
+          # package: a tutorial is typically run from wherever the user
+          # copied it to, so nothing may be resolved relative to the script.
+          $env:CSXCAD_INSTALL_PATH = "$env:GITHUB_WORKSPACE\pkgstage\openEMS"
+          Set-Location $env:TEMP
+          python -c "import openEMS, os; p = os.path.join(os.path.dirname(openEMS.__file__), 'resources', 'phantoms', 'phantom_head_298MHz.h5'); assert os.path.isfile(p), p; print('bundled in the wheel: ' + p)"
+          $phantoms = "$env:GITHUB_WORKSPACE\pkgstage\openEMS\resources\phantoms"
+          if (-not (Test-Path "$phantoms\phantom_head_298MHz.h5")) {
+            Write-Error "resources/phantoms is missing from the package"
+            exit 1
+          }
+          Write-Host "OK: the package ships resources/phantoms"
 
       - name: Save vcpkg cache
         if: always()

@@ -238,6 +238,19 @@ that serve as a fallback when the Virtual Family dataset is not available:
    :ref:`3 T Birdcage <octave_tutorial_mri_lp_birdcage>` tutorial.
    Domain: ±115 × ±115 × ±130 mm, 2.5 mm voxels (92 × 92 × 104 cells, 19 kB).
 
+Both interfaces resolve the location for you, relative to the installed
+interface rather than to the calling script, so a tutorial keeps working
+wherever it is copied to:
+
+.. code-block:: octave
+
+   phantom_file = openEMS_resource_path('phantoms', 'phantom_head_298MHz.h5');
+
+.. code-block:: python
+
+   from openEMS.utilities import get_resource_path
+   phantom_file = get_resource_path('phantoms', 'phantom_head_298MHz.h5')
+
 The source script ``resources/phantoms/create_phantoms.py`` reproduces
 both files and documents the tissue properties used.
 
