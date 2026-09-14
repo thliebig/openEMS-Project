@@ -70,4 +70,4 @@ More
 Documentation:
     https://docs.openems.de
 Windows installation details and troubleshooting:
-    https://docs.openems.de/python/manual_install.html#python-windows-install
+    https://docs.openems.de/en/latest/python/manual_install.html#python-windows-install
