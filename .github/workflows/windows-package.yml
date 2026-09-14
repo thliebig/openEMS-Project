@@ -446,35 +446,9 @@ jobs:
           # ── python/: wheels + tutorials + Cython declarations ────────────────
           New-Item -ItemType Directory -Force "$pkg/python"
           Copy-Item "$env:GITHUB_WORKSPACE/wheels/*.whl" "$pkg/python/"
-          @(
-            "openEMS Python Interface - Quick Install",
-            "==========================================",
-            "",
-            "1. Check your Python version:",
-            "     python --version",
-            "   The wheel filenames encode the version (e.g. cp313 = Python 3.13).",
-            "   Pick the .whl files that match.",
-            "",
-            "2. Install CSXCAD first, then openEMS (order matters):",
-            "     pip install CSXCAD-*-cp313-cp313-win_amd64.whl",
-            "     pip install openEMS-*-cp313-cp313-win_amd64.whl",
-            "   Replace cp313 with your Python version tag.",
-            "",
-            "3. Set CSXCAD_INSTALL_PATH so Python can find the DLLs.",
-            "   Run once (opens a new prompt to take effect):",
-            "     setx CSXCAD_INSTALL_PATH `"C:\openEMS`"",
-            "   Replace C:\openEMS with the folder where you extracted this package.",
-            "",
-            "4. Verify in a new command prompt:",
-            "     python -c `"import CSXCAD; print(CSXCAD.ContinuousStructure())`"",
-            "     python -c `"import openEMS; print(openEMS.openEMS())`"",
-            "",
-            "If that fails with `"ImportError: DLL load failed`", CSXCAD_INSTALL_PATH",
-            "is not the folder holding CSXCAD.dll -- mind an extra directory level",
-            "if the ZIP was extracted into a folder of the same name.",
-            "",
-            "Full documentation: https://docs.openems.de"
-          ) | Set-Content "$pkg/python/README.txt" -Encoding UTF8
+          # Line-wise Get-/Set-Content writes CRLF line endings for Notepad
+          Get-Content "$env:GITHUB_WORKSPACE/.github/windows-package/python/README.txt" |
+            Set-Content "$pkg/python/README.txt" -Encoding UTF8
           if (Test-Path "$env:GITHUB_WORKSPACE/openEMS/python/Tutorials") {
             Copy-Item "$env:GITHUB_WORKSPACE/openEMS/python/Tutorials" `
                       "$pkg/python/Tutorials" -Recurse
@@ -497,25 +471,9 @@ jobs:
             Copy-Item -Destination "$pkg/lib/"
 
           # ── README ────────────────────────────────────────────────────────────
-          @(
-            "openEMS Windows Package - $stem",
-            "========================================================",
-            "",
-            "1. Add this folder to your Windows PATH (System Properties > Environment",
-            "   Variables > Path), then open a new command prompt.",
-            "",
-            "2. Install the Python interfaces for your Python version:",
-            "     pip install python\CSXCAD-*.whl",
-            "     pip install python\openEMS-*.whl",
-            "",
-            "3. In Octave/Matlab add the interface path (adjust the drive/path):",
-            "     addpath('C:\path\to\openEMS\matlab')",
-            "",
-            "4. The include\ and lib\ folders contain C++ headers and import libraries",
-            "   for building custom extensions against the installed DLLs.",
-            "",
-            "Project page: https://openEMS.de"
-          ) | Set-Content "$pkg/README.txt" -Encoding UTF8
+          Get-Content "$env:GITHUB_WORKSPACE/.github/windows-package/README.txt" |
+            ForEach-Object { $_ -replace '@PACKAGE_NAME@', $stem } |
+            Set-Content "$pkg/README.txt" -Encoding UTF8
 
           # ── strip debug symbols ───────────────────────────────────────────────
           Get-ChildItem $pkg -Recurse -Filter "*.pdb" | Remove-Item -Force

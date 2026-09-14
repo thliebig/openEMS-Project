@@ -656,38 +656,26 @@ Download the latest Windows package from the
 (stable release or the ``nightly`` pre-release).  Extract the ZIP to a
 folder of your choice, for example ``C:\openEMS``.
 
-Step 2: Identify your Python version
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Open a command prompt and run:
-
-.. code-block:: doscon
-
-    python --version
-
-The output shows your Python version, e.g. ``Python 3.13.x``.  Wheel
-filenames encode the version — ``cp313`` in the name means CPython 3.13.
-
-Step 3: Install the wheels
+Step 2: Install the wheels
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``CSXCAD`` must be installed **before** ``openEMS``.  From the ``python\``
-sub-directory of the extracted package:
+Each wheel is built for one Python version — ``cp313`` in the file name
+means CPython 3.13.  pip picks the matching one when pointed at the
+``python\`` sub-directory of the extracted package:
 
 .. code-block:: doscon
 
-    pip install C:\openEMS\python\CSXCAD-*-cp313-cp313-win_amd64.whl
-    pip install C:\openEMS\python\openEMS-*-cp313-cp313-win_amd64.whl
+    python -m pip install numpy h5py matplotlib
+    python -m pip install --no-index --find-links C:\openEMS\python openEMS
 
-Replace ``cp313`` with the tag matching your Python version.
+The first command installs the dependencies from PyPI.  The second
+installs openEMS and CSXCAD from that folder only, so they always match
+the DLLs of the package; ``--no-index`` keeps pip from fetching anything
+else, which is also why the dependencies are installed separately.  If
+it reports ``No matching distribution found``, the package has no wheel
+for your Python version (see ``python --version``).
 
-.. note::
-
-   Installing ``openEMS`` before ``CSXCAD`` causes pip to look for
-   CSXCAD from a path that does not exist on your machine and report a
-   ``No such file or directory`` error.  Always install CSXCAD first.
-
-Step 4: Set ``CSXCAD_INSTALL_PATH``
+Step 3: Set ``CSXCAD_INSTALL_PATH``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 At import time, Python must locate ``CSXCAD.dll``, ``openEMS.dll``, and
@@ -706,7 +694,7 @@ or in PowerShell:
 
     $env:CSXCAD_INSTALL_PATH = "C:\openEMS"
 
-Step 5: Verify the installation
+Step 4: Verify the installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In a **new** command prompt (after ``setx``), run:
