@@ -253,11 +253,22 @@ Each call returns a port object (a struct in Matlab/Octave), which is later
 passed to :func:`calcPort` or the ``CalcPort()`` method in Python. With more
 than one port, keep them in a cell array or list.
 
+Any number of ports can be active in the same simulation, e.g. to feed all
+elements of an antenna array at once, each with its own amplitude and delay
+(``'Delay'`` in Matlab/Octave, ``delay`` in Python) to steer the beam. The
+:ref:`MRI birdcage coil tutorial <octave_tutorial_mri_lp_birdcage>` feeds two
+ports in quadrature this way.
+
 .. important::
-   Excite only one port per simulation. The reflection and transmission
-   parameters are all relative to the one active port, e.g. with port 1
-   active the results are :math:`S_{11}` and :math:`S_{21}`. A full
-   S-parameter matrix needs one simulation per port.
+   S-parameters need exactly one active port, while all other ports are
+   defined as passive ports to measure what arrives there. With port 1 active
+   and port 2 passive, a simulation yields :math:`S_{11}` and :math:`S_{21}`;
+   a full S-parameter matrix needs one simulation per port, each time with
+   another port active. With several active ports, the reflected wave at a
+   port also contains what is coupled in from the other ports, so
+   ``uf.ref/uf.inc`` is the *active* reflection coefficient of that port in
+   this excitation. It approaches the individual :math:`S_{nn}` only if the
+   ports are well isolated from each other.
 
 Lumped Port Setup
 ~~~~~~~~~~~~~~~~~
