@@ -12,9 +12,9 @@ openEMS is a free and open electromagnetic field solver using the FDTD method. O
 + Dispersive material (Drude/Lorentz/Debye type)
 + Field dumps in time and frequency domain as vtk or hdf5 file format
 + Flexible post-processing routines in Octave/Matlab and Python
-+ and [many more](https://docs.openems.de/intro.html#features)
++ and [many more](https://docs.openems.de/en/latest/intro.html#features)
 
 # Installation Instructions
 
-[https://docs.openems.de/install.html](https://docs.openems.de/install.html)
+[https://docs.openems.de/en/latest/install/index.html](https://docs.openems.de/en/latest/install/index.html)
 
