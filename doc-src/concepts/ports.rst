@@ -237,7 +237,33 @@ Feature Reference
 Usage
 ------
 
-The following example adds two lumped ports to the simulation.
+All port functions share a few arguments:
+
+* **Port number**: an integer that must be unique within the simulation.
+* **Priority**: the priority of the primitives the port creates
+  (``prio`` in Matlab/Octave, the ``priority`` keyword in Python).
+* **Excitation**: whether the port is active. Matlab/Octave takes ``true`` or
+  ``false`` for the lumped and curve ports and the ``'ExcitePort'`` key for the
+  microstrip, stripline and CPW ports, but an amplitude for the coaxial
+  (``'ExciteAmp'``) and waveguide ports. Python always takes an amplitude,
+  where ``0`` is a passive port and a negative value flips the direction of the
+  excited field.
+
+Each call returns a port object (a struct in Matlab/Octave), which is later
+passed to :func:`calcPort` or the ``CalcPort()`` method in Python. With more
+than one port, keep them in a cell array or list.
+
+.. important::
+   Excite only one port per simulation. The reflection and transmission
+   parameters are all relative to the one active port, e.g. with port 1
+   active the results are :math:`S_{11}` and :math:`S_{21}`. A full
+   S-parameter matrix needs one simulation per port.
+
+Lumped Port Setup
+~~~~~~~~~~~~~~~~~
+
+The following example adds two 50 Ω lumped ports in z-direction, the first
+one active, the second one passive.
 
 .. tabs::
 
@@ -259,17 +285,119 @@ The following example adds two lumped ports to the simulation.
 
       port = [None, None]
 
-      start = [-100 0 0]
-      stop  = [-100 0 50]
-      port[0] = fdtd.AddLumpedPort(1, z0, start, stop, 'z', excite=1)
+      start = [-100, 0, 0]
+      stop  = [-100, 0, 50]
+      port[0] = fdtd.AddLumpedPort(1, z0, start, stop, 'z', excite=1, priority=5)
 
-      start = [-100 0 0]
-      stop  = [-100 0 50]
-      port[1] = fdtd.AddLumpedPort(2, z0, start, stop, 'z', excite=0)
+      start = [100, 0, 0]
+      stop  = [100, 0, 50]
+      port[1] = fdtd.AddLumpedPort(2, z0, start, stop, 'z', excite=0, priority=5)
 
-.. seealso::
-   This page is incomplete. See the
-   `Legacy Wiki <https://wiki.openems.de/index.php/Ports.html>`_ for more information.
+Transmission Line Port Setup
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Microstrip, stripline, coplanar waveguide and coaxial ports place their
+excitation and probes on the mesh lines, so **the mesh must be defined before
+the port is created**.
+
+The port spans a piece of the transmission line, as a box or, for the coaxial
+port, as the end points of the cable axis. The order of ``start`` and
+``stop`` matters: the wave is assumed to travel from ``start`` to ``stop``, so
+``start`` is the outer end of the line and ``stop`` points towards the device
+under test, for the passive port as well. For a microstrip port, the
+coordinate of ``start`` in the excitation direction is the height of the strip,
+the one of ``stop`` the ground plane.
+
+The optional parameters are the same in Matlab/Octave (key/value pairs) and
+Python (keywords):
+
+``FeedShift``
+   Shift the excitation from ``start`` towards ``stop`` by the given distance in
+   drawing units. Default is 0. Only used for an active port.
+``Feed_R``
+   Place a lumped feeding resistance at the excitation. By default there is
+   none, and ``start`` must lie inside an absorbing boundary (e.g. a PML), which
+   then absorbs the wave that the excitation launches away from the structure.
+``MeasPlaneShift``
+   Position of the measurement plane, as a distance from ``start`` in drawing
+   units. Default is the middle of the port box. The resulting voltages and
+   currents are referenced to this plane.
+
+The following example, taken from the MSL notch filter tutorial, adds two
+microstrip ports in x-direction, with the metal strip at
+``substrate_thickness`` and the ground plane at z = 0. Both ports start at
+the outer end of the line, inside a PML.
+
+.. tabs::
+
+   .. code-tab:: octave
+
+      CSX = AddMetal(CSX, 'PEC');
+
+      portstart = [-MSL_length, -MSL_width/2, substrate_thickness];
+      portstop  = [          0,  MSL_width/2, 0];
+      [CSX, port{1}] = AddMSLPort(CSX, 999, 1, 'PEC', portstart, portstop, 0, [0 0 -1], ...
+                                  'ExcitePort', true, 'FeedShift', 10*resolution, ...
+                                  'MeasPlaneShift', MSL_length/3);
+
+      portstart = [MSL_length, -MSL_width/2, substrate_thickness];
+      portstop  = [         0,  MSL_width/2, 0];
+      [CSX, port{2}] = AddMSLPort(CSX, 999, 2, 'PEC', portstart, portstop, 0, [0 0 -1], ...
+                                  'MeasPlaneShift', MSL_length/3);
+
+   .. code-tab:: python
+
+      pec = CSX.AddMetal('PEC')
+
+      port = [None, None]
+
+      portstart = [-MSL_length, -MSL_width/2, substrate_thickness]
+      portstop  = [          0,  MSL_width/2, 0]
+      port[0] = fdtd.AddMSLPort(1, pec, portstart, portstop, 'x', 'z', excite=-1,
+                                FeedShift=10*resolution, MeasPlaneShift=MSL_length/3,
+                                priority=10)
+
+      portstart = [MSL_length, -MSL_width/2, substrate_thickness]
+      portstop  = [         0,  MSL_width/2, 0]
+      port[1] = fdtd.AddMSLPort(2, pec, portstart, portstop, 'x', 'z',
+                                MeasPlaneShift=MSL_length/3, priority=10)
+
+Waveguide Port Setup
+~~~~~~~~~~~~~~~~~~~~
+
+Waveguide ports also need the mesh to be defined first. The port box spans a
+short piece of the waveguide in propagation direction: the excitation is placed
+at ``start``, the voltage and current probes at ``stop``. The ``stop``
+coordinate thus defines the reference plane of the port. As for the
+transmission line ports, ``start`` is the outer end and ``stop`` points towards
+the device under test.
+
+The rectangular waveguide port takes the waveguide width and height in meters
+and a mode name such as ``'TE10'``; the circular waveguide port takes the
+radius and a mode name such as ``'TE11'``. For other cross-sections,
+:func:`AddWaveGuidePort` accepts the mode profile as field functions.
+
+.. tabs::
+
+   .. code-tab:: octave
+
+      start = [0 0 10*mesh_res];
+      stop  = [a b 15*mesh_res];
+      [CSX, port{1}] = AddRectWaveGuidePort(CSX, 0, 1, start, stop, 'z', a*unit, b*unit, 'TE10', 1);
+
+      start = [0 0 length-10*mesh_res];
+      stop  = [a b length-15*mesh_res];
+      [CSX, port{2}] = AddRectWaveGuidePort(CSX, 0, 2, start, stop, 'z', a*unit, b*unit, 'TE10');
+
+   .. code-tab:: python
+
+      start = [0, 0, 10*mesh_res]
+      stop  = [a, b, 15*mesh_res]
+      port[0] = fdtd.AddRectWaveGuidePort(0, start, stop, 'z', a*unit, b*unit, 'TE10', 1)
+
+      start = [0, 0, length-10*mesh_res]
+      stop  = [a, b, length-15*mesh_res]
+      port[1] = fdtd.AddRectWaveGuidePort(1, start, stop, 'z', a*unit, b*unit, 'TE10')
 
 Selection
 -----------
@@ -342,49 +470,99 @@ time-domain waveform is extracted to obtain meaningful results.
 Attributes
 ~~~~~~~~~~
 
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-|      Matlab / Octave    |    Python                |    Domain       |  Definition                                      |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-|   ``ZL_ref``            | ``Z_ref``                | Impedance       | Reference Impedance                              |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| ``uf_inc{n}``           | ``uf_inc[n]``            | Frequency       | Incident Voltage                                 |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| ``uf_ref{n}``           | ``uf_ref[n]``            | Frequency       | Reflected Voltage                                |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| ``if_tot{n}``           | ``if_tot[n]``            | Frequency       | Total Voltage                                    |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| ``if_inc{n}``           | ``if_inc[n]``            | Frequency       | Incident Current                                 |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| ``if_ref{n}``           | ``if_ref[n]``            | Frequency       | Reflected Current                                |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| ``if_tot{n}``           | ``if_tot[n]``            | Frequency       | Total Current                                    |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| ``P_inc{n}``            | ``P_inc[n]``             | Frequency       | Incident Power                                   |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| ``P_ref{n}``            | ``P_ref[n]``             | Frequency       | Reflected Power                                  |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| ``P_acc{n}``            | ``P_acc[n]``             | Frequency       | Accepted Power (Incident - Reflected)            |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| N/A (see notes)         | ``ut_inc[n]``            | Time            | Incident Voltage                                 |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| N/A (see notes)         | ``ut_ref[n]``            | Time            | Reflected Voltage                                |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| ``ut_tot{n}``           | ``ut_tot[n]``            | Time            | Total Voltage                                    |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| N/A (see notes)         | ``it_inc[n]``            | Time            | Incident Current                                 |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| N/A (see notes)         | ``it_ref[n]``            | Time            | Reflected Current                                |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| ``it_tot{n}``           | ``it_tot[n]``            | Time            | Total Current                                    |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| ``raw.U.TD{1}.val{n}``  | ``u_data.ui_val[0][n]``  | Time            | Raw Voltage (``ut_tot`` Recommended)             |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| ``raw.U.TD{1}.t{n}``    | ``u_data.ui_time[0][n]`` | Time            | Raw Time of Voltage Samples                      |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| ``raw.I.TD{1}.val{n}``  | ``i_data.ui_val[0][n]``  | Time            | Raw Current (``it_tot`` Recommended)             |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
-| ``raw.I.TD{1}.t{n}``    | ``i_data.ui_time[0][n]`` | Time            | Raw Time of Current Samples                      |
-+-------------------------+--------------------------+-----------------+--------------------------------------------------+
+After :func:`calcPort` or the ``CalcPort()`` method in Python, each port
+object provides the following results:
+
+.. list-table::
+   :header-rows: 1
+
+   * - Matlab/Octave
+     - Python
+     - Domain
+     - Definition
+   * - ``ZL_ref``
+     - ``Z_ref``
+     - Impedance
+     - Reference impedance
+   * - ``ZL``
+     - ``ZL`` (waveguide), ``Z_ref`` (see below)
+     - Impedance
+     - Characteristic line impedance (transmission line and waveguide ports)
+   * - ``beta``
+     - ``beta``
+     - Frequency
+     - Propagation constant (transmission line and waveguide ports)
+   * - ``uf.inc``
+     - ``uf_inc``
+     - Frequency
+     - Incident voltage
+   * - ``uf.ref``
+     - ``uf_ref``
+     - Frequency
+     - Reflected voltage
+   * - ``uf.tot``
+     - ``uf_tot``
+     - Frequency
+     - Total voltage
+   * - ``if.inc``
+     - ``if_inc``
+     - Frequency
+     - Incident current
+   * - ``if.ref``
+     - ``if_ref``
+     - Frequency
+     - Reflected current
+   * - ``if.tot``
+     - ``if_tot``
+     - Frequency
+     - Total current
+   * - ``P_inc``
+     - ``P_inc``
+     - Frequency
+     - Incident power
+   * - ``P_ref``
+     - ``P_ref``
+     - Frequency
+     - Reflected power
+   * - ``P_acc``
+     - ``P_acc``
+     - Frequency
+     - Accepted power (incident - reflected)
+   * - ``ut.time``
+     - ``u_data.ui_time[0]``
+     - Time
+     - Time of the voltage samples
+   * - ``ut.tot``
+     - ``ut_tot``
+     - Time
+     - Total voltage
+   * - N/A (see notes)
+     - ``ut_inc``
+     - Time
+     - Incident voltage
+   * - N/A (see notes)
+     - ``ut_ref``
+     - Time
+     - Reflected voltage
+   * - ``it.time``
+     - ``i_data.ui_time[0]``
+     - Time
+     - Time of the current samples
+   * - ``it.tot``
+     - ``it_tot``
+     - Time
+     - Total current
+   * - N/A (see notes)
+     - ``it_inc``
+     - Time
+     - Incident current
+   * - N/A (see notes)
+     - ``it_ref``
+     - Time
+     - Reflected current
+
+In Python, a transmission line port stores the extracted line impedance in
+``Z_ref``, unless ``ref_impedance`` is given.
 
 .. note::
 
@@ -394,63 +572,82 @@ Attributes
   prefix ``ut``. In American literature, symbols such as :math:`V`, :math:`E` and
   :math:`\mathcal{E}` are used.
 
-  **Incident and reflected signals.** In Matlab/Octave, only total time-domain port
-  voltage and current are given, while their incident, reflected components are not.
-  They can be calculated using the following expressions::
+  **Incident and reflected signals.** In Matlab/Octave, only the total time-domain port
+  voltage and current are given, while their incident and reflected components are not.
+  Python only provides them for a scalar reference impedance. For a scalar
+  reference impedance, they can be calculated using the following expressions::
 
-      ut_inc = 0.5 * (ut_tot + it_tot * ZL_ref)
-      ut_ref = ut_tot - ut_inc
+      ut_inc = 0.5 * (port.ut.tot + port.it.tot * port.ZL_ref);
+      ut_ref = port.ut.tot - ut_inc;
 
-      it_inc = 0.5 * (it_tot + ut_tot ./ ZL_ref)
-      it_ref = it_inc - it_tot
+      it_inc = 0.5 * (port.it.tot + port.ut.tot ./ port.ZL_ref);
+      it_ref = it_inc - port.it.tot;
 
 Usage
 ~~~~~
 
-Matlab/Octave::
+The S-parameters follow from the incident and reflected voltages. For the
+transmission, divide the *reflected* voltage of the passive port by the
+incident voltage of the active port: the reflected wave of a port is the wave
+leaving the structure through it.
 
-    f_min = 100e6
-    f_max = 1e9
-    points = 1000
-    freq_list = linspace(f_min, f_max, points);
+By default the reference impedance is the port resistance of a lumped port, or
+the extracted line impedance of a transmission line or waveguide port. Pass a
+reference impedance to normalize all ports to the same value, e.g. 50 Ω. The
+measurement plane of a transmission line port can be moved afterwards with
+``'RefPlaneShift'`` (Matlab/Octave) or ``ref_plane_shift`` (Python).
 
-    for i = 1:numel(port)
-        port{i} = calcPort(port{i}, simpath, freq_list);
-    endfor
+.. tabs::
 
-    s11_list = port{1}.uf.ref ./ port{1}.uf.inc;
-    s21_list = port{2}.uf.ref ./ port{1}.uf.inc;
-    z21_list = port{1}.uf.tot ./ port{1}.if_tot;
+   .. code-tab:: octave
 
-Python::
+      f_min = 100e6;
+      f_max = 1e9;
+      freq_list = linspace(f_min, f_max, 1000);
 
-    import numpy as np
-    from matplotlib import pyplot as plt
+      % after running the simulation, calcPort also accepts a cell array of ports
+      port = calcPort(port, Sim_Path, freq_list, 'RefImpedance', 50);
 
-    f_min = 100e6
-    f_max = 1e9
-    points = 1000
-    z0 = 50
-    freq_list = np.linspace(f_min, f_max, points)
+      s11 = port{1}.uf.ref ./ port{1}.uf.inc;
+      s21 = port{2}.uf.ref ./ port{1}.uf.inc;
+      zin = port{1}.uf.tot ./ port{1}.if.tot;
 
-    # after running the simulation
-    for p in port:
-        p.CalcPort(simdir, freq_list, ref_impedance=z0)
+      figure
+      plot(port{1}.ut.time, port{1}.ut.tot, 'k-');
+      hold on
+      plot(port{2}.ut.time, port{2}.ut.tot, 'r--');
+      grid on
+      legend('input voltage', 'output voltage');
+      xlabel('time (s)');
+      ylabel('voltage (V)');
 
-    s11_list = port[0].uf_ref / port[0].uf_inc
-    s21_list = port[1].uf_ref / port[0].uf_inc
-    z11_list = port[0].uf_tot / port[0].if_tot
+   .. code-tab:: python
 
-    plt.figure()
-    plt.plot(port[0].u_data.ui_time[0], port[0].ut_tot, label="Input Voltage")
-    plt.plot(port[1].u_data.ui_time[0], port[1].ut_tot, label="Output Voltage")
-    plt.grid()
-    plt.legend()
-    plt.xlabel('Time (s)')
-    plt.ylabel('Voltage (V)')
-    plt.show()
+      import numpy as np
+      from matplotlib import pyplot as plt
+
+      f_min = 100e6
+      f_max = 1e9
+      freq_list = np.linspace(f_min, f_max, 1000)
+
+      # after running the simulation
+      for p in port:
+          p.CalcPort(Sim_Path, freq_list, ref_impedance=50)
+
+      s11 = port[0].uf_ref / port[0].uf_inc
+      s21 = port[1].uf_ref / port[0].uf_inc
+      zin = port[0].uf_tot / port[0].if_tot
+
+      plt.figure()
+      plt.plot(port[0].u_data.ui_time[0], port[0].ut_tot, 'k-', label='input voltage')
+      plt.plot(port[1].u_data.ui_time[0], port[1].ut_tot, 'r--', label='output voltage')
+      plt.grid()
+      plt.legend()
+      plt.xlabel('time (s)')
+      plt.ylabel('voltage (V)')
+      plt.show()
 
 .. seealso::
-   * :ref:`tutorial_msl_notchfilter` — lumped port setup on a microstrip structure.
+   * :ref:`tutorial_msl_notchfilter` — microstrip port setup and S-parameters.
    * :ref:`tutorial_rect_waveguide` — waveguide port with mode profile excitation.
 
