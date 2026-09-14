@@ -418,17 +418,13 @@ jobs:
 
           # ── matlab/: merged Octave/Matlab interface ───────────────────────────
           New-Item -ItemType Directory -Force "$pkg/matlab"
-          # Installed interface scripts from CSXCAD and openEMS
+          # Installed interface scripts from CSXCAD and openEMS; the latter
+          # installs the whole matlab/ directory, Tutorials included.
           if (Test-Path "$HOME/opt/share/CSXCAD/matlab") {
             Copy-Item "$HOME/opt/share/CSXCAD/matlab/*" "$pkg/matlab/" -Recurse -Force
           }
           if (Test-Path "$HOME/opt/share/openEMS/matlab") {
             Copy-Item "$HOME/opt/share/openEMS/matlab/*" "$pkg/matlab/" -Recurse -Force
-          }
-          # Tutorials from openEMS source tree
-          if (Test-Path "$env:GITHUB_WORKSPACE/openEMS/matlab/Tutorials") {
-            Copy-Item "$env:GITHUB_WORKSPACE/openEMS/matlab/Tutorials" `
-                      "$pkg/matlab/Tutorials" -Recurse -Force
           }
 
           # ── resources/: data files used by the octave tutorials ───────────────
