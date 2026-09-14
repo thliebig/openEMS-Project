@@ -6,10 +6,10 @@ Manual Documentation Build
 During development and testing, it's often necessary to build
 CSXCAD and openEMS documentation manually. 
 
-If you are an end-user, please view CSXCAD and openEMS's development
-documentation via `<https://openems.readthedocs.org>`_, and view
-the stable documentation via `<https://docs.openEMS.de>`_. There's
-no need to manually build documentation for end users.
+If you are an end-user, please view the documentation online via
+`<https://docs.openems.de>`_. The *latest* version follows the ``master``
+branch, *stable* shows the latest release. There's no need to manually
+build documentation for end users.
 
 .. tip::
    The following instructions are working as the time of writing, but it

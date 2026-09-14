@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Compiling openEMS may require installing the following packages:
-# https://openems.readthedocs.io/en/latest/install/requirements.html
+# https://docs.openems.de/en/latest/install/requirements.html
 #
 # Compiling hyp2mat may require installing the following packages:
 # apt-get install gengetopt help2man groff pod2pdf bison flex libhpdf-dev libtool
