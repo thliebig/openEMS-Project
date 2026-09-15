@@ -251,7 +251,11 @@ Usage
 
 All port functions share a few arguments:
 
-* **Port number**: an integer that must be unique within the simulation.
+* **Port number**: an integer that must be unique within the simulation. The
+  port's probes are named after it, and openEMS writes each probe to a file of
+  that name, so two ports with the same number would corrupt each other's
+  results. Creating such a port raises an error; ports with a different
+  ``PortNamePrefix`` may share a number.
 * **Priority**: the priority of the primitives the port creates
   (``prio`` in Matlab/Octave, the ``priority`` keyword in Python).
 * **Excitation**: whether the port is active. Matlab/Octave takes ``true`` or
