@@ -133,6 +133,18 @@ To avoid signal reflections, the lumped port must also have a lumped resistance
 matched to the characteristic impedance of the transmission line, which is
 problematic if the characteristic impedance of the transmission line is unknown.
 
+Curve Ports
+~~~~~~~~~~~
+
+A curve port is a lumped port on a single mesh edge. Instead of filling a box
+with an electric field, it places the resistance, the excitation and the probes
+on the one mesh cell closest to the middle between ``start`` and ``stop``, in
+the direction in which the two points are farthest apart. If ``start`` and
+``stop`` span more than one cell, the port connects both points to this cell
+with thin PEC wires. This makes it the natural feed of wire structures such as
+dipoles or loops: a single curve port spanning a dipole creates the feed gap
+and both arms.
+
 Transmission Line Ports
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -304,6 +316,29 @@ one active, the second one passive.
       stop  = [100, 0, 50]
       port[1] = fdtd.AddLumpedPort(2, z0, start, stop, 'z', excite=0, priority=5)
 
+Curve Port Setup
+~~~~~~~~~~~~~~~~
+
+A curve port snaps to the mesh, so the mesh must be defined first, and it needs
+a mesh line close to the middle between ``start`` and ``stop``, where the feed
+cell is placed. No direction is given; it follows from ``start`` and ``stop``.
+The following example creates an active 73 Ω half-wave dipole along z, including
+its arms.
+
+.. tabs::
+
+   .. code-tab:: octave
+
+      start = [0 0 -arm_len];
+      stop  = [0 0  arm_len];
+      [CSX, port] = AddCurvePort(CSX, 5, 1, 73, start, stop, true);
+
+   .. code-tab:: python
+
+      start = [0, 0, -arm_len]
+      stop  = [0, 0,  arm_len]
+      port = fdtd.AddCurvePort(1, 73, start, stop, excite=1, priority=5)
+
 Transmission Line Port Setup
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -315,9 +350,12 @@ The port spans a piece of the transmission line, as a box or, for the coaxial
 port, as the end points of the cable axis. The order of ``start`` and
 ``stop`` matters: the wave is assumed to travel from ``start`` to ``stop``, so
 ``start`` is the outer end of the line and ``stop`` points towards the device
-under test, for the passive port as well. For a microstrip port, the
-coordinate of ``start`` in the excitation direction is the height of the strip,
-the one of ``stop`` the ground plane.
+under test, for the passive port as well.
+
+Each transmission line port also creates the conductor it spans (the strip or,
+for the coaxial port, the inner and outer conductor), using the metal property
+passed to it. The remaining parts of the line, e.g. the ground planes, the
+substrate and the line between the ports, are up to the user.
 
 The optional parameters are the same in Matlab/Octave (key/value pairs) and
 Python (keywords):
@@ -333,6 +371,14 @@ Python (keywords):
    Position of the measurement plane, as a distance from ``start`` in drawing
    units. Default is the middle of the port box. The resulting voltages and
    currents are referenced to this plane.
+
+Microstrip Port
+"""""""""""""""
+
+The port box spans the strip in width direction, and in excitation (height)
+direction from the strip to the ground plane: the coordinate of ``start`` in
+this direction is the height of the strip, the one of ``stop`` the ground
+plane. The port creates the strip, the ground plane is up to the user.
 
 The following example, taken from the MSL notch filter tutorial, adds two
 microstrip ports in x-direction, with the metal strip at
@@ -373,6 +419,134 @@ the outer end of the line, inside a PML.
       port[1] = fdtd.AddMSLPort(2, pec, portstart, portstop, 'x', 'z',
                                 MeasPlaneShift=MSL_length/3, priority=10)
 
+Stripline Port
+""""""""""""""
+
+A stripline is a strip centered between two ground planes. The port box is
+flat: ``start`` and ``stop`` span the strip in propagation and width direction
+and are equal in excitation (height) direction, at the height of the strip. The
+additional ``height`` argument is the distance from the strip to each of the two
+ground planes. The port creates the strip, while the ground planes and the
+dielectric in between are up to the user.
+
+.. tabs::
+
+   .. code-tab:: octave
+
+      CSX = AddMetal(CSX, 'PEC');
+
+      portstart = [mesh.x(1), -SL_width/2, 0];
+      portstop  = [0,          SL_width/2, 0];
+      [CSX, port{1}] = AddStripLinePort(CSX, 999, 1, 'PEC', portstart, portstop, SL_height, 'x', [0 0 -1], ...
+                                        'ExcitePort', true, 'FeedShift', 10*resolution, ...
+                                        'MeasPlaneShift', SL_length/3);
+
+      portstart = [mesh.x(end), -SL_width/2, 0];
+      portstop  = [0,            SL_width/2, 0];
+      [CSX, port{2}] = AddStripLinePort(CSX, 999, 2, 'PEC', portstart, portstop, SL_height, 'x', [0 0 -1], ...
+                                        'MeasPlaneShift', SL_length/3);
+
+   .. code-tab:: python
+
+      pec = CSX.AddMetal('PEC')
+
+      portstart = [mesh.GetLines('x')[0], -SL_width/2, 0]
+      portstop  = [0,                      SL_width/2, 0]
+      port[0] = fdtd.AddStripLinePort(1, pec, portstart, portstop, 'x', 'z', SL_height,
+                                      excite=1, FeedShift=10*resolution,
+                                      MeasPlaneShift=SL_length/3, priority=999)
+
+      portstart = [mesh.GetLines('x')[-1], -SL_width/2, 0]
+      portstop  = [0,                       SL_width/2, 0]
+      port[1] = fdtd.AddStripLinePort(2, pec, portstart, portstop, 'x', 'z', SL_height,
+                                      MeasPlaneShift=SL_length/3, priority=999)
+
+Coplanar Waveguide Port
+"""""""""""""""""""""""
+
+A coplanar waveguide (CPW) is a center strip with a ground plane on either side
+in the same plane, separated by a gap. Like the stripline port, the port box is
+flat and spans the center strip. The additional ``gap_width`` argument is the
+width of each of the two gaps. In contrast to the other transmission line
+ports, the excitation direction is the direction *across the gaps*, i.e. the
+width direction of the strip, which lies in the plane of the CPW. The port
+creates the center strip, while the ground planes beyond the gaps are up to the
+user. A feeding resistance ``Feed_R`` is split into one resistance of
+2 ``Feed_R`` per gap.
+
+.. tabs::
+
+   .. code-tab:: octave
+
+      CSX = AddMetal(CSX, 'CPW_PORT');
+
+      portstart = [-CPW_length/2,                 -CPW_width/2, substrate_thickness];
+      portstop  = [-CPW_length/2+CPW_port_length,  CPW_width/2, substrate_thickness];
+      [CSX, port{1}] = AddCPWPort(CSX, 999, 1, 'CPW_PORT', portstart, portstop, CPW_gap, 'x', [0 1 0], ...
+                                  'ExcitePort', true, 'MeasPlaneShift', CPW_port_length, 'Feed_R', 50);
+
+      portstart = [CPW_length/2,                 -CPW_width/2, substrate_thickness];
+      portstop  = [CPW_length/2-CPW_port_length,  CPW_width/2, substrate_thickness];
+      [CSX, port{2}] = AddCPWPort(CSX, 999, 2, 'CPW_PORT', portstart, portstop, CPW_gap, 'x', [0 1 0], ...
+                                  'MeasPlaneShift', CPW_port_length, 'Feed_R', 50);
+
+   .. code-tab:: python
+
+      cpw_port_metal = CSX.AddMetal('CPW_PORT')
+
+      portstart = [-CPW_length/2,                   -CPW_width/2, substrate_thickness]
+      portstop  = [-CPW_length/2 + CPW_port_length,  CPW_width/2, substrate_thickness]
+      port[0] = fdtd.AddCPWPort(1, cpw_port_metal, portstart, portstop, 'x', 'y', CPW_gap,
+                                excite=1, MeasPlaneShift=CPW_port_length, Feed_R=50,
+                                priority=999)
+
+      portstart = [CPW_length/2,                   -CPW_width/2, substrate_thickness]
+      portstop  = [CPW_length/2 - CPW_port_length,  CPW_width/2, substrate_thickness]
+      port[1] = fdtd.AddCPWPort(2, cpw_port_metal, portstart, portstop, 'x', 'y', CPW_gap,
+                                MeasPlaneShift=CPW_port_length, Feed_R=50, priority=999)
+
+Coaxial Port
+""""""""""""
+
+For a coaxial port, ``start`` and ``stop`` are the end points of the cable axis.
+The port takes the inner conductor radius ``r_i``, the inner radius ``r_o`` and
+the outer radius ``r_os`` of the outer conductor, all in drawing units, and
+creates both conductors from the given metal property, plus the dielectric
+filling between them if a material property is given (an empty name in
+Matlab/Octave or ``None`` in Python makes it an air-filled line). The
+excitation is a radial electric field between the conductors, so no excitation
+direction is needed. ``Feed_R`` only supports an open (default) or a shorted
+(``0``) end.
+
+.. tabs::
+
+   .. code-tab:: octave
+
+      CSX = AddMetal(CSX, 'copper');
+
+      start = [0 0 0];
+      stop  = [0 0 length/2];
+      [CSX, port{1}] = AddCoaxialPort(CSX, 10, 1, 'copper', '', start, stop, 'z', r_i, r_o, r_os, ...
+                                      'ExciteAmp', 1, 'FeedShift', 10*mesh_res);
+
+      start = [0 0 length];
+      stop  = [0 0 length/2];
+      [CSX, port{2}] = AddCoaxialPort(CSX, 10, 2, 'copper', '', start, stop, 'z', r_i, r_o, r_os);
+
+   .. code-tab:: python
+
+      copper = CSX.AddMetal('copper')
+
+      start = [0, 0, 0]
+      stop  = [0, 0, length/2]
+      port[0] = fdtd.AddCoaxialPort(1, copper, None, start, stop, 'z', r_i, r_o, r_os,
+                                    excite=1, FeedShift=10*mesh_res, priority=10)
+
+      start = [0, 0, length]
+      stop  = [0, 0, length/2]
+      port[1] = fdtd.AddCoaxialPort(2, copper, None, start, stop, 'z', r_i, r_o, r_os,
+                                    priority=10)
+
 Waveguide Port Setup
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -383,10 +557,14 @@ coordinate thus defines the reference plane of the port. As for the
 transmission line ports, ``start`` is the outer end and ``stop`` points towards
 the device under test.
 
-The rectangular waveguide port takes the waveguide width and height in meters
-and a mode name such as ``'TE10'``; the circular waveguide port takes the
-radius and a mode name such as ``'TE11'``. For other cross-sections,
-:func:`AddWaveGuidePort` accepts the mode profile as field functions.
+The waveguide walls are not created by the port and are up to the user.
+
+Rectangular Waveguide Port
+""""""""""""""""""""""""""
+
+The rectangular waveguide port takes the waveguide width ``a`` and height
+``b`` in meters and a TE mode name such as ``'TE10'``. The port box spans the
+cross-section of the waveguide, with the mode evaluated from its lower corner.
 
 .. tabs::
 
@@ -409,6 +587,51 @@ radius and a mode name such as ``'TE11'``. For other cross-sections,
       start = [0, 0, length-10*mesh_res]
       stop  = [a, b, length-15*mesh_res]
       port[1] = fdtd.AddRectWaveGuidePort(1, start, stop, 'z', a*unit, b*unit, 'TE10')
+
+Circular Waveguide Port
+"""""""""""""""""""""""
+
+The circular waveguide port takes the radius in meters, a TE mode name such as
+``'TE11'`` and a polarization angle ``pol_ang`` (0 for horizontal, π/2 for
+vertical). On a Cartesian mesh the mode is centered in the port box. In
+Matlab/Octave the port always propagates in z-direction and also works on a
+cylindrical mesh, as in the :ref:`circular waveguide tutorial
+<octave_tutorial_circ_waveguide>`; the Python port takes the propagation
+direction as an argument.
+
+.. tabs::
+
+   .. code-tab:: octave
+
+      start = [-R -R 10*mesh_res];
+      stop  = [ R  R 15*mesh_res];
+      [CSX, port{1}] = AddCircWaveGuidePort(CSX, 0, 1, start, stop, R*unit, 'TE11', 0, 1);
+
+      start = [-R -R length-10*mesh_res];
+      stop  = [ R  R length-15*mesh_res];
+      [CSX, port{2}] = AddCircWaveGuidePort(CSX, 0, 2, start, stop, R*unit, 'TE11', 0);
+
+   .. code-tab:: python
+
+      start = [-R, -R, 10*mesh_res]
+      stop  = [ R,  R, 15*mesh_res]
+      port[0] = fdtd.AddCircWaveGuidePort(1, start, stop, 'z', R*unit, 'TE11', excite=1)
+
+      start = [-R, -R, length-10*mesh_res]
+      stop  = [ R,  R, length-15*mesh_res]
+      port[1] = fdtd.AddCircWaveGuidePort(2, start, stop, 'z', R*unit, 'TE11')
+
+Generic Waveguide Port
+""""""""""""""""""""""
+
+For other cross-sections or modes, :func:`AddWaveGuidePort` and
+:class:`~openEMS.ports.WaveguidePort` take the transverse electric and magnetic
+field of the mode and its cutoff wavenumber ``kc``. The mode profile is given
+either as three field functions per field, which may use the coordinates
+``x``, ``y``, ``z``, ``rho`` and ``a``, or as HDF5 mode files, e.g. exported
+from a mode solver. The ``local_origin`` argument moves the origin of the mode
+coordinates. The rectangular and circular waveguide ports are built on top of
+this port, see their implementation for complete examples.
 
 Selection
 -----------
