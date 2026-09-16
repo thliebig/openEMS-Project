@@ -228,8 +228,9 @@ that serve as a fallback when the Virtual Family dataset is not available:
 
 ``phantom_head_298MHz.h5``
    3-layer ellipsoidal head phantom (skin / skull / brain) with tissue
-   properties at 298 MHz from the IT'IS database. Used by the
-   :ref:`7 T Loop Coil <octave_tutorial_mri_loop_coil>` tutorial.
+   properties at 298 MHz from the IT'IS database. Used by the 7 T Loop Coil
+   tutorial (:ref:`Octave <octave_tutorial_mri_loop_coil>` /
+   :ref:`Python <tutorial_mri_loop_coil>`).
    Domain: ±115 × ±90 × ±115 mm, 2.5 mm voxels (92 × 72 × 92 cells, 24 kB).
 
 ``phantom_body_128MHz.h5``
@@ -258,6 +259,7 @@ both files and documents the tissue properties used.
 .. seealso::
 
    * :ref:`octave_tutorial_mri_loop_coil` — 7 T MRI loop coil SAR simulation
+     (:ref:`Python version <tutorial_mri_loop_coil>`)
    * :ref:`octave_tutorial_mri_lp_birdcage` — 3 T birdcage coil B1 and SAR
    * :ref:`octave_tutorial_dipole_sar` — dipole SAR with a layered head phantom
    * :func:`AddDiscMaterial`, :func:`CreateDiscMaterial`,
