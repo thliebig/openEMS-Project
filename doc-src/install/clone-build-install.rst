@@ -113,11 +113,6 @@ Passing these arguments to enable, disable, or adjust extra features:
    Enable :program:`hyp2mat` for converting HyperLynx PCB layouts to simulation
    geometry. It still compiles, but is now unmaintained, not recommended.
 
-.. option:: --with-MPI
-
-   Build MPI engine version, the regular multi-thread engine is disabled. Only
-   needed for cluster, not recommended.
-
 .. option:: --disable-GUI
 
    Disable :program:`AppCSXCAD` GUI for viewing simulation models, useful for servers.

@@ -38,7 +38,6 @@ Modes (pick one; default: --check):
 Options:
   --python      Include Python binding deps (Cython, numpy, h5py, matplotlib)
   --disable-gui Exclude Qt and VTK-Qt deps (headless / server builds)
-  --with-mpi    Include MPI deps
   --with-ctb    Include Octave (Circuit Toolbox / Matlab interface)
   -h, --help    Show this help
 EOF
@@ -48,7 +47,6 @@ EOF
 MODE=check
 WITH_PYTHON=false
 WITH_GUI=true
-WITH_MPI=false
 WITH_OCTAVE=false
 
 while [[ $# -gt 0 ]]; do
@@ -58,7 +56,6 @@ while [[ $# -gt 0 ]]; do
     --auto)        MODE=auto ;;
     --python)      WITH_PYTHON=true ;;
     --disable-gui|--disable-GUI) WITH_GUI=false ;;
-    --with-mpi)    WITH_MPI=true ;;
     --with-ctb)    WITH_OCTAVE=true ;;
     -h|--help)     usage; exit 0 ;;
     *) printf 'Unknown option: %s\n\n' "$1" >&2; usage >&2; exit 1 ;;
@@ -110,7 +107,6 @@ declare -a PKGS_VTK_QT=()
 declare -a PKGS_GUI=()
 declare -a PKGS_PYTHON=()
 declare -a PKGS_OCTAVE=()
-declare -a PKGS_MPI=()
 
 case "$PM" in
   apt)
@@ -129,7 +125,6 @@ case "$PM" in
       cython3 python3-numpy python3-h5py python3-matplotlib python3-venv
     )
     PKGS_OCTAVE=( octave )
-    PKGS_MPI=( libopenmpi-dev openmpi-bin )
     ;;
 
   dnf)
@@ -145,7 +140,6 @@ case "$PM" in
       python3-Cython python3-numpy python3-h5py python3-matplotlib
     )
     PKGS_OCTAVE=( octave )
-    PKGS_MPI=( openmpi-devel )
     ;;
 
   apk)
@@ -161,7 +155,6 @@ case "$PM" in
       cython py3-numpy py3-h5py py3-matplotlib
     )
     PKGS_OCTAVE=( octave )
-    PKGS_MPI=( openmpi-dev )
     ;;
 
   pacman)
@@ -177,7 +170,6 @@ case "$PM" in
       cython python-numpy python-h5py python-matplotlib
     )
     PKGS_OCTAVE=( octave )
-    PKGS_MPI=( openmpi )
     ;;
 
   brew)
@@ -188,7 +180,6 @@ case "$PM" in
     PKGS_GUI=( qt5compat )
     PKGS_PYTHON=( python3 python-setuptools cython numpy python-matplotlib )
     PKGS_OCTAVE=( octave )
-    PKGS_MPI=( open-mpi )
     ;;
 
   pkg)
@@ -213,7 +204,6 @@ case "$PM" in
       PKGS_PYTHON=( python3 )
     fi
     PKGS_OCTAVE=( octave )
-    PKGS_MPI=( mpi/openmpi )
     ;;
 esac
 
@@ -233,7 +223,6 @@ if [[ "$WITH_GUI" == true ]]; then
 fi
 [[ "$WITH_PYTHON" == true && ${#PKGS_PYTHON[@]} -gt 0 ]] && ALL_PKGS+=( "${PKGS_PYTHON[@]}" )
 [[ "$WITH_OCTAVE" == true && ${#PKGS_OCTAVE[@]} -gt 0 ]] && ALL_PKGS+=( "${PKGS_OCTAVE[@]}" )
-[[ "$WITH_MPI"    == true && ${#PKGS_MPI[@]}    -gt 0 ]] && ALL_PKGS+=( "${PKGS_MPI[@]}" )
 
 # ── Privilege helper ──────────────────────────────────────────────────────────
 # brew: never sudo; everything else: passthrough if root, sudo otherwise.
@@ -355,11 +344,10 @@ _check_all() {
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 printf 'openEMS dependency check  [%s, pm: %s]\n' "$OS_ID" "$PM"
-printf 'Options: GUI=%-3s  Python=%-3s  Octave=%-3s  MPI=%-3s\n\n' \
+printf 'Options: GUI=%-3s  Python=%-3s  Octave=%-3s\n\n' \
   "$([[ $WITH_GUI    == true ]] && echo yes || echo no)" \
   "$([[ $WITH_PYTHON == true ]] && echo yes || echo no)" \
-  "$([[ $WITH_OCTAVE == true ]] && echo yes || echo no)" \
-  "$([[ $WITH_MPI    == true ]] && echo yes || echo no)"
+  "$([[ $WITH_OCTAVE == true ]] && echo yes || echo no)"
 
 [[ "$PM" == pacman ]] && \
   echo "Warning: Arch/Manjaro support is largely untested. Package names may be" \

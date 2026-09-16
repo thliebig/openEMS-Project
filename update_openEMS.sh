@@ -27,7 +27,6 @@ function help_msg {
   echo "	--with-hyp2mat 		enable hyp2mat build"
   echo "	--with-CTB		enable circuit toolbox"
   echo "	--disable-GUI		disable GUI build (AppCSXCAD)"
-  echo "	--with-MPI		enable MPI"
   echo "	--skip-dep-check	do not check for missing build dependencies"
   echo "        --with-tinyxml          download and build custom TinyXML from source,"
   echo "                                enabled by default on macOS as TinyXML is desupported"
@@ -203,10 +202,6 @@ function parse_args {
         echo "disabling AppCSXCAD build"
         BUILD_GUI="NO"
         ;;
-      --with-MPI)
-        echo "enabling MPI"
-        WITH_MPI=1
-        ;;
       --skip-dep-check)
         echo "skipping build dependency check"
         SKIP_DEP_CHECK=1
@@ -271,7 +266,6 @@ function dependency_check {
   local dep_args=()
   if [ "$BUILD_GUI" = "NO" ]; then dep_args+=("--disable-gui"); fi
   if [ "$BUILD_PY_EXT" -eq 1 ]; then dep_args+=("--python"); fi
-  if [ "$WITH_MPI" -eq 1 ]; then dep_args+=("--with-mpi"); fi
   if [ "$BUILD_CTB" -eq 1 ]; then dep_args+=("--with-ctb"); fi
 
   if ./scripts/install_deps.sh --check ${dep_args[@]+"${dep_args[@]}"}; then
@@ -348,7 +342,6 @@ NJOBS=$(python3 -c "import os; print(os.cpu_count())" || nproc || sysctl -n hw.n
 BUILD_HYP2MAT=0
 BUILD_CTB=0
 BUILD_GUI="YES"
-WITH_MPI=0
 BUILD_PY_EXT=0
 BUILD_TINYXML=0
 SKIP_DEP_CHECK=0
@@ -393,8 +386,7 @@ fi
 # build openEMS Project
 build "$BASEDIR" "$TMPDIR" "$NJOBS" "$LOG_FILE" "$STDOUT" \
       "-DBUILD_APPCSXCAD=$BUILD_GUI" \
-      "-DCMAKE_INSTALL_PREFIX=$INSTALL_PATH" \
-      "-DWITH_MPI=$WITH_MPI"
+      "-DCMAKE_INSTALL_PREFIX=$INSTALL_PATH"
 
 ##### additional packages #####
 

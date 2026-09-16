@@ -54,7 +54,7 @@ Features
 * Coordinate dependent excitation definitions (e.g. mode-profiles)
 * Matlab/Octave and Python-Interface
 * Flexible post-processing routines (mostly in Matlab/Octave)
-* Multi-threading, SIMD (SSE) and MPI support for parallel FDTD.
+* Multi-threading and SIMD (SSE) support for parallel FDTD.
 * Cross-platform support, including Linux, FreeBSD, macOS and Windows, and has been successfully built on x86, ARM, and POWER9 CPUs.
 
 Citation
