@@ -93,7 +93,7 @@ Documentation Locations
   ``openEMS-Project/openEMS/matlab``.
 
   - A custom script ``openEMS-Project/doc-src/octave/generate_octave_docs.py``
-    is used to is used to extract Octave docstrings as Markdown
+    is used to extract Octave docstrings as Markdown
     documentation (not restructuredText).
 
   - The Python documentation is generated from Python docstrings
@@ -101,19 +101,28 @@ Documentation Locations
 
   - Submit Pull Requests against ``CSXCAD.git`` and ``openEMS.git``.
 
-- **Examples and Tutorials**: This is the most underdeveloped
-  section of the documentation. Currently, only a few Python
-  tutorials are available, which are automatically generated
-  from the Python example source code from
-  ``openEMS-Project/openEMS/python/Tutorials/``.
+- **Examples and Tutorials**: Both the Python and the Octave/Matlab
+  tutorials are generated from the example source code itself:
 
-  - Submit Python examples to ``openEMS.git``, which is
-    automatically converted to an "article" by extracting
-    Python comments and interleaving them with Python code.
+  - ``openEMS-Project/openEMS/python/Tutorials/*.py`` via
+    ``doc-src/python/openEMS/convert_tutorials.py``.
 
-  - The author of this documentation page believes that
-    the auto-generation has serious limitations. Article-format
-    tutorials are seriously in need (or at least, this
-    auto-generator needs serious upgrade to become a 
-    full-featured "literate programming" system). But a plan
-    has not yet been worked out.
+  - ``openEMS-Project/openEMS/matlab/Tutorials/*.m`` via
+    ``openEMS-Project/openEMS/matlab/doc/convert_tutorials.py``.
+
+  - Both converters extract the comments of an example and interleave
+    them with its code to form an "article". Submit new examples to
+    ``openEMS.git``; no separate documentation page has to be written
+    for them.
+
+.. note::
+   Several paths below ``doc-src`` are symbolic links into the
+   submodules, so the page you are editing may well live in another
+   repository:
+
+   * ``doc-src/python/CSXCAD`` → ``CSXCAD/python/doc``
+   * ``doc-src/python/openEMS`` → ``openEMS/python/doc``
+   * ``doc-src/octave/Tutorials`` → ``openEMS/matlab/doc/Tutorials``
+
+   Check with ``ls -l`` before opening a Pull Request, and submit it
+   against the repository that actually holds the file.

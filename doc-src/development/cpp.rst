@@ -55,7 +55,7 @@ Install Basic Programs
 
        cd ..
 
-2. Build CSXCAD. The CMake variales ``-DFPARSER_ROOT_DIR``
+2. Build CSXCAD. The CMake variables ``-DFPARSER_ROOT_DIR``
    should be pointed to the install root paths of fparser,
    which are usually the same as ``-DCMAKE_INSTALL_PREFIX``.
 
@@ -70,7 +70,7 @@ Install Basic Programs
 
        cd ..
 
-3. Build openEMS. The CMake variales ``-DFPARSER_ROOT_DIR`` and
+3. Build openEMS. The CMake variables ``-DFPARSER_ROOT_DIR`` and
    ``-DCSXCAD_ROOT_DIR`` should be pointed to the install root paths
    of fparser and CSXCAD, which are usually the same as
    ``-DCMAKE_INSTALL_PREFIX``.
@@ -95,39 +95,82 @@ Install Basic Programs
 Install AppCSXCAD GUI (optional)
 ------------------------------------
 
-1. Build QCSXCAD:
+1. Build QCSXCAD. As above, ``-DCSXCAD_ROOT_DIR`` must point to the
+   install root path of CSXCAD.
 
 .. code-block:: console
 
     cd QCSXCAD
     mkdir build
     cd build
-    cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
+    cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS -DCSXCAD_ROOT_DIR=$HOME/opt/openEMS
     make
     make install
 
     cd ..
 
-2. Build AppCSXCAD:
+2. Build AppCSXCAD. It needs both ``-DCSXCAD_ROOT_DIR`` and
+   ``-DQCSXCAD_ROOT_DIR``.
 
 .. code-block:: console
 
     cd AppCSXCAD
     mkdir build
     cd build
-    cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
+    cmake ../ -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS -DCSXCAD_ROOT_DIR=$HOME/opt/openEMS -DQCSXCAD_ROOT_DIR=$HOME/opt/openEMS
     make
     make install
 
     cd ..
 
+.. _local_config_cmake:
+
+Persistent CMake Options: ``localConfig.cmake``
+--------------------------------------------------
+
+Repeating the same ``-D`` options on every ``cmake`` invocation becomes
+tedious when a submodule is rebuilt often. CSXCAD, openEMS, QCSXCAD and
+AppCSXCAD therefore read an optional ``localConfig.cmake`` from their
+respective source root, before any dependency is looked up. Any variable
+set there acts as the default, so the options can be written down once
+instead of being retyped:
+
+.. code-block:: cmake
+
+    # openEMS-Project/openEMS/localConfig.cmake
+    set(CMAKE_INSTALL_PREFIX $ENV{HOME}/opt/openEMS)
+    set(FPARSER_ROOT_DIR     $ENV{HOME}/opt/openEMS)
+    set(CSXCAD_ROOT_DIR      $ENV{HOME}/opt/openEMS)
+
+With that file in place, the build reduces to:
+
+.. code-block:: console
+
+    cd openEMS/build
+    cmake ../
+    make
+    make install
+
+These files are listed in ``.gitignore`` and are the usual way to
+configure a development machine. Options given on the command line still
+win, so a one-off build against a different prefix needs no edit of the
+file.
+
+The top-level ``openEMS-Project`` build reads a ``localConfig.cmake`` of
+its own in the same way, which is useful when the unified build is driven
+by CMake directly instead of by ``update_openEMS.sh``.
+
+.. note::
+   ``fparser`` does not read ``localConfig.cmake``; it only needs
+   ``-DCMAKE_INSTALL_PREFIX`` anyway.
+
 openEMS search path
 --------------------
 
-After the build is complete, add ``~/openEMS/bin`` into your search
+After the build is complete, add ``~/opt/openEMS/bin`` into your search
 path::
 
-    export PATH="$HOME/openEMS/bin:$PATH"
+    export PATH="$HOME/opt/openEMS/bin:$PATH"
 
 You need to write this line into your shell's profile, such as ``~/.bashrc``
 or ``~/.zshrc`` to make this change persistent.

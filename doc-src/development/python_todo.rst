@@ -16,7 +16,7 @@ One can classify these missing features into two categories.
 1. The C++ API was not linked to Python.
 
  - Solving this problem is relatively easy. One can add the missing
-   C++ API binding without reimplementating any logic.
+   C++ API binding without reimplementing any logic.
 
 2. Both developers and ordinary openEMS users have contributed
    high-level pre-processing and
@@ -26,7 +26,7 @@ One can classify these missing features into two categories.
  - This problem is more difficult to solve, as the same logic must
    be reimplemented in Python.
 
-The following list is list of missing Python features for reference by
+The following list of missing Python features is meant for reference by
 developers and end users.
 
 Known Problems
@@ -44,29 +44,6 @@ Some model importing and exporting functions are unimplemented
   :meth:`~CSXCAD.CSProperties.CSProperties.AddPolyhedronReader`.
   To export models, use :program:`AppCSXCAD`.
 
-Many transmission line ports are unimplemented
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- Type 2: Missing high-level feature.
-
-- Affected APIs: :func:`AddCurvePort`, :func:`AddStripLinePort`,
-  :func:`AddCPWPort`, :func:`AddCircWaveGuidePort`.
-
-- Workaround:
-
-  1. **Create Excitation**: Create the required excitations
-  manually via :meth:`~CSXCAD.ContinuousStructure.AddExcitation`,
-  with :meth:`~CSXCAD.CSProperties.CSPropExcitation.SetWeightFunction`
-  to set the required field pattern, derive :ref:`concept_primitives`
-  of the required geometrical shape.
-
-  2. **Create Probes**:
-  Along the transmission line, add voltage
-  and current probes with :meth:`~CSXCAD.ContinuousStructure.AddProbe`,
-  derive :ref:`concept_primitives` of the required geometrical shape,
-  and finally calculate S-parameters from measured raw voltage and
-  currents.
-
 Mur ABC phase velocity parameter adjustment is unimplemented
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -79,33 +56,34 @@ Mur ABC phase velocity parameter adjustment is unimplemented
 
 - Workaround: None.
 
-Dispersive materials are not implemented.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Comment: The underlying ``Set_Mur_PhaseVel()`` is already declared in
+  ``openEMS/python/openEMS/openEMS.pxd``, it is only never called. The
+  missing piece is an optional argument of
+  :meth:`~openEMS.openEMS.SetBoundaryCond` that forwards it.
+  Note that this is unrelated to the *local* absorbing boundary
+  property :class:`~CSXCAD.CSProperties.CSPropAbsorbingBC`, whose
+  ``PhaseVelocity`` is available in Python.
 
-- Type 1+2: Missing C++ binding and high-level feature.
+Dispersive material fitting helpers are unimplemented
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Affected APIs: :func:`AddDebyeMaterial`,
-  :func:`AddDjordjevicSarkarMaterial`, :func:`AddLorentzMaterial`,
+- Type 2: Missing high-level feature.
+
+- Affected APIs: :func:`AddDjordjevicSarkarMaterial`,
   :func:`CalcDebyeMaterial`, :func:`CalcDjordjevicSarkarApprox`,
-  :func:`CalcDrudeMaterial`
-  :func:`CalcLorentzMaterial`
+  :func:`CalcDrudeMaterial`, :func:`CalcLorentzMaterial`.
 
-- Workaround:
+- Workaround: None. These Octave functions are helper functions that
+  calculate the model's output curves for the purpose of fitting
+  parameters and preparing a simulation. No C++ APIs exist because
+  they're not actually used in the simulation.
 
-  - For :func:`AddDebyeMaterial`, :func:`AddLorentzMaterial`,
-    manually create the respective CSXCAD objects via
-    :meth:`~CSXCAD.CSProperties.CSProperties.fromType` or
-    :meth:`~CSXCAD.CSProperties.CSProperties.fromTypeName`,
-    and manually set the model parameters via
-    :meth:`~CSXCAD.CSProperties.CSProperties.SetAttributeValue`.
-
-  - For :func:`AddDjordjevicSarkarMaterial`, :func:`CalcDebyeMaterial`,
-    :func:`CalcDjordjevicSarkarApprox`, :func:`CalcDrudeMaterial`,
-    :func:`CalcLorentzMaterial`, no workaround is available. These
-    Octave functions are helper functions that calculate the model's
-    output curves for the purpose of fitting parameters and preparing
-    a simulation. No C++ APIs exist because they're not actually used
-    in the simulation.
+- Comment: The Debye and Lorentz *materials* themselves are available
+  in Python as :class:`~CSXCAD.CSProperties.CSPropDebyeMaterial` and
+  :class:`~CSXCAD.CSProperties.CSPropLorentzMaterial`, including their
+  model parameters. Only the fitting helpers listed above, and the
+  Djordjevic-Sarkar model built on top of them, are missing. See
+  :ref:`dispersive_materials`.
 
 Delay fidelity post-processing for UWB systems is unimplemented
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -142,20 +120,10 @@ but they're themselves not part of the simulator.
 
 To analyze RF circuits in Python, use other Python RF
 engineering libraries, such as :program:`scikit-rf`. This is a 3rd-party
-project not associated with openEMS (although the author of this
-page happens to be a contributor of both).
+project not associated with openEMS.
 
-Consersely, :program:`scikit-rf` contains many sophisticated
+Conversely, :program:`scikit-rf` contains many sophisticated
 calibration, de-embedding and signal transform algorithms
 which represented multiple years of work. If you encounter openEMS
 examples with :program:`scikit-rf`, Matlab/Octave alternatives
 would be even less straightforward to find.
-
-.. note::
-
-   Development idea: To lower the language barrier, as
-   developers, perhaps we can provide some standalone, single-purpose
-   Octave and Python tools callable from the command-line tools,
-   such as a Lorentz material fitter in Octave, or a SOLT calibration
-   tool in Python? This enables users to perform a task without
-   using the language.

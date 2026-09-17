@@ -59,7 +59,14 @@ satisfactory fit.
    "With four parameters I can fit an elephant,
    and with five I can make him wiggle his trunk."
 
-   **Python**. The functions described below are not ported to Python yet.
+   **Python**. The Octave functions described below have no direct Python
+   equivalent, but the Debye, Drude and Lorentz materials themselves are
+   available as :class:`~CSXCAD.CSProperties.CSPropDebyeMaterial` and
+   :class:`~CSXCAD.CSProperties.CSPropLorentzMaterial`, whose model
+   parameters are set with
+   :meth:`~CSXCAD.CSProperties.CSPropDispersiveMaterial.SetDispersiveMaterialProperty`.
+   The Djordjevic-Sarkar model and the ``Calc*`` curve-fitting helpers
+   are Octave-only, see :ref:`develop_unimpl_python`.
 
    **Djordjevic-Sarkar**. This is a special helper model for creating
    an approximate but realistic Debye model for a FR-4 circuit board,
