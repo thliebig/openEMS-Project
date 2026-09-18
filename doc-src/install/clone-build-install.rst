@@ -117,6 +117,13 @@ Passing these arguments to enable, disable, or adjust extra features:
 
    Disable :program:`AppCSXCAD` GUI for viewing simulation models, useful for servers.
 
+.. option:: --skip-dep-check
+
+   Skip the automatic build-dependency check. By default,
+   ``update_openEMS.sh`` runs :ref:`install_deps.sh <install_deps_script>`'s
+   ``--check`` mode before building, and warns (without aborting) if a
+   required package appears to be missing.
+
 .. option:: --with-tinyxml
 
    Download and build a custom installation of TinyXML from source, need network

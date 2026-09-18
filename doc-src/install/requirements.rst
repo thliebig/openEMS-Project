@@ -66,8 +66,45 @@ The following list shows the minimum dependency versions supported by openEMS
 
   * VTK's Qt must be linked to the same Qt version as QCSXCAD/AppCSXCAD.
 
-Install From Package Manager
--------------------------------
+Install Dependencies From Package Manager
+--------------------------------------------
+
+.. _install_deps_script:
+
+.. tip::
+   **Automated dependency check/install.** ``scripts/install_deps.sh``,
+   included in the repository cloned in :ref:`clone_build_install_src`
+   (see below), detects the current OS and package manager (``apt``,
+   ``dnf``, ``apk``, ``pacman``, ``brew`` or ``pkg``) and checks or
+   installs the required packages directly, without having to look up the
+   right list below. Once the repository is cloned, run:
+
+   .. code-block:: bash
+
+       # list what's missing, and the command to install it
+       ./scripts/install_deps.sh --check --python --with-ctb
+
+       # install missing packages, after confirmation
+       ./scripts/install_deps.sh --install --python --with-ctb
+
+   Add ``--disable-gui`` for a headless build without :program:`AppCSXCAD`,
+   and use ``--auto`` instead of ``--install`` to install without
+   prompting. This is the same script that ``update_openEMS.sh`` runs
+   automatically (in ``--check`` mode) before every build, and that the
+   project's own CI uses (in ``--auto`` mode) to prepare each test runner
+   — see :ref:`clone_build_install_src`'s ``--skip-dep-check`` option.
+
+   It also covers Arch, Manjaro, and other ``pacman``-based distributions,
+   which the manual per-distro instructions below don't include.
+
+   Like the per-distro package lists below, the packages ``install_deps.sh``
+   installs can go out of date as distributions rename or reorganize
+   packages over time. If it reports a missing or wrong package on a
+   supported distribution, please report it or send a pull request.
+
+   The per-distro instructions below remain useful as a reference, for
+   distributions the script doesn't yet detect, or to see exactly which
+   packages are required and why.
 
 Alpine
 ~~~~~~~
