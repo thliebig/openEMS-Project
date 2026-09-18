@@ -23,20 +23,12 @@ Cylindrical
 ~~~~~~~~~~~
 
 As an extension of the FDTD algorithm, openEMS also supports meshing
-in cylindrical coordinates. This is useful for simulating round
-structures without the "staircasing" error. The cylindrical mesh
-can be uniform or non-uniform, however, the cylindrical mesh
-system also creates a unique problem for FDTD - the origin is a
-coordinate singularity. At a fixed angular resolution, all cells
-near the origin becomes progressively smaller. Therefore, openEMS
-also has a special feature called "subgridding" to reduce the
-angular resolution by dropping half of the azimuthal mesh lines
-within one or multiple given radii.
-
-Both features help achieving resource-saving benefits in cylindrical
-coordinate simulations, similar to the non-uniform Cartesian mesh.
-As a showcase, an antenna for medical Magnetic Resonance Imaging (MRI)
-has been successfully simulated this way in a research project.
+in cylindrical coordinates, useful for simulating round structures
+without the "staircasing" error. The cylindrical mesh can be uniform
+or non-uniform, just like the Cartesian mesh above. See
+:ref:`concept_cylindrical_fdtd` for why this matters, the coordinate
+singularity it introduces at the origin, and how "subgridding"
+addresses it.
 
 Create a Mesh
 ---------------

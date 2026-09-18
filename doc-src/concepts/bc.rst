@@ -166,6 +166,8 @@ Two kinds of Absorbing Boundary Conditions are implemented in openEMS.
       :func:`SetBoundaryCond`'s optional argument ``MUR_PhaseVelocity``.
       For Python, this API is currently unimplemented.
 
+.. _concept_bc_pml:
+
 #. **Perfectly Matched Layer (PML)**. This is the
    second-generation boundary condition proposed in the 1990s, modeling
    the behavior of a hypothetical EM wave-absorbing material. Unlike

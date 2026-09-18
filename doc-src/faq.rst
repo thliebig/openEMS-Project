@@ -135,6 +135,25 @@ Small oscillations in the energy after the excitation ends are normal
 (see above); a steady plateau or slow rise usually points to a boundary
 condition problem or the DC issue described above.
 
+.. rubric:: My simulation becomes unstable (energy diverges, fields turn to NaN). What should I check?
+
+Given a valid mesh, FDTD's explicit update is inherently stable as long as
+the timestep respects the CFL/Rennings2 limit — which openEMS sets
+automatically, see :ref:`concept_numerical_method`. In practice, a
+diverging simulation is most often caused by a **PML placed too close to a
+radiating structure**. This applies to any intentional radiator (an
+antenna) as well as unintentional ones (a stray open trace, an
+unterminated port). Fringe fields and evanescent waves intruding into the
+:ref:`PML <concept_bc_pml>` can destabilize it. Move the structure at
+least :math:`\lambda/4` away from the PML boundary, or switch that
+boundary to Mur's ABC.
+
+If that doesn't apply, re-check the mesh for degenerate or extremely
+small/large cells and confirm the drawing unit is set correctly — an
+inconsistent unit scale can produce implausible material or geometry
+values that destabilize the simulation indirectly rather than through FDTD
+itself.
+
 .. rubric:: Can I use a sinusoidal excitation for frequency-domain analysis?
 
 Yes. ``SetSinusExcite`` drives the structure at a single continuous-wave
