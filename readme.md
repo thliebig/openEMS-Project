@@ -18,3 +18,11 @@ openEMS is a free and open electromagnetic field solver using the FDTD method. O
 
 [https://docs.openems.de/en/latest/install/index.html](https://docs.openems.de/en/latest/install/index.html)
 
+# Contributing
+
+Pull requests are welcome. [AGENTS.md](AGENTS.md) has the working rules — build,
+submodule handling, documentation and commit conventions — and applies to human
+and AI-assisted contributions alike. Disclosure and sign-off requirements are in
+[AI_POLICY.md](AI_POLICY.md). The simulation code lives in the submodules; each
+has its own `AGENTS.md`.
+

@@ -11,6 +11,17 @@ Add a tag to your commit message when AI tools were involved:
 
 The same applies to pull request descriptions and issue reports: state at the top whether AI was used.
 
+## Sign-off
+
+Every commit must carry a `Signed-off-by:` line certifying the [Developer Certificate of Origin](https://developercertificate.org/); `git commit -s` adds it. It is always the **last** line, with the AI tag directly above it:
+
+```
+Assisted-by: <tool>
+Signed-off-by: Your Name <your@email.example>
+```
+
+Use exactly these trailers. Do not add `Co-Authored-By:`, session identifiers or links inserted by AI tooling, or other automatically generated trailers — the tag above is the disclosure this project asks for.
+
 ## Responsibility
 
 The contributor is fully responsible for every line of code, script, documentation, or configuration submitted, regardless of how it was produced. Do not submit AI-generated content you have not read, understood, and verified. Reviewers will apply extra scrutiny to `Generated-by` submissions.
