@@ -204,7 +204,7 @@ If Python is also needed for an offline installation, use:
 
 .. code-block:: bash
 
-    ./openEMS_Project.sh --python --python-use-network disable
+    ./update_openEMS.sh --python --python-use-network disable
 
 Before running this script, all Python packages marked as optional
 in the :ref:`install_requirements_src` page should be installed,

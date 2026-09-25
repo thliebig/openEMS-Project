@@ -581,7 +581,7 @@ Void Linux
 
       # To build a custom VTK, first remove the system package's
       # development files
-      sudo xkps-remove vtk-dev
+      sudo xbps-remove vtk-devel
 
       # Install VTK build-time dependencies, prepare to build it from source!
       sudo xbps-install -S qt6-base-devel qt6-declarative-devel qt6-qt5compat-devel
@@ -688,7 +688,13 @@ so, follow this guide.
   .. code-block:: bash
 
       sudo pkg install py311-setuptools py311-wheel py311-setuptools-scm \
-                       py311-cython3 py311-numpy py311-h5py py311-matplotlib
+                       py311-numpy py311-h5py py311-matplotlib
+
+  .. note::
+
+     Cython is not listed above: the name of its FreeBSD port varies
+     between quarterly snapshots. Install it via ``pip install cython``
+     instead.
 
 - To use ParaView to visualize simulation results (recommended):
 
@@ -756,12 +762,6 @@ macOS
 
       brew install python-setuptools cython numpy python-matplotlib
 
-- To use ParaView to visualize simulation results (recommended):
-
-  .. code-block:: bash
-
-      brew install paraview
-
 - Skip to :ref:`clone_build_install_src` and continue installation.
 
 Windows
@@ -773,7 +773,7 @@ Please skip to
 :ref:`Install Ready-Made Package on Windows <install_readymade_windows_package_src>`
 for more information.
 
-The follow instructions are given for developers only, one should follow
+The following instructions are given for developers only, one should follow
 these instructions only if a manual install is needed during development.
 
 One can build openEMS on Windows using two different methods. The first

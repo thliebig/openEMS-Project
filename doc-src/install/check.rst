@@ -171,7 +171,7 @@ source code files as Python modules, creating confusing errors.
 
 .. code-block:: console
 
-    $ cd /  # Important: always leave "python" first.
+    $ cd /  # Important: leave the source code "python" directories first.
 
 Next, type the following into the command window and compare the
 output:
