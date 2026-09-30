@@ -225,7 +225,11 @@ def render_function(cwd, cachedir, mfile, funcname):
         # not version-dependent, and keep whatever the help text was as body.
         func_usage = signature
         func_prototype = strip_return_value(signature)
-        body = "\n".join([first_line, rest]) if first_line else rest
+        if first_line.lower().startswith("undocumented function"):
+            # Octave's marker, not a description: do not render it.
+            body = rest
+        else:
+            body = "\n".join([first_line, rest]) if first_line else rest
     else:
         func_usage = first_line
         body = rest

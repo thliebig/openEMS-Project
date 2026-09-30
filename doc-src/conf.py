@@ -17,6 +17,9 @@ import sys
 import os
 import subprocess
 import sphinx_rtd_theme
+from sphinx.util import logging as sphinx_logging
+
+logger = sphinx_logging.getLogger(__name__)
 
 
 # find the the parent documentation directory in absolute path
@@ -35,10 +38,20 @@ def run_before_docs(app):
     )
     retval.check_returncode()
 
+    # Capture the octave generator's output so that what it reports -- an
+    # M-file with no help text, or one not assigned to an API group -- becomes
+    # a Sphinx warning and is counted, instead of scrolling past in the log.
     retval = subprocess.run(
         ["python3", "generate_octave_docs.py"],
-        cwd=str(docroot / "octave/")
+        cwd=str(docroot / "octave/"),
+        capture_output=True, text=True
     )
+    print(retval.stdout, end="")
+    if retval.stderr:
+        print(retval.stderr, end="", file=sys.stderr)
+    for line in (retval.stdout + retval.stderr).splitlines():
+        if line.startswith(("Note:", "Warning:", "ERROR:")):
+            logger.warning("octave reference: %s", line.split(":", 1)[1].strip())
     retval.check_returncode()
 
     retval = subprocess.run(
