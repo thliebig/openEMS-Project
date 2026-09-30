@@ -61,6 +61,87 @@ By default, the mesh coordinates have a physical unit of meter.
 This is rarely desirable since most 3D models for RF devices are
 drawn in millimeters or micrometers.
 
+Adding Mesh Lines
+~~~~~~~~~~~~~~~~~~
+
+A mesh is a list of line positions per axis, in drawing units. Lines can be
+set as a whole or added one group at a time; both are needed in practice, since
+a structure is usually meshed by first laying down a background grid and then
+adding the lines that specific features require.
+
+.. tabs::
+
+   .. code-tab:: octave
+
+      % the mesh is a plain struct with one vector per axis
+      mesh.x = -100 : res : 100;
+      mesh.y = -100 : res : 100;
+
+      % add the lines a feature needs, e.g. a sheet at z = 0
+      mesh.z = [-50 0 50];
+
+      % hand the mesh to CSXCAD
+      csx = DefineRectGrid(csx, unit, mesh);
+
+   .. code-tab:: python
+
+      import numpy as np
+
+      mesh = csx.GetGrid()
+      mesh.SetDeltaUnit(unit)
+
+      mesh.SetLines('x', np.arange(-100, 100 + res, res))
+      mesh.SetLines('y', np.arange(-100, 100 + res, res))
+
+      # add the lines a feature needs, e.g. a sheet at z = 0
+      mesh.SetLines('z', [-50, 50])
+      mesh.AddLine('z', 0)
+
+:meth:`~CSXCAD.CSRectGrid.CSRectGrid.SetLines` replaces the lines of an axis,
+:meth:`~CSXCAD.CSRectGrid.CSRectGrid.AddLine` adds to them; both sort the
+result and drop duplicates, so lines may be given in any order. Read them back
+with :meth:`~CSXCAD.CSRectGrid.CSRectGrid.GetLines`, which is the usual way to
+place something at the edge of the simulation box.
+
+Smoothing
+~~~~~~~~~~
+
+The lines placed so far are the ones the geometry demands; the gaps between
+them are usually too large. Smoothing fills each gap with additional lines,
+respecting a maximum resolution and a maximum ratio between neighboring cell
+sizes:
+
+.. tabs::
+
+   .. code-tab:: octave
+
+      % fill the gaps in all three directions, max. cell size "res",
+      % grading ratio 1.5
+      mesh = SmoothMesh(mesh, res, 1.5);
+
+      csx = DefineRectGrid(csx, unit, mesh);
+
+   .. code-tab:: python
+
+      mesh.SmoothMeshLines('all', res, ratio=1.5)
+
+In Matlab/Octave, ``SmoothMesh`` picks between ``SmoothMeshLines``,
+``SmoothMeshLines2`` and ``RecursiveSmoothMesh`` per axis, and takes an
+``allowed_max_ratio`` to bound the grading. The Python
+:meth:`~CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines` implements the first of
+those.
+
+.. warning::
+   The ``ratio`` argument steers how lines are distributed within one gap, but
+   it is not enforced as a post-condition: a gap next to a much finer cell can
+   still end up with a jump larger than ``ratio``. After smoothing, check the
+   result — ``AnalyseMesh(lines)`` in Matlab/Octave reports the smallest and
+   largest cell of one axis and the worst grading ratio it contains.
+
+Fixed lines must survive smoothing, which is what the ``highres`` trick in the
+:ref:`1/3-2/3 rule <mesh_1_3_2_3>` below is about: smoothing never subdivides
+an interval that is already smaller than ``max_res``.
+
 .. important::
 
    In some transmission line solvers, the unit of measurement is arbitrary
@@ -171,6 +252,8 @@ may be desirable to increase simulation speed around unimportant regions::
     wavelength = v / f_max / unit
     res = wavelength / 10
 
+.. _mesh_1_3_2_3:
+
 1/3-2/3 Rule
 ---------------
 
@@ -200,10 +283,6 @@ lines within our handcrafted cells, effectively undoing the 1/3-2/3 rule.
 Using the `highres` interval works around the problem, since
 :meth:`~CSXCAD.CSRectGrid.CSRectGrid.SmoothMeshLines` is not allowed to
 subdivide an interval smaller than ``res``. A factor of 1.5 is recommended.
-
-.. todo::
-
-   Explain other workarounds, such as creating all lines manually.
 
 Courant-Friedrichs-Lewy (CFL) Criterion
 ----------------------------------------
