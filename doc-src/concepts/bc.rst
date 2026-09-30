@@ -112,12 +112,11 @@ Mathematically, both PEC and PMC are Dirichlet boundary conditions
 that enforce fixed field values (e.g. zero).
 
 .. note::
-   For our simulation, instead of explicitly modeling metal
-   plates, we can model a vacuum with nothing inside, taking advantage
-   of the PEC boundary conditions at ``z_min`` and ``z_max`` for
-   fast computation. However, this is beyond the scope of this tutorial,
-   and it won't capture the fringe fields above and below. We won't use
-   PEC or PMC in this example.
+   Reflecting boundaries can replace explicitly modeled metal: a vacuum
+   box with PEC at ``z_min`` and ``z_max`` models a parallel-plate region
+   without any primitive, and costs nothing to simulate. The price is that
+   the fringe fields above and below the plates are gone, since there is no
+   space beyond the boundary for them to exist in.
 
 Absorbing Boundary Conditions (ABC)
 -------------------------------------

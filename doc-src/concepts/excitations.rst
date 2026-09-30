@@ -102,7 +102,7 @@ Add a 400 MHz sinusoidal line excitation (short dipole):
       csx = AddExcitation(
           csx, ...
           'infDipole', ...
-          1, ...            % E-field
+          0, ...            % E-field, soft
           [1 0 0] ...       % excitation vector
       );
       start = [-dipole_length/2 0 0];
@@ -124,8 +124,8 @@ Add a 400 MHz sinusoidal line excitation (short dipole):
       dipole_length = 10
 
       inf_dipole = csx.AddExcitation(
-          'excite',
-          0,         # E-field
+          'infDipole',
+          0,         # E-field, soft
           [1, 0, 0]  # excitation vector
       )
 
@@ -215,8 +215,24 @@ Add a Gaussian pulse as a TFSF source:
 
    .. code-tab:: python
 
-      # Python
-      TBD.
+      import numpy as np
+
+      fdtd.SetGaussExcite(0.5 * (f_start + f_stop), 0.5 * (f_stop - f_start))
+
+      inc_angle = 0                                      # incident angle on the x-axis
+      k_dir = [np.cos(np.deg2rad(inc_angle)),            # plane wave direction
+               np.sin(np.deg2rad(inc_angle)), 0]
+      E_dir = [0, 0, 1]                                  # polarization --> E_z
+      f0 = 500e6       # frequency for numerical phase velocity compensation
+
+      pw_exc = csx.AddExcitation('plane_wave', exc_type=10, exc_val=E_dir)
+      pw_exc.SetPropagationDir(k_dir)
+      pw_exc.SetFrequency(f0)
+
+      # source is in the box defined by start and stop
+      start = [-100, -100, -100]
+      stop  = [ 100,  100,  100]
+      pw_exc.AddBox(start, stop)
 
 Weighting Function
 --------------------
@@ -330,89 +346,13 @@ Example
         %
         % By default this region is a vacuum, you may want to fill
         % this region with your own materials too.
-        start = [0 0 0]
-        stop  = [0 0 0]
+        start = [0 0 0];
+        stop  = [0 0 coax_length];
         csx = AddCylindricalShell(
             csx, "excite", ...
             0, ...
-            ex_start, ...
-            ex_stop, ...
-            (coax_inner_od + coax_outer_id) * 0.5, ...
-            (coax_outer_id - coax_inner_od) ...
-        );
-
-- Excite a coaxial transmission line excitation in Cartesian
-  coordinates ``(x, y, z)``, for a wave traveling along any axis.
-
-  .. tabs::
-
-     .. code-tab:: octave
-
-        % x, y, r_o, r_i are placeholders
-        func_x = 'x / (x * x + y * y) * (sqrt(x * x + y * y) < r_o) * (sqrt(x * x + y * y) > r_i)';
-        func_y = 'y / (x * x + y * y) * (sqrt(x * x + y * y) < r_o) * (sqrt(x * x + y * y) > r_i)';
-
-        % In a coax, the electric field's polarization is zero along the
-        % axis of propagation, and only exists along two axes orthogonal
-        % to the propagation direction.
-        %
-        % Depending on the actual field, the weighting function can be
-        %
-        %   * (  0, f_y, f_z)
-        %   * (f_x,   0, f_y)
-        %   * (f_x, f_y,   0)
-        %
-        % So our first problem is to rewrite the "x", "y" in the strings
-        % to the actual two axes orthogonal to the propagation direction
-
-        % change dir to {0, 1, 2} for propagating along the {x, y, z} axis
-        dir = 0;
-
-        % determine two direction indexes orthogonal to propagation direction
-        dir_ortho1 = mod(dir + 1, 3)
-        dir_ortho2 = mod(dir + 2, 3)
-
-        % determine the variable names orthogonal to propagation direction
-        dir_names = {'x', 'y', 'z'};
-
-        % Matlab/Octave uses 1-based index
-        dir_str = dir_names{dir + 1};
-        dir_ortho1_str = dir_names{dir_ortho1 + 1};
-        dir_ortho2_str = dir_names{dir_ortho2 + 2};
-
-        % substitute variable names in weighting function strings
-        func_x = strrep(func_x, 'x', dir_ortho1_str)
-        func_x = strrep(func_x, 'y', dir_ortho1_str)
-        func_y = strrep(func_y, 'x', dir_ortho2_str)
-        func_y = strrep(func_y, 'y', dir_ortho2_str)
-
-        % construct weighting function arrays
-        func_E{dir + 1} = '0';
-        func_E{dir_ortho1 + 1} = func_x;
-        func_E{dir_ortho2 + 1} = func_y;
-
-        % construct excitation vector
-        %
-        % shown here for clarity, it's not necessary, the unused polarization
-        % is masked by the zero weighting function anyway
-        excv = [1 1 1]
-        excv{dir + 1} = 0
-
-        csx = AddExcitation(csx, "excite", 0, excv);
-        csx = SetExcitationWeight(csx, "excite", func_E);
-
-        % Create a 2D disc to excite the region between the inner
-        % and outer conductor.
-        %
-        % By default this region is a vacuum, you may want to fill
-        % this region with your own materials too.
-        start = [0 0 0]
-        stop  = [0 0 0]
-        csx = AddCylindricalShell(
-            csx, "excite", ...
-            0, ...
-            ex_start, ...
-            ex_stop, ...
+            start, ...
+            stop, ...
             (coax_inner_od + coax_outer_id) * 0.5, ...
             (coax_outer_id - coax_inner_od) ...
         );

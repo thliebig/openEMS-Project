@@ -123,85 +123,49 @@ required:
 Models and Simulations Reuse
 ------------------------------
 
-It's possible to serialize a CSXCAD model or a full openEMS simulation
-to ``.xml`` files on disk. The simulations can then be replayed without
-accessing to the original scripts.
+An ``.xml`` file on disk can be replayed without the script that produced it,
+but how much of the setup it carries depends on the interface used, because
+the two bindings were built differently. The Matlab/Octave binding is an XML
+generator: every function call only writes to the file, and ``openEMS`` is
+then started as an external program. The Python binding calls CSXCAD and
+openEMS as libraries, so writing XML is optional and has to be asked for.
 
-The development of the Matlab/Octave and Python bindings took
-different paths, as a result, they behave differently in terms of
-reusing models and simulations.
+.. list-table::
+   :header-rows: 1
+   :widths: 40 30 30
 
-Matlab/Octave
-"""""""""""""
+   * -
+     - Matlab/Octave
+     - Python
+   * - Write geometry only
+     - ``struct_2_xml``
+     - :meth:`CSXCAD.ContinuousStructure.Write2XML`
+   * - Write geometry and simulation
+     - ``WriteOpenEMS``
+     - :meth:`openEMS.openEMS.Write2XML`
+   * - Read a file back in
+     - not possible
+     - ``ReadFromXML`` on either class
+   * - Replay with ``openEMS file.xml``
+     - always
+     - only if the file was written
 
-The Matlab/Octave binding was written as a pure "XML generator frontend"
-to CSXCAD, and the openEMS executable was used as an "executable backend".
-All Matlab/Octave operations (such as geometries and simulation
-settings) are only wrappers for the underlying ``.xml`` file writer. Once
-generated, openEMS is launched and takes over the simulation independently.
-As a result, the same ``.xml`` file can be directly used to replay the same
-simulation via the ``openEMS`` command-line in the future, even without the
-source code. For example, it can be useful for constructing a simulation on
-the local machine, but running simulation on a headless server::
+Being able to replay matters for running a simulation somewhere other than
+where it was built, e.g. constructing it on a laptop and running it on a
+headless server::
 
     openEMS simulation.xml
 
-However, since the Matlab/Octave binding is only an ``.xml`` generator without
-direct access to CSXCAD itself, the generated ``.xml`` file is "a one-way street"
-that can't be reloaded as a Matlab/Octave data structure after the fact.
-Source code must be kept if the generated structure or simulation needs any
-future modifications. Overall, the Matlab/Octave binding works like a static
-website generator. One can generate web pages, but can’t edit the HTML files
-back into the source format.
-
-Python
-"""""""
-
-In the Python binding, a decision was made to create a library-level binding to
-both CSXCAD and openEMS. When geometries are created, rather than generating the
-matching ``.xml`` code, it uses the actual functions and internal data structures
-within CSXCAD and openEMS.
-
-This design decision leads to different consequences.
-Since one can start a simulation by invoking openEMS as
-a library directly, there's no need to call any external command. Saving
-``.xml`` files are optional.  As a result, without explicitly serializing
-these data structures on disk as ``.xml`` files, no Python simulations can
-be externally viewed or replayed by default. On the other hand, if ``.xml``
-files are explicitly saved, it's possible to save and reload models and
-simulations thanks to the library-level access.
-
-To save or load models, use :class:`~CSXCAD.ContinuousStructure`'s
-:meth:`~CSXCAD.ContinuousStructure.Write2XML` or
-:meth:`~CSXCAD.ContinuousStructure.ReadFromXML`.
-To save or load both models and simulation parameters, use
-:class:`~openEMS.openEMS`'s own :meth:`~openEMS.openEMS.Write2XML` and
-:meth:`~openEMS.openEMS.ReadFromXML`.
-
-In the past, :meth:`~CSXCAD.ContinuousStructure.Write2XML` and
-:meth:`~CSXCAD.ContinuousStructure.ReadFromXML` were only implemented
-in CSXCAD, not openEMS. Thus, no simulation parameters could be saved or
-reloaded, because they were not controlled by CSXCAD. To restart a
-simulation from CSXCAD-only ``.xml`` file, one must manually reconstruct
-a :class:`~openEMS.openEMS` instance with external simulation parameters.
-In the latest versions, one can save both CSXCAD and openEMS data structures
-using the method described above. The saved ``.xml`` simulation file can
-be replayed by :program:`openEMS` independent of the script.
+In Matlab/Octave this is free, but one-way: the generated file cannot be
+loaded back into a Matlab/Octave structure, so the script remains the only
+editable form of the model. In Python both directions work, which is what
+makes round-tripping through :program:`AppCSXCAD` possible.
 
 .. note::
-   **Replaying Simulations**. Sometimes it may be desirable to "replay" an
-   existing simulation setup without access to the Matlab/Octave or Python
-   source code. This is always possible in Matlab/Octave, but it's only
-   supported in Python if both the models and simulation parameters are
-   saved.
+   Post-processing always needs code. The ``openEMS`` program is only a field
+   solver; interpreting the files it writes is done by the Matlab/Octave or
+   Python routines, see :ref:`postproc_src`.
 
-Post-Processing
-"""""""""""""""""
-
-In all cases, post-processing simulation results always requires source
-code in order to parse and interpret the generated files on disk.
-The program ``openEMS`` itself is only a field solver engine. For analysis,
-we rely on Matlab/Octave or Python routines.
 
 Interfacing CSXCAD with Third-Party Apps
 """""""""""""""""""""""""""""""""""""""""
@@ -263,10 +227,10 @@ from :class:`~CSXCAD.CSProperties.CSProperties`::
     csx = CSXCAD.ContinuousStructure()
 
     # create a property (e.g. AddMetal, AddMaterial)
-    material = csx.AddExample(arg1, arg2, arg3, ...)
+    metal = csx.AddMetal('enclosure')
 
     # create a special file-defined primitive
-    enclosure = enclosure.AddPolyhedronReader('enclosure.stl')
+    enclosure = metal.AddPolyhedronReader('enclosure.stl')
     enclosure.ReadFile()
 
     # can be manipulated like any other primitives
@@ -291,200 +255,11 @@ POV-Ray, STL, X3D, Polydata-VTK, and PNG file formats.
    another source, yet the user is not already familiar with the meshing
    process and its pitfalls, confusing problems may arise.
 
-Modeling via a GUI?
-------------------------
+Modeling via a GUI
+--------------------
 
-In principle, it's feasible to make or tweak a 3D model using the
-:program:`AppCSXCAD` GUI. Geometries and mesh lines can be added
-entirely by the GUI, which are then saved and read into Python later
-via :meth:`~CSXCAD.ContinuousStructure.ReadFromXML` with additional
-initialization and tweaks for simulations. Likewise, saving and
-reloading makes it possible to tune a script-generated 3D model in
-the :program:`AppCSXCAD` GUI.
-
-This technique circumvents programmatic modeling
-(as described in :ref:`concept_primitives`) entirely. However,
-it has not been put in use by anyone to our best knowledge, possibly
-because it's not a coherent method.
-On the other hand, there are numerous attempts over the years
-to create models using GUI-based or high-level tools, to varying
-degrees of success.
-
-The first general idea is to create the structure first in a
-general-purpose CAD like FreeCAD. This can then be exported as
-a 3D model and be loaded into CSXCAD via :func:`ImportSTL` for
-simulation. By editing the CSXCAD object further, ports and
-probes can also be modeled via a GUI.
-
-The second general idea, specific to planar circuits and circuit
-board simulations, is to first create the circuit board using an
-EDA tool such as gEDA, pcb-rnd, or KiCad. The circuit layout
-can then be exported as a 2D vector image format, such as
-HyperLynx, Gerber, SVG or PDF. The polygons in these images
-are then extracted and imported as CSXCAD polygons.
-
-The third general idea is to create a high-level programming
-library for defining high-level objects such as traces, vias,
-circuit board layers, so that they can be created one object
-at a time, rather than one polygon at a time.
-
-A common subgoal of all tools is an automatic meshing algorithm,
-which turned out to be far from straightforward. CSXCAD models
-are usually designed as highly simplified test cases to check
-specific design parameters. In manual modeling, geometries and
-meshing are co-designed to simplify each other. However, automatic
-meshing algorithms deal with arbitrary models imported by users,
-a more difficult problem.
-
-.. important::
-   **Third-Party Tools.** These tools are developed by third
-   parties, and not officially supported by the openEMS project.
-   Most of them are highly experimental and incomplete.
-   They're described here for completeness. The project forum
-   is also open to the discussions of their uses.
-
-   **Importing is easy, simulation is hard.** These tools
-   should be considered advanced applications. Beginners are
-   *not recommended* to try them before familiarizing themselves
-   with the CSXCAD/openEMS workflow first via basic simulations,
-   as described in the :ref:`tutorials`.
-   Trying to import a circuit board without understanding the
-   concept of ports, boundary conditions or meshing rules leads
-   to failures, especially when most of these tools are highly
-   experimental and incomplete.
-
-   **Don't work in isolation.** So far there are already 7 different
-   tools that attempt to automate modeling of circuit boards and
-   3D objects for openEMS. Instead of creating another one from
-   scratch, it's probably a good idea to have a discussion with
-   the authors of these existing tools.
-
-Examples of these tools include:
-
-* :program:`OpenEMSH`, developed by Thomas Lepoix.
-
-  * The next-generation automatic mesher for openEMS simulations,
-    with funding from NLnet. It aims to overcome the difficulties
-    encountered by all previous projects, but it's still in the
-    early-development stage.
-
-  * https://github.com/Open-RFlab/openemsh
-
-* :program:`Qucs-RFlayout`, developed by Thomas Lepoix.
-
-  * Convert planar microwave circuit schematics created in the Qucs RF
-    circuit simulator to KiCad layouts and openEMS models.
-
-  * https://github.com/thomaslepoix/Qucs-RFlayout
-
-* :program:`FreeCAD-OpenEMS-Export`, developed by Lubomir Jagos.
-
-  * FreeCAD-based model and port edits, with CSXCAD export.
-
-  * https://github.com/LubomirJagos/FreeCAD-OpenEMS-Export
-
-* :program:`IntuitionRF`, developed by Juleinn.
-
-  * It allows one to mesh structures interactively via Blender.
-
-  * https://github.com/Juleinn/IntuitionRF
-
-* :program:`pcb2csx`, developed by Evan Foss.
-
-  * It's a plugin to the EDA tool :program:`pcb-rnd`,
-    allowing one to export an existing circuit board layout to CSXCAD.
-
-  * http://repo.hu/cgi-bin/pool.cgi?project=pcb-rnd&cmd=show&node=s_param
-
-  * Tutorial: `Direct Path to openEMS for S-parameters
-    <http://repo.hu/cgi-bin/pool.cgi?project=pcb-rnd&cmd=show&node=s_param>`_
-
-* :program:`gerber2ems`, developed by Antmicro.
-
-  * It allows one to export an existing PCB layout as a Gerber file,
-    which can then be converted and imported as a CSXCAD model.
-
-  * https://github.com/antmicro/gerber2ems
-
-* :program:`pcbmodelgen`, developed by jcyrax.
-
-  * It converts a KiCad layout file into the CSXCAD model,
-    also with experimental auto-meshing support.
-
-  * https://github.com/jcyrax/pcbmodelgen
-
-* :program:`pyems`, developed by Matt Huszagh.
-
-  * It's a high-level Python interface to openEMS, which allows
-    the programmatic creation of high-level structures such as
-    circuit boards, traces, vias, PCB layers. It has also an
-    experimental auto-mesh generation algorithm.
-
-  * https://github.com/matthuszagh/pyems
-
-* :program:`hyp2mat`, developed by Koen De Vleeschauwer and
-  distributed officially as part of openEMS.
-
-  * It converts a
-    HyperLynx layout file (can be generated by PCB EDA tools,
-    including EAGLE or KiCad 6). The geometries are extracted
-    to generate an Octave script with commands to create
-    the CSXCAD model.
-
-  * In principle, it can be used with Python
-    as well, by exporting the model to XML in Octave via
-    :func:`WriteOpenEMS`, and importing the model via
-    :meth:`~CSXCAD.ContinuousStructure.ReadFromXML`. But
-    no one has tested it.
-
-  * Currently it's retired and no longer maintained.
-
-  * https://github.com/koendv/hyp2mat
-
-Developer Notes
-"""""""""""""""""
-
-The old project wiki also described this following idea to
-convert circuit board layouts from Gerber, PDF, DXF, or
-SVG into CSXCAD models. This idea may be of interest to
-developers working on automated CSXCAD model generation.
-
-.. note::
-
-   PCB layers in Gerber files can be converted to PDF by means of
-   gerber2pdf which can be found on Sourceforge (editor's note:
-   native PDF, SVG and DXF exports are available in many EDA packages).
-   The PDF can be imported into Inkscape just as it is the case
-   for DXF files. Within Inkscape, the usually closed paths can be
-   modified (either manually or with filters) such that they result
-   in a suitable list of polygon nodes for openEMS.
-
-   Sometimes these polygons or curves have too many nodes. The number
-   of nodes can be reduced with the Inkscape function "Path" > "Simplify".
-   The amount of reduction is controlled by the parameter "Simplification
-   Threshold" which can be found under "Preferences" > "Behavior". These
-   paths are still Bézier curves which must be converted into polygons.
-   This is achieved with "Extensions" > "Modify Path" > "Flatten Béziers".
-   The parameter in this dialog also controls the number of resulting
-   points.
-
-   When all nodes are as required, the paths can be exported as a HTML5
-   Canvas. The resulting file can then be processed with an ASCII Editor.
-   The numbers after the moveTo and lineTo statements are the polygon nodes
-   X- and Y- coordinates respectively. However, they still must be
-   transformed by a linear transform given in the transform statement. The
-   first four numbers a matrix by which the node coordinates have to be
-   multiplied and the remaining two numbers are a vector which has to
-   be added.
-
-   The result will be the node coordinates in HTML pixels with X counting
-   from left to right and Y counting from top to bottom, which does not
-   conform to the coordinate system of the Inkscape canvas.
-
-   In order to have the same axes as in Inkscape (X left to right and Y
-   bottom to top), the fourth and sixth number have to be multiplied by -1
-   and the image height has to be added to the sixth number. Now the
-   coordinates are in the usual coordinate system but still in HTML5 pixels.
-   The ratio of pixels to mm or other units of length can finally be found
-   under the document properties in Inkscape. This factor can be applied in
-   Octave/Matlab. This finally gives polygons which can be processed by openEMS.
+A model can also be built or tweaked in the :program:`AppCSXCAD` GUI and
+read back with :meth:`~CSXCAD.ContinuousStructure.ReadFromXML`, and a number
+of third-party tools generate CSXCAD models from FreeCAD, KiCad, Gerber or
+Blender. None of them is part of openEMS; they are listed in
+:ref:`third_party_tools`.

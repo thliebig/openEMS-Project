@@ -663,17 +663,12 @@ transmission lines. An ordinary port can't excite them correctly,
 as the waveguide is essentially a DC short circuit. Special waveguide
 ports must be used to excite the unique TE-mode waves. These include
 general waveguide ports, rectangular waveguide ports, and circular
-waveguide ports
+waveguide ports.
 
 .. note::
-   Like physical ports on real devices, the virtual ports in openEMS are not
-   perfect. They're ideal sources of EM fields, but they are not ideal
-   *launchers* of EM waves into structures. A port creates a region of
-   discontinuity, so they may introduce artifacts.
-   Optimizing the placement and implementation of a port reduces artifacts.
-   Alternatively, these artifacts
-   can be removed through calibration or de-embedding algorithms, an
-   advanced topic beyond the scope of this tutorial.
+   Instead of suppressing the artifacts of a port, they can also be removed
+   afterwards through calibration or de-embedding algorithms, as done on a
+   real VNA. This is an advanced topic beyond the scope of this page.
 
    .. figure:: images/error-box.svg
       :class: with-border

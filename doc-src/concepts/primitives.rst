@@ -32,6 +32,47 @@ via :func:`AddExcitation`, and assigning a Box primitive to it via
    :ref:`property <concept_properties>` (such as a Metal) before creating
    any primitives.
 
+Common Arguments
+------------------
+
+Every ``Add*`` primitive function takes the same surrounding arguments; only
+the shape parameters differ, and those are listed per shape below.
+
+In Matlab/Octave the primitive is added to the ``CSX`` structure by name,
+and the call returns the modified structure:
+
+.. code-block:: octave
+
+    CSX = AddSphere(CSX, propName, prio, center, rad, varargin)
+
+``propName``
+   Name of the property the shape belongs to, as passed to ``AddMetal``,
+   ``AddMaterial`` and friends.
+``prio``
+   Priority of the primitive, see :ref:`concept_priority`.
+``varargin``
+   Key/value pairs, the same for every primitive: ``'CoordSystem'`` (see
+   :ref:`concept_coordinate_systems`) and ``'Transform', {array}`` (see
+   :ref:`concept_transformation`).
+
+In Python the primitive is a method of the property object and returns the
+created primitive:
+
+.. code-block:: python
+
+    sphere = material.AddSphere(center, radius, **kw)
+
+``material``
+   The property object, e.g. from :meth:`~CSXCAD.ContinuousStructure.AddMetal`.
+``**kw``
+   ``priority`` (see :ref:`concept_priority`); the coordinate system and
+   transformations are set on the returned object with
+   :meth:`~CSXCAD.CSPrimitives.CSPrimitives.SetCoordinateSystem` and
+   :meth:`~CSXCAD.CSPrimitives.CSPrimitives.AddTransform`.
+
+The full argument lists are in the :ref:`Octave <csxcad_octave_api>` and
+:ref:`Python <csprimitives>` reference.
+
 Shapes
 -------
 
@@ -43,38 +84,13 @@ since it usually matches the given Cartesian or cylindrical FDTD mesh. Furthermo
 primitive is the only one whose shape depends on the chosen coordinate system it is defined
 with.
 
-.. tabs::
+::
 
-   .. tab:: Octave
+    CSX = AddBox(CSX, 'propName', 1, start, stop, varargin)   % Octave
+    box = material.AddBox(CSX, start, stop, **kw)             # Python
 
-      :func:`AddBox` function definition::
-
-          CSX = AddBox(CSX, 'propName', 1, start, stop, varargin);
-
-      * ``CSX``: The original CSX structure.
-      * ``propName``: Name of the assigned property.
-      * ``prio``: Priority of the primitive, see :ref:`concept_priority`.
-      * ``start``: ``[x y z]`` First (start) coordinate.
-      * ``stop``: ``[x y z]`` Second (stop) coordinate.
-      * ``varargin``: A key/value list of primitives variable arguments.
-
-        * ``CoordSystem``: See :ref:`concept_coordinate_systems`.
-        * ``Transform, {array}``: See :ref:`concept_transformation`.
-
-   .. tab:: Python
-
-      :meth:`~CSXCAD.CSProperties.CSProperties.AddBox` method
-      definition::
-
-          box = material.AddBox(CSX, start, stop, **kw);
-
-      * ``box``: An instance of :class:`~CSXCAD.CSPrimitives.CSPrimBox`.
-      * ``material``: An instance of :class:`~CSXCAD.CSProperties.CSPropMaterial`.
-      * ``start``: ``[x y z]`` First (start) coordinate.
-      * ``stop``: ``[x y z]`` Second (stop) coordinate.
-      * ``**kw``: Optional keyword arguments:
-
-        * ``priority``: priority of the primitive, see :ref:`concept_priority`.
+* ``start``: ``[x y z]`` First (start) coordinate.
+* ``stop``: ``[x y z]`` Second (stop) coordinate.
 
 Examples
 ''''''''
@@ -176,38 +192,13 @@ Sphere
 
 The sphere primitive is defined by its central point and radius.
 
-.. tabs::
+::
 
-   .. tab:: Octave
+    CSX = AddSphere(CSX, propName, prio, center, rad, varargin)   % Octave
+    sphere = material.AddSphere(center, radius, **kw)             # Python
 
-      :func:`AddSphere` function definition::
-
-          CSX = AddSphere(CSX, propName, prio, center, rad, varargin)
-
-      * ``CSX``: The original CSX structure.
-      * ``propName``: Name of the assigned property.
-      * ``prio``: Priority of the primitive, see :ref:`concept_priority`.
-      * ``center``: Coordinate of the center point of the sphere.
-      * ``rad``: Radius of the sphere.
-      * ``varargin``: A key/value list of primitives variable arguments.
-
-        * ``CoordSystem``: See :ref:`concept_coordinate_systems`.
-        * ``Transform, {array}``: See :ref:`concept_transformation`.
-
-   .. tab:: Python
-
-      :meth:`~CSXCAD.CSProperties.CSProperties.AddSphere` method
-      definition::
-
-          sphere = material.AddSphere(center, radius, **kw)
-
-      * ``box``: An instance of :class:`~CSXCAD.CSPrimitives.CSPrimSphere`.
-      * ``material``: An instance of :class:`~CSXCAD.CSProperties.CSPropMaterial`.
-      * ``center``: Coordinate of the center point of the sphere.
-      * ``rad``: Radius of the sphere.
-      * ``**kw``: Optional keyword arguments:
-
-        * ``priority``: priority of the primitive, see :ref:`concept_priority`.
+* ``center``: Coordinate of the center point of the sphere.
+* ``rad``: Radius of the sphere.
 
 Example
 '''''''''
@@ -240,48 +231,14 @@ Spherical Shell
 The spherical shell primitive is defined by its central point, radius
 and shell thickness.
 
-.. tabs::
+::
 
-   .. tab:: Octave
+    CSX = AddSphericalShell(CSX, propName, prio, center, rad, shell_width, varargin)   % Octave
+    spherical_shell = material.AddSphericalShell(center, radius, shell_width, **kw)    # Python
 
-      :func:`AddSphericalShell` function definition::
-
-          CSX = AddSphericalShell(CSX, propName, prio, center, rad, shell_width, varargin)
-
-      * ``CSX``: The original CSX structure.
-      * ``propName``: Name of the assigned property.
-      * ``prio``: Priority of the primitive, see :ref:`concept_priority`.
-      * ``center``: Coordinate of the center point of the sphere.
-      * ``rad``: Radius of the spherical shell.
-      * ``shell_width``: Thickness of the shell.
-
-        * The inner radius of this shell is ``rad - shell_width / 2``.
-        * The outer radius of this shell is ``rad + shell_width / 2``.
-
-      * ``varargin``: A key/value list of primitives variable arguments
-
-        * ``CoordSystem``: See :ref:`concept_coordinate_systems`.
-        * ``Transform, {array}``: See :ref:`concept_transformation`.
-
-   .. tab:: Python
-
-      :meth:`~CSXCAD.CSProperties.CSProperties.AddSphericalShell` method
-      definition::
-
-          spherical_shell = material.AddSphericalShell(center, radius, shell_width, **kw)
-
-      * ``spherical_shell``: An instance of :class:`~CSXCAD.CSPrimitives.CSPrimSphericalShell`.
-      * ``material``: An instance of :class:`~CSXCAD.CSProperties.CSPropMaterial`.
-      * ``center``: Coordinate of the center point of the sphere.
-      * ``rad``: Radius of the sphere.
-      * ``shell_width``: Thickness of the shell.
-
-        * The inner radius of this shell is ``rad - shell_width / 2``.
-        * The outer radius of this shell is ``rad + shell_width / 2``.
-
-      * ``**kw``: Optional keyword arguments:
-
-        * ``priority``: priority of the primitive, see :ref:`concept_priority`.
+* ``center``: Coordinate of the center point of the sphere.
+* ``rad``: Radius of the spherical shell.
+* ``shell_width``: Thickness of the shell.
 
 Example
 '''''''''
@@ -318,39 +275,14 @@ along the start - stop points with the two cylinder faces being perpendicular
 to this axis.
 
 
-.. tabs::
+::
 
-   .. tab:: Octave
+    CSX = AddCylinder(CSX, propName, prio, start, stop, rad, varargin)   % Octave
+    cylinder = material.AddCylinder(start, stop, radius, **kw)           # Python
 
-      :func:`AddCylinder` function definition::
-
-          CSX = AddCylinder(CSX, propName, prio, start, stop, rad, varargin)
-
-      * ``CSX``: The original CSX structure
-      * ``propName``: Name of the assigned material
-      * ``prio``: Priority of the primitive, see :ref:`concept_priority`.
-      * ``start``: ``[x y z]`` start point of the cylinder (midpoint of the first cylinder face).
-      * ``stop``: ``[x y z]`` stop point of the cylinder (midpoint of the second cylinder face).
-      * ``rad``: Radius of the cylinder.
-      * ``varargin``: A key/value list of primitives variable arguments.
-
-        * ``CoordSystem``: See :ref:`concept_coordinate_systems`.
-        * ``Transform, {array}``: See :ref:`concept_transformation`.
-
-   .. tab:: Python
-      :meth:`~CSXCAD.CSProperties.CSProperties.AddCylinder` method
-      definition::
-
-          cylinder = material.AddCylinder(start, stop, radius, **kw)
-
-      * ``cylinder``: An instance of :class:`~CSXCAD.CSPrimitives.CSPrimCylinder`.
-      * ``material``: An instance of :class:`~CSXCAD.CSProperties.CSPropMaterial`.
-      * ``start``: ``[x y z]`` start point of the cylinder (midpoint of the first cylinder face).
-      * ``stop``: ``[x y z]`` stop point of the cylinder (midpoint of the second cylinder face).
-      * ``radius``: Radius of the cylinder.
-      * ``**kw``: Optional keyword arguments:
-
-        * ``priority``: priority of the primitive, see :ref:`concept_priority`.
+* ``start``: ``[x y z]`` start point of the cylinder (midpoint of the first cylinder face).
+* ``stop``: ``[x y z]`` stop point of the cylinder (midpoint of the second cylinder face).
+* ``rad``: Radius of the cylinder.
 
 Example
 ''''''''
@@ -384,49 +316,14 @@ Cylindrical Shell
 A cylindrical shell primitive is defined by its midpoints of the first and last
 faces, the radius of the cylinder, and shell thickness.
 
-.. tabs::
+::
 
-   .. tab:: Octave
+    CSX = AddCylindricalShell(CSX, propName, prio, start, stop, rad, shell_width, varargin)   % Octave
+    cylinder_shell = material.AddCylindricalShell(start, stop, radius, shell_width, **kw)     # Python
 
-      :func:`AddCylindricalShell` function definition::
-
-          CSX = AddCylindricalShell(CSX, propName, prio, start, stop, rad, shell_width, varargin)
-
-      * ``CSX``: default first argument, containing the CSXCAD data structure.
-      * ``propName``: name of the (previously defined) property (e.g. a metal or material).
-      * ``start``, ``stop``: ``[x y z]`` coordinates of the start and end points of the
-        cylinder central axis.
-      * ``rad``: radius of the cylinder.
-      * ``shell_width``: width of the cylinder shell.
-
-        * The inner radius of this shell is ``rad - shell_width / 2``.
-        * The outer radius of this shell is ``rad + shell_width / 2``.
-
-      * ``varargin``: a key/value list of primitives variable arguments.
-
-        * ``CoordSystem``: See :ref:`concept_coordinate_systems`.
-        * ``Transform, {array}``: See :ref:`concept_transformation`.
-
-   .. tab:: Python
-
-      :meth:`~CSXCAD.CSProperties.CSProperties.AddCylindricalShell` method
-      definition::
-
-          cylinder_shell = material.AddCylindricalShell(start, stop, radius, shell_width, **kw)
-
-      * ``cylinder_shell``: An instance of :class:`~CSXCAD.CSPrimitives.CSPrimCylindricalShell`.
-      * ``material``: An instance of :class:`~CSXCAD.CSProperties.CSPropMaterial`.
-      * ``start``: ``[x y z]`` start point of the cylinder (midpoint of the first cylinder face).
-      * ``stop``: ``[x y z]`` stop point of the cylinder (midpoint of the second cylinder face).
-      * ``radius``: Radius of the cylinder.
-      * ``shell_width``: width of the cylinder shell.
-
-        * The inner radius of this shell is ``rad - shell_width / 2``.
-        * The outer radius of this shell is ``rad + shell_width / 2``.
-
-      * ``**kw``: Optional keyword arguments:
-
-        * ``priority``: priority of the primitive, see :ref:`concept_priority`.
+* ``start``: , ``stop``: ``[x y z]`` coordinates of the start and end points of the cylinder central axis.
+* ``rad``: radius of the cylinder.
+* ``shell_width``: width of the cylinder shell.
 
 Example
 ''''''''
@@ -464,50 +361,15 @@ Curve
 
 A 1D curve is defined by its coordinate arrays.
 
-.. tabs::
+::
 
-   .. tab:: Octave
+    CSX = AddCurve(CSX, propName, prio, points, varargin)   % Octave
+    curve = material.AddCurve(points, **kw)                 # Python
 
-      :func:`AddCurve` function definition::
-
-          CSX = AddCurve(CSX, propName, prio, points, varargin)
-
-      * ``CSX``: The original CSX structure.
-      * ``propName``: Name of the assigned property.
-      * ``prio``: Priority of the primitive, see :ref:`concept_priority`.
-      * ``points``: Two-dimensional coordinates of the base polygon.
-        Array column refers to point number, array row refers to its
-        ``x``, ``y``, ``z`` positions.
-
-        * ``points(1, point_number)``: position ``x`` of ``point_number``.
-        * ``points(2, point_number)``: position ``y`` of ``point_number``.
-        * ``points(3, point_number)``: position ``z`` of ``point_number``.
-
-      * ``varargin``: A key/value list of primitives variable arguments.
-
-        * ``CoordSystem``: See :ref:`concept_coordinate_systems`.
-        * ``Transform, {array}``: See :ref:`concept_transformation`.
-
-   .. tab:: Python
-
-      :meth:`~CSXCAD.CSProperties.CSProperties.AddCurve` method
-      definition::
-
-          curve = material.AddCurve(points, **kw)
-
-      * ``curve``: An instance of :class:`~CSXCAD.CSPrimitives.CSPrimCurve`.
-      * ``material``: An instance of :class:`~CSXCAD.CSProperties.CSPropMaterial`.
-      * ``points``: Two-dimensional coordinates of the base polygon.
-        Array column refers to point number, array row refers to its
-        ``x``, ``y``, ``z`` positions.
-
-        * ``points[0, point_number]``: position ``x`` of ``point_number``.
-        * ``points[1, point_number]``: position ``y`` of ``point_number``.
-        * ``points[2, point_number]``: position ``z`` of ``point_number``.
-
-      * ``**kw``: Optional keyword arguments:
-
-        * ``priority``: priority of the primitive, see :ref:`concept_priority`.
+* ``points``: Two-dimensional coordinates of the base polygon. Array column refers to point number, array row refers to its ``x``, ``y``, ``z`` positions.
+* ``points(1, point_number)``: position ``x`` of ``point_number``.
+* ``points(2, point_number)``: position ``y`` of ``point_number``.
+* ``points(3, point_number)``: position ``z`` of ``point_number``.
 
 Example
 ''''''''
@@ -574,52 +436,16 @@ Wire
 
 Define a cylinder-like wire by its coordinate arrays and radius.
 
-.. tabs::
+::
 
-   .. tab:: Octave
+    CSX = AddWire(CSX, propName, prio, points, wire_rad, varargin)   % Octave
+    wire = material.AddWire(points, radius, **kw)                    # Python
 
-      :func:`AddWire` function definition::
-
-          CSX = AddWire(CSX, propName, prio, points, wire_rad, varargin)
-
-      * ``CSX``: The original CSX structure
-      * ``propName``: Name of the assigned property.
-      * ``prio``: Priority of the primitive, see :ref:`concept_priority`.
-      * ``points``: Two-dimensional coordinates of the base polygon.
-        Array column refers to point number, array row refers to its
-        ``x``, ``y``, ``z`` positions.
-
-        * ``points(1, point_number)``: position ``x`` of ``point_number``.
-        * ``points(2, point_number)``: position ``y`` of ``point_number``.
-        * ``points(3, point_number)``: position ``z`` of ``point_number``.
-
-      * ``wire_rad``: Wire radius.
-      * ``varargin``: A key/value list of primitives variable arguments.
-
-        * ``CoordSystem``: See :ref:`concept_coordinate_systems`.
-        * ``Transform, {array}``: See :ref:`concept_transformation`.
-
-   .. tab:: Python
-
-      :meth:`~CSXCAD.CSProperties.CSProperties.AddWire` method
-      definition::
-
-          wire = material.AddWire(points, radius, **kw)
-
-      * ``wire``: An instance of :class:`~CSXCAD.CSPrimitives.CSPrimWire`.
-      * ``material``: An instance of :class:`~CSXCAD.CSProperties.CSPropMaterial`.
-      * ``points``: Two-dimensional coordinates of the base polygon.
-        Array column refers to point number, array row refers to its
-        ``x``, ``y``, ``z`` positions.
-
-        * ``points(1, point_number)``: position ``x`` of ``point_number``.
-        * ``points(2, point_number)``: position ``y`` of ``point_number``.
-        * ``points(3, point_number)``: position ``z`` of ``point_number``.
-
-      * ``radius``: Wire radius.
-      * ``**kw``: Optional keyword arguments:
-
-        * ``priority``: priority of the primitive, see :ref:`concept_priority`.
+* ``points``: Two-dimensional coordinates of the base polygon. Array column refers to point number, array row refers to its ``x``, ``y``, ``z`` positions.
+* ``points(1, point_number)``: position ``x`` of ``point_number``.
+* ``points(2, point_number)``: position ``y`` of ``point_number``.
+* ``points(3, point_number)``: position ``z`` of ``point_number``.
+* ``wire_rad``: Wire radius.
 
 Example
 '''''''
@@ -670,40 +496,14 @@ Polygon
 A polygon is defined by its two dimensional shape in form of a polygon,
 its normal direction and elevation.
 
-.. tabs::
+::
 
-   .. tab:: Octave
+    CSX = AddPolygon(CSX, propName, prio, normDir, elevation, points, varargin)   % Octave
+    polygon = material.AddPolygon(points, norm_dir, elevation, **kw)              # Python
 
-      :func:`AddPolygon` function definition::
-
-          CSX = AddPolygon(CSX, propName, prio, normDir, elevation, points, varargin)
-
-      * ``CSX``: The original CSX structure.
-      * ``propName``: Name of the assigned property.
-      * ``prio``: Priority of the primitive, see :ref:`concept_priority`.
-      * ``normDir``: The normal direction of the polygon (0->x, 1->y, 2->z).
-      * ``points``: Two-dimensional coordinates p(i,j) of the base polygon.
-      * ``elevation``: Elevation in normal direction.
-      * ``varargin``: A key/value list of primitives variable arguments.
-
-        * ``CoordSystem``: See :ref:`concept_coordinate_systems`.
-        * ``Transform, {array}``: See :ref:`concept_transformation`.
-
-   .. tab:: Python
-
-      :meth:`~CSXCAD.CSProperties.CSProperties.AddPolygon` method
-      definition::
-
-          polygon = material.AddPolygon(points, norm_dir, elevation, **kw)
-
-      * ``polygon``: An instance of :class:`~CSXCAD.CSPrimitives.CSPrimPolygon`.
-      * ``material``: An instance of :class:`~CSXCAD.CSProperties.CSPropMaterial`.
-      * ``points``: Two-dimensional coordinates p(i,j) of the base polygon.
-      * ``normDir``: The normal direction of the polygon (0->x, 1->y, 2->z).
-      * ``elevation``: Elevation in normal direction.
-      * ``**kw``: Optional keyword arguments:
-
-        * ``priority``: priority of the primitive, see :ref:`concept_priority`.
+* ``normDir``: The normal direction of the polygon (0->x, 1->y, 2->z).
+* ``points``: Two-dimensional coordinates p(i,j) of the base polygon.
+* ``elevation``: Elevation in normal direction.
 
 .. note::
 
@@ -790,50 +590,15 @@ of a polygon, its normal direction, elevation and thickness.
    The polygon has to be defined using Cartesian coordinates. For use
    with cylindrical mesh, set ``CoordSystem`` to 0.
 
-.. tabs::
+::
 
-   .. tab:: Octave
+    CSX = AddLinPoly(CSX, propName, prio, normDir, elevation, points, Length, varargin)   % Octave
+    linpoly = material.AddLinPoly(points, norm_dir, elevation, length, **kw)              # Python
 
-      :func:`AddLinPoly` function definition::
-
-          CSX = AddLinPoly(CSX, propName, prio, normDir, elevation, points, Length, varargin)
-
-      * ``CSX``: The original CSX structure.
-      * ``propName``: Name of the assigned property.
-      * ``prio``: Priority of the primitive, see :ref:`concept_priority`.
-      * ``normDir``: The normal direction of the polygon (0->x, 1->y, 2->z).
-      * ``points``: Two-dimensional coordinates of the base polygon; see above.
-      * ``elevation``: Elevation in normal direction.
-      * ``length``: Linear extrusion in normal direction, starting at elevation.
-      * ``varargin``: See primitives variable arguments.
-
-        * ``CoordSystem``: See :ref:`concept_coordinate_systems`.
-        * ``Transform, {array}``: See :ref:`concept_transformation`.
-
-      .. important::
-         The polygon has to be defined using Cartesian coordinates. For use
-         with cylindrical mesh, set ``CoordSystem``  to 0.
-
-   .. tab:: Python
-
-      :meth:`~CSXCAD.CSProperties.CSProperties.AddLinPoly` method
-      definition::
-
-          linpoly = material.AddLinPoly(points, norm_dir, elevation, length, **kw)
-
-      * ``linpoly``: An instance of :class:`~CSXCAD.CSPrimitives.CSPrimLinPoly`.
-      * ``material``: An instance of :class:`~CSXCAD.CSProperties.CSPropMaterial`.
-      * ``points``: Two-dimensional coordinates of the base polygon; see above.
-      * ``norm_dir``: The normal direction of the polygon (0->x, 1->y, 2->z).
-      * ``elevation``: Elevation in normal direction.
-      * ``length``: Linear extrusion in normal direction, starting at elevation.
-      * ``**kw``: Optional keyword arguments:
-
-        * ``priority``: priority of the primitive, see :ref:`concept_priority`.
-
-      .. important::
-         The polygon has to be defined using Cartesian coordinates. For use
-         with cylindrical mesh, call :meth:`~CSXCAD.CSPrimitives.CSPrimitives.SetCoordinateSystem`
+* ``normDir``: The normal direction of the polygon (0->x, 1->y, 2->z).
+* ``points``: Two-dimensional coordinates of the base polygon; see above.
+* ``elevation``: Elevation in normal direction.
+* ``length``: Linear extrusion in normal direction, starting at elevation.
 
 Example
 ''''''''
@@ -894,61 +659,15 @@ Rotational Polygon
 A rotational polygon is defined by its two dimensional base shape in form
 of a polygon, its normal direction, rotational axis and angle of rotation.
 
-.. tabs::
+::
 
-   .. tab:: Octave
+    CSX = AddRotPoly(CSX, materialname, prio, normDir, points, RotAxisDir, angle, varargin)   % Octave
+    rotpoly = material.AddRotPoly(points, norm_dir, elevation, rot_axis, angle, **kw)         # Python
 
-      :func:`AddRotPoly` function definition::
-
-          CSX = AddRotPoly(CSX, materialname, prio, normDir, points, RotAxisDir, angle, varargin)
-
-      * ``CSX``: The original CSX structure.
-      * ``materialname``: Name of the assigned material property, created
-        by :func:``AddMetal` or :func:``AddMaterial``.
-
-      * ``prio``: Priority of the primitive, see :ref:`concept_priority`.
-      * ``normDir``: The normal direction of the polygon e.g.
-        ``x``, ``y`` or ``z``, or numeric (0->x, 1->y, 2->z).
-      * ``RotAxisDir``: Rotational axis direction e.g.
-        ``x``, ``y`` or ``z``, or numeric (0->x, 1->y, 2->z).
-        * Note` it should be different to normal direction.
-      * ``points``: Two-dimensional coordinates of the base polygon; see above
-      * ``angle``: Rotation angle, optional, default is ``[0 2*pi]`` (e.g.
-        ``[0 2*pi]`` for a full rotation).
-      * ``varargin``: See primitives variable arguments.
-
-        * ``CoordSystem``: See :ref:`concept_coordinate_systems`.
-        * ``Transform, {array}``: See :ref:`concept_transformation`.
-
-      .. important::
-         The polygon has to be defined using Cartesian coordinates. For use
-         with cylindrical mesh, set ``CoordSystem``  to 0.
-
-   .. tab:: Python
-
-      :meth:`~CSXCAD.CSProperties.CSProperties.AddRotPoly` method
-      definition::
-
-          rotpoly = AddRotPoly(points, norm_dir, elevation, rot_axis, angle, **kw)
-
-      * ``rotpoly``: An instance of :class:`~CSXCAD.CSPrimitives.CSPrimRotPoly`.
-      * ``material``: An instance of :class:`~CSXCAD.CSProperties.CSPropMaterial`.
-      * ``points``: Two-dimensional coordinates of the base polygon; see above
-      * ``norm_dir``: The normal direction of the polygon e.g.
-        ``x``, ``y`` or ``z``, or numeric (0->x, 1->y, 2->z).
-      * ``elevation``: Elevation in normal direction.
-      * ``rot_axis``: Rotational axis direction e.g.
-        ``x``, ``y`` or ``z``, or numeric (0->x, 1->y, 2->z).
-        * Note` it should be different to normal direction.
-      * ``angle``: Rotation angle, optional, default is ``[0 2*pi]`` (e.g.
-        ``[0 2*pi]`` for a full rotation).
-      * ``**kw``: Optional keyword arguments:
-
-        * ``priority``: priority of the primitive, see :ref:`concept_priority`.
-
-      .. important::
-         The polygon has to be defined using Cartesian coordinates. For use
-         with cylindrical mesh, call :meth:`~CSXCAD.CSPrimitives.CSPrimitives.SetCoordinateSystem`
+* ``normDir``: The normal direction of the polygon e.g. ``x``, ``y`` or ``z``, or numeric (0->x, 1->y, 2->z).
+* ``RotAxisDir``: Rotational axis direction e.g. ``x``, ``y`` or ``z``, or numeric (0->x, 1->y, 2->z).
+* ``points``: Two-dimensional coordinates of the base polygon; see above
+* ``angle``: Rotation angle, optional, default is ``[0 2*pi]`` (e.g. ``[0 2*pi]`` for a full rotation).
 
 Example
 '''''''''
@@ -1091,45 +810,13 @@ and ``{1, 3, 4}``.
    * All faces must contain the vertices in a right-handed order with
      the normal direction for each face pointing out of the solid
 
-.. tabs::
+::
 
-   .. tab:: Octave
+    CSX = AddPolyhedron(CSX, propName, prio, vertices, faces, varargin)   % Octave
+    polyhedron = material.AddPolyhedron(**kw)                             # Python
 
-      :func:`AddPolyhedron` function definition::
-
-          CSX = AddPolyhedron(CSX, propName, prio, vertices, faces, varargin)
-
-      * ``CSX``: The original CSX structure.
-      * ``propName``: Name of the assigned property.
-      * ``prio``: Priority of the primitive, see :ref:`concept_priority`.
-      * ``vertices``: Cell array of all vertices.
-      * ``faces``: Cell array of all faces.
-      * ``varargin``: A key/value list of primitives variable arguments.
-
-        * ``CoordSystem``: See :ref:`concept_coordinate_systems`.
-        * ``Transform, {array}``: See :ref:`concept_transformation`.
-
-   .. tab:: Python
-
-      :meth:`~CSXCAD.CSProperties.CSProperties.AddPolyhedron` method
-      definition::
-
-          polyhedron = AddPolyhedron(**kw)
-
-      * ``box``: An instance of :class:`~CSXCAD.CSPrimitives.CSPrimPolyhedron`.
-      * ``material``: An instance of :class:`~CSXCAD.CSProperties.CSPropMaterial`.
-      * ``**kw``: Optional keyword arguments:
-
-        * ``priority``: priority of the primitive, see :ref:`concept_priority`.
-
-      The created :class:`~CSXCAD.CSPrimitives.CSPrimPolyhedron` instance
-      has the following methods:
-
-      * ``AddFace(verts)``: Add a face with a given list of vertices.
-        The vertices have to be added already. Currently only triangle faces
-        are possible.
-
-      * ``AddVertex(x, y, z)``: Add a single 3D vertex.
+* ``vertices``: Cell array of all vertices.
+* ``faces``: Cell array of all faces.
 
 Example
 ''''''''
@@ -1433,79 +1120,6 @@ Complex Examples
 
 More complex structures can be created by combining various primitives
 with specific priorities and transformations.
-
-Mickey
-""""""""
-
-.. image:: images/mickey.png
-
-This structure was created by combining several scaled spheres, cylinders,
-and a polyhedron::
-
-    % materials
-    csx = AddMaterial(csx, 'Air');
-    csx = SetMaterialProperty(csx, 'Air', 'Epsilon', 1, 'Mue', 1);
-    csx = AddMetal(csx, 'metal'); %create PEC with propName 'metal'
-
-    % face
-    csx = AddSphere(csx, 'metal', 1, [0 0 0], 150, 'Transform', {'Scale', '2,2,1'});
-
-    % ears
-    csx = AddSphere( ...
-        csx, 'metal', 1, ...
-        [ sqrt(0.7 * 150 ^ 2) sqrt(0.7 * 150 ^ 2) 0], ...
-        50, ...
-        'Transform', {'Scale', '2,2,1'} ...
-    );
-    csx = AddSphere( ...
-        csx, 'metal', 1, ...
-        [-sqrt(0.7 * 150 ^ 2) sqrt(0.7 * 150 ^ 2) 0], ...
-        50, ...
-        'Transform', {'Scale', '2,2,1'} ...
-    );
-
-    %nose
-    csx = AddBox(csx, 'Air', 2, [-20 -40 -160], [20 40 160]);
-
-    % eyes
-    csx = AddCylinder(
-        csx, 'Air', 2, ...
-        [-sqrt(0.3 * 150 ^ 2) sqrt(0.3 * 150 ^ 2) -150], ...
-        [-sqrt(0.3 * 150 ^ 2) sqrt(0.3 * 150 ^ 2) 150], ...
-    30);
-    csx = AddCylinder(
-        csx, 'Air', 2, ...
-        [ sqrt(0.3 * 150 ^ 2) sqrt(0.3 * 150 ^ 2) -150], ...
-        [ sqrt(0.3 * 150 ^ 2) sqrt(0.3 * 150 ^ 2) 150], ...
-    30);
-
-    % hair
-    points = zeros(3,3);
-    points(:,1) = [0 290 0];
-    points(:,2) = [0 330 0];
-    points(:,3) = [20 360 50];
-    for i=-3:3
-        csx = AddWire(csx, 'metal', 10, points, 5,' Transform', {'Rotate_Z', i * pi / 25});
-    end
-
-    % mouth
-    vertices{1} = [-150 -100 150];
-    vertices{2} = [0 -150 150];
-    vertices{3} = [150 -100 150];
-    vertices{4} = [0 -200 150];
-    vertices{5} = [-150 -100 -150];
-    vertices{6} = [0 -150 -150];
-    vertices{7} = [150 -100 -150];
-    vertices{8} = [0 -200 -150];
-
-    faces{1} = [1 2 3 0];
-    faces{2} = [4 7 3 0];
-    faces{3} = [4 5 1 0];
-    faces{4} = [6 7 3 2];
-    faces{5} = [1 5 6 2];
-    faces{6} = [7 6 5 4];
-
-    csx = AddPolyhedron(csx, 'Air', 0, vertices, faces);
 
 Sphere Aggregation
 """"""""""""""""""

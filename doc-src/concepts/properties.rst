@@ -338,7 +338,7 @@ Create a lumped 1 pF capacitor in ``y`` direction:
    .. code-tab:: octave
 
       csx = InitCSX();
-      CSX = AddLumpedElement(CSX, 'capacitor', 'y', 'Caps', 1, 'C', 1e-12);
+      csx = AddLumpedElement(csx, 'capacitor', 'y', 'Caps', 1, 'C', 1e-12);
       % assign primitives via AddBox(), AddCylinder(), etc.
 
    .. code-tab:: python
@@ -355,37 +355,22 @@ Create a lumped 1 pF capacitor in ``y`` direction:
    based on a hypothetical material (via :func:`AddMaterial` with an artificial
    conductivity or permittivity) may be a workaround.
 
-For most of the project history, a lumped element can only be an isolated
-resistor or capacitor (even inductors are not implemented). In the latest
-development version of openEMS (v0.0.37, unreleased), a contributed
-new extension has been submitted to openEMS, allowing the lumped element
-to be an entire RLC circuit, with resistance, capacitance, inductance values
-simultaneously.
-It's controlled by the parameter ``LEtype`` in Python's
-:meth:`~CSXCAD.ContinuousStructure.AddLumpedElement`. A value of ``0``
-denotes a parallel RLC circuit, while a value of ``1`` denotes a series
-RLC circuit. It's not implemented by the Matlab/Octave binding as of
-now.
+Before openEMS 0.37, a lumped element could only be a single resistor or
+capacitor. Since 0.37 it can be a full RLC circuit, with resistance,
+capacitance and inductance at once, selected by the ``LEtype`` parameter of
+Python's :meth:`~CSXCAD.ContinuousStructure.AddLumpedElement`: ``0`` for a
+parallel and ``1`` for a series RLC circuit. The Matlab/Octave binding does
+not expose it yet.
 
 Limitation: Parasitic Ambiguity
 """""""""""""""""""""""""""""""
 
-Lumped elements are ideal throughout the region occupied by the derived
-primitives. However, the intermediate connections between a lumped element
-to the external circuit still introduce parasitic effects (e.g., inductance
-from the overall loop area, partial inductance of terminal leads or mounting
-height). Full-wave simulations inherently capture them through the electric
-and magnetic fields in space.
-
-Furthermore, the existence and modeling of parasitic effects can be
-context-dependent and ambiguous. It's not always clear whether a parasitic
-effect should be explicitly modeled as a lumped element (such as an LC
-circuit), implicitly modeled using the geometries, or modeled as a combination
-of both.
-
-Due to these ambiguities, it's recommended to run simple test cases to
-determine the best way to model a lumped component for your application.
-To learn more, see :ref:`concept_lumped`.
+A lumped element is ideal only inside the region its primitives occupy. The
+connections between it and the rest of the circuit still add parasitics, which
+the full-wave simulation captures through the fields in space — so whether a
+given parasitic belongs in the lumped value or in the geometry is genuinely
+ambiguous. See :ref:`concept_lumped` for how that plays out on a real SMD
+component.
 
 Dispersive Materials
 ----------------------

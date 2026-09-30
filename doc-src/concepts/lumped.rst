@@ -1,11 +1,13 @@
 .. _concept_lumped:
 
-Lumped Elements
-===============
+Lumped Element Modeling
+========================
 
-Lumped elements are ideal resistors, capacitors and inductors with sizes
-assumed to be negligible. They're especially useful for modeling surface-mount
-circuit components.
+A lumped element is an ideal resistor, capacitor or inductor, with its size
+assumed negligible — see :ref:`concept_properties` for how to define one. What
+this page is about is the harder question: given a real surface-mount
+component, which part of its behaviour belongs in the lumped value and which
+part belongs in the geometry around it.
 
 Parasitic Ambiguity
 ----------------------

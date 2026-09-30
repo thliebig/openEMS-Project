@@ -35,7 +35,7 @@ the material is active.
       % bound the active region
       CSX = AddBox(CSX, 'tissue', 0, [-120 -120 -100], [120 120 100]);
 
-   .. tab:: python
+   .. tab:: Python
 
       Not yet available in the Python interface — use the Octave/Matlab
       interface or call openEMS via the XML workflow.

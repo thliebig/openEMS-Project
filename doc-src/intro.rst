@@ -32,7 +32,8 @@ Where to Start
 ================
 
 * **New to openEMS?** Begin with :ref:`install_src`, then work through the
-  :ref:`tutorials` to run your first simulation.
+  :ref:`Python <tutorials>` or :ref:`Octave/Matlab <octave_tutorials>`
+  tutorials to run your first simulation.
 * **Learning the underlying concepts?** The :ref:`concepts_src` section
   explains FDTD fundamentals, meshing, ports, excitations, boundary
   conditions, and post-processing.
@@ -60,14 +61,6 @@ Features
 Citation
 ============================
 
-If you are using openEMS for any publication, we kindly ask you to cite
-openEMS using the following reference.
-
-BibTex::
-
-    @ELECTRONIC{openEMS,
-      author = {Thorsten Liebig},
-      title = {openEMS - Open Electromagnetic Field Solver},
-      organization = {General and Theoretical Electrical Engineering (ATE), University of Duisburg-Essen},
-      url = {https://www.openEMS.de}
-    }
+If you are using openEMS for any publication, we kindly ask you to cite it.
+The BibTeX entry, the papers describing openEMS itself, and a collection of
+work that uses it are on the :ref:`publications_src` page.
