@@ -110,12 +110,27 @@ def get_octave_helptext(cwd, funcname):
     # Arbitrary Octave code execution is possible via filename injection.
     # We assume all files committed into the project tree are non-malicious,
     # so never use it with untrusted files!
-    retval = subprocess.run(
-        ["octave", "--eval", "display(get_help_text('%s'));" % funcname],
-        cwd=cwd,
-        capture_output=True
-    )
-    retval.check_returncode()
+    try:
+        retval = subprocess.run(
+            ["octave", "--eval", "display(get_help_text('%s'));" % funcname],
+            cwd=cwd,
+            capture_output=True
+        )
+    except FileNotFoundError:
+        # No octave at all. Reported per function, but what makes this fatal
+        # is the count check in generate_doc().
+        print("Warning: octave not found, cannot read the help text of %s"
+              % funcname, file=sys.stderr)
+        return ""
+    if retval.returncode != 0:
+        # Do not fail the documentation build over one function: the caller
+        # falls back to the signature in the M-file. Whether this is fatal is
+        # decided in generate_doc(), from how many functions it affects.
+        print("Warning: octave exited %d reading the help text of %s:\n%s"
+              % (retval.returncode, funcname,
+                 retval.stderr.decode("UTF-8", "replace").strip()),
+              file=sys.stderr)
+        return ""
     return retval.stdout.decode("UTF-8")
 
 
@@ -159,53 +174,67 @@ def get_cached_helptext(cwd, cachedir, mfile, funcname):
     return text
 
 
-def is_function_file(mfile):
-    """True if the M-file defines a function, False if it is a script."""
+def read_function_signature(mfile):
+    """The `function ...` line of an M-file, or None if it is a script."""
     with open(mfile, encoding="UTF-8", errors="replace") as f:
         for line in f:
             stripped = line.strip()
             if not stripped or stripped.startswith(("%", "#")):
                 continue
-            return stripped.startswith("function")
-    return False
+            if stripped.startswith("function"):
+                return stripped.rstrip(";")
+            return None
+    return None
+
+
+def strip_return_value(signature):
+    """`function [CSX, port] = AddX(a, b)` -> `AddX(a, b)`."""
+    return signature.split("=")[-1].strip().replace("function ", "")
 
 
 def render_function(cwd, cachedir, mfile, funcname):
-    """Render one function or script as a Markdown section."""
+    """Render one function or script as a Markdown section.
+
+    Returns (markdown, used_fallback). `used_fallback` says the help text did
+    not start with the function definition, so the signature was taken from
+    the M-file instead.
+    """
     text = get_cached_helptext(cwd, cachedir, mfile, funcname)
-    func_usage, rest = modify_helptext(text)
-    func_usage = func_usage.lstrip()
+    first_line, rest = modify_helptext(text)
+    first_line = first_line.lstrip()
 
     out = ["## %s\n" % funcname]
 
-    if not is_function_file(mfile):
+    signature = read_function_signature(mfile)
+    if signature is None:
         # A script (e.g. physical_constants) has no signature to document.
-        out.append(func_usage)
+        out.append(first_line)
         out.append(rest)
-        return "\n".join(out)
+        return "\n".join(out), False
 
-    func_prototype = func_usage.split("=")[-1].strip()
-    func_prototype = func_prototype.replace("function ", "")
-
-    # The M-file defines a function, so the first line of its help text has to
-    # be that function's definition. If the name is missing, the help text was
-    # not what we expected -- e.g. Octave printed something of its own first.
-    # Writing that out produces a reference page full of nonsense, so refuse
-    # instead: a stale cache entry would otherwise never be noticed again.
-    if funcname not in func_prototype:
-        print(
-            'ERROR: help text of "%s" does not look like a function '
-            'definition.\n  Extracted prototype: %r\n  Full first line: %r'
-            % (funcname, func_prototype, func_usage),
-            file=sys.stderr,
-        )
-        return None
+    func_prototype = strip_return_value(first_line)
+    # Octave answers for a function without a doc comment in a way that varies
+    # by version: 11.x prefixes the signature with "undocumented function:",
+    # older versions return the first comment inside the function body, or
+    # nothing at all. Treat all of them as "no help text" so that the rendered
+    # page does not depend on the Octave that built it.
+    fallback = (funcname not in func_prototype
+                or first_line.lower().startswith("undocumented function"))
+    if fallback:
+        # No usable help text, so take the signature from the M-file, which is
+        # not version-dependent, and keep whatever the help text was as body.
+        func_usage = signature
+        func_prototype = strip_return_value(signature)
+        body = "\n".join([first_line, rest]) if first_line else rest
+    else:
+        func_usage = first_line
+        body = rest
 
     out.append("```{function} %s\n```\n" % func_prototype)
     out.append("Full definition:\n")
     out.append("```{code-block} matlab\n%s\n```\n" % func_usage)
-    out.append(rest)
-    return "\n".join(out)
+    out.append(body)
+    return "\n".join(out), fallback
 
 
 def generate_doc(subproject):
@@ -239,26 +268,36 @@ def generate_doc(subproject):
                 members.extend(unlisted)
                 break
 
-    failed = []
+    fallbacks = []
+    total = 0
     for slug, title, members in groups:
         sections = []
         for funcname in members:
             mfile = mdir / (funcname + ".m")
             if not mfile.is_file():
                 continue
-            rendered = render_function(cwd, cachedir, mfile, funcname)
-            if rendered is None:
-                failed.append(funcname)
-                continue
+            total += 1
+            rendered, fallback = render_function(cwd, cachedir, mfile, funcname)
+            if fallback:
+                fallbacks.append(funcname)
             sections.append(rendered)
 
         with open(outdir / ("%s.md" % slug), "w") as f:
             f.write("# %s\n\n" % title)
             f.write("\n".join(sections))
 
-    if failed:
-        print("ERROR: could not generate help text for: %s" % ", ".join(failed),
-              file=sys.stderr)
+    if fallbacks:
+        print("Note: %s: no usable help text, using the M-file signature "
+              "for: %s" % (subproject, ", ".join(fallbacks)))
+
+    # One or two M-files without a doc comment is normal. Nearly all of them
+    # failing is not: it means Octave answered with something other than the
+    # help text, which once went unnoticed and produced a reference full of
+    # nonsense. Refuse to write that.
+    if total and len(fallbacks) > total / 2:
+        print("ERROR: %s: %d of %d functions returned no usable help text. "
+              "Is octave installed and 'get_help_text' working in it?"
+              % (subproject, len(fallbacks), total), file=sys.stderr)
         sys.exit(1)
 
 
