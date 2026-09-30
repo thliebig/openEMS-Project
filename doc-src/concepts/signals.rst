@@ -82,8 +82,9 @@ Thus, its actual time duration (in seconds) is meshing-dependent, so is its
 bandwidth.
 
 .. warning::
-   **Bandwidth**. This signal doesn't have a well-defined bandwidth. The specified
-   frequency ``f_max`` is ignored; bandwidth limitation is currently unimplemented.
+   **Bandwidth**. This signal doesn't have a well-defined bandwidth. The
+   ``f_max`` that Python takes is ignored; bandwidth limitation is currently
+   unimplemented, and the Octave interface takes no such argument at all.
    Using these signals may cause unrealistic excitation of rarely-encountered
    high-order EM wave modes in structures, creating unexpected behavior.
    The rising edge of the waveform may show overshoot and ringing due to
@@ -104,11 +105,9 @@ Usage
 
    .. code-tab:: octave
 
-      # bandwidth limitation is not implemented, it's ignored by the simulation!
-      f_max = 10e9;
-
+      % the Octave interface takes no frequency argument here
       fdtd = InitFDTD();
-      fdtd = SetDiracExcite(fdtd, f_max);
+      fdtd = SetDiracExcite(fdtd);
 
    .. code-tab:: python
 
@@ -146,9 +145,9 @@ bandwidth.
    iterations, or :meth:`~openEMS.openEMS.SetMaxTime` to cap the simulated
    time in seconds, so that the simulation is truncated without convergence.
 
-   **Bandwidth**. This signal doesn't have a well-defined bandwidth. The specified
-   frequency
-   ``f_max`` is ignored; bandwidth limitation is currently unimplemented.
+   **Bandwidth**. This signal doesn't have a well-defined bandwidth. The
+   ``f_max`` that Python takes is ignored; bandwidth limitation is currently
+   unimplemented, and the Octave interface takes no such argument at all.
    Using these signals may cause unrealistic excitation of rarely-encountered
    high-order EM wave modes in structures, creating unexpected behavior.
    The rising edge of the waveform may show overshoot and ringing due to
@@ -169,13 +168,11 @@ Usage
 
    .. code-tab:: octave
 
-      # bandwidth limitation is not implemented, it's ignored by the simulation!
-      f_max = 10e9;
-
       % Limit the maximum simulation to 10000 timesteps,
       % otherwise it never terminates.
+      % The Octave interface takes no frequency argument here.
       fdtd = InitFDTD('NrTS', 10000);
-      fdtd = SetStepExcite(fdtd, f_max);
+      fdtd = SetStepExcite(fdtd);
 
    .. code-tab:: python
 
