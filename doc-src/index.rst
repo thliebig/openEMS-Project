@@ -4,17 +4,20 @@ Welcome to openEMS's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 5
+   :maxdepth: 2
 
    intro
 
    install/index
-   concepts/index
    python/openEMS/Tutorials/index
    octave/Tutorials/index
 
+   concepts/index
+   postproc/index
+
    python/python
    octave/octave
+   reference/index
 
    more
    changelog/index
@@ -30,4 +33,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

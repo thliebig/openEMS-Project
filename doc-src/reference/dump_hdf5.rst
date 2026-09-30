@@ -200,7 +200,7 @@ read:
         mesh = dump.GetMesh()
         x = mesh['lines'][0] / mesh['scaling']    # x-lines in drawing units
 
-The frequency requested from :meth:`GetFieldAtFrequency` must match one stored
+The frequency requested from :meth:`~openEMS.utilities.HDF5Dump.GetFieldAtFrequency` must match one stored
 in the file. If the file holds **time-domain** data instead, the frequency is
 computed by an on-the-fly DFT, so the same post-processing code works whether
 the dump was recorded as TD or FD. The DFT reads every timestep but holds only
@@ -256,7 +256,7 @@ Directions are given as ``0``/``1``/``2`` or by coordinate name (``'x'``,
 ``'y'``, ``'z'``, or ``'rho'``, ``'alpha'``, ``'z'`` for a cylindrical mesh).
 Positions passed as ``pos``/``start``/``stop`` are in SI units and are snapped
 to the nearest mesh line; ``idx``/``idx_start``/``idx_stop`` take mesh line
-indices instead. :meth:`NearestIndex` converts a coordinate to an index.
+indices instead. :meth:`~openEMS.utilities.HDF5Dump.NearestIndex` converts a coordinate to an index.
 
 The ``File`` property exposes the underlying open ``h5py.File`` for anything
 not wrapped by the class, such as the ``/CellData`` and ``/CellWidth`` groups

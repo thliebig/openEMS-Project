@@ -8,60 +8,25 @@ frequency domains.
 Install
 ''''''''
 
-Qucs has a somewhat confusing development history, three different
-spinoffs exist.
+Use :program:`Qucs-S`, the actively maintained fork; the original
+:program:`Qucs` needs Qt4 and no longer installs on current systems, and
+:program:`QucsStudio` is not open source. Qucs-S 24.2.0 and later include the
+:program:`Qucsator` RF engine that this page needs, and the walkthrough below
+was written against 25.1.0 — with an older version the menus differ.
 
-#. :program:`Qucs`. Development of the original :program:`Qucs` started
-   in the early 2000s, but was slowed down over time. Finally in ~2019,
-   its underlying GUI framework Qt4 has been discontinued, making it
-   uninstallable on most operating systems. Its :program:`Qucsator`` engine
-   has good RF simulation features, but limited time-domain capabilities
-   with performance and convergence issues.
-
-#. :program:`QucsStudio` is a free-of-charge spinoff of Qucs with
-   additional features, but it's **not** free and open source software.
-
-#. :program:`Qucs-S`. The project :program:`Qucs-S` is a fork of
-   :program:`Qucs` with a modernized codebase, aiming to support
-   multiple SPICE backends for improved time-domain simulations,
-   such as `Ngspice`. RF simulations still use the original
-   :program:`Qucsator` engine externally before Qucs-S 24.2.0
-   (meaning that an installation of the now-unavailable Qucs is
-   still needed). After Qucs-S 24.2.0, :program:`Qucsator` is
-   now a builtin option.
-
-.. warning::
-   For this tutorial, we use Qucs-S 25.1.0. Other Qucs spinoffs
-   or older Qucs-S versions have features and user interface
-   changes that are in conflict with this tutorial, so one should
-   use Qucs-S 25.1.0 or newer when following this tutorial.
-
-The Qucs-S packages in most operating systems are outdated, thus,
-Debian, Ubuntu, Fedora and openSUSE users should use the third-party package
-maintained by Qucs-S project developers. It's hosted on Open Build
-Service (OBS), installation instructions can be found in the following
-link.
-
-* https://software.opensuse.org/download.html?project=home%3Ara3xdh&package=qucs-s
-
-Alternatively, if no package is available, a self-contained AppImage
-version is also available as a stop-gap measure before it's packaged.
-
-* https://github.com/ra3xdh/qucs_s/releases/tag/25.1.0
-
-Download ``Qucs-S-25.1.0-linux-x86_64.AppImage``, and grant it
-execution permission::
-
-    chmod +x Qucs-S-25.1.0-linux-x86_64.AppImage
+Distribution packages are often behind; the Qucs-S developers maintain
+up-to-date packages for Debian, Ubuntu, Fedora and openSUSE on the `Open Build
+Service <https://software.opensuse.org/download.html?project=home%3Ara3xdh&package=qucs-s>`_,
+and publish an `AppImage <https://github.com/ra3xdh/qucs_s/releases>`_
+otherwise.
 
 .. _qucsator:
 
 Enable Qucsator
 '''''''''''''''''''
 
-As previously mentioned, Qucs-S uses Ngspice for simulation by default,
-but it lacks some features required for RF/microwave applications that
-we need. Hence, we must switch Qucs-S's engine from Ngspice to Qucsator.
+Qucs-S simulates with Ngspice by default, which lacks the RF/microwave
+features needed here. Switch the engine from Ngspice to Qucsator.
 
 **Switch the engine.** Press the drop-down list at the top-right of
 the Qucs-S window. By default, it should show `Ngspice`, click

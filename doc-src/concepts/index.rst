@@ -4,28 +4,44 @@
 Concepts
 ========
 
-Basic concepts of openEMS simulation.
+How an openEMS simulation is put together, from the numerical method
+underneath it to the results it writes out.
 
 .. toctree::
    :maxdepth: 1
+   :caption: Fundamentals
 
    numerical_method
-   modeling
-   properties
-   disc_material
-   primitives
    mesh
    cylindrical_fdtd
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Modeling
+
+   modeling
+   properties
+   primitives
+   disc_material
+   dispersive
+   lumped
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Sources and Boundaries
+
    bc
    ports
    excitations
    signals
+   probes
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Running and Results
+
+   simulation
    dump
-   dump_hdf5
    nf2ff
    sar
-   lumped
-   dispersive
-   simulation
    model_io
-   postproc

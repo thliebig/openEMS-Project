@@ -3,8 +3,10 @@
 Python Interface
 ================
 
+API reference for the CSXCAD and openEMS Python modules. For installing them,
+see :ref:`pyinstall`.
+
 .. toctree::
 
-   install
    CSXCAD/CSXCAD_API
    openEMS/openEMS_API
