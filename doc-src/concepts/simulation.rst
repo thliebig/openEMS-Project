@@ -1,3 +1,5 @@
+.. _concept_simulation:
+
 Simulation
 ============
 
@@ -25,8 +27,8 @@ If everything works as expected, the following screen appears::
 
     $ python3 simulation.py
      ----------------------------------------------------------------------
-     | openEMS 64bit -- version v0.0.36-16-g7d7688a
-     | (C) 2010-2023 Thorsten Liebig <thorsten.liebig@gmx.de>  GPL license
+     | openEMS 64bit -- version v0.37.0
+     | (C) 2010-2026 Thorsten Liebig <thorsten.liebig@gmx.de>  GPL license
      ----------------------------------------------------------------------
     	Used external libraries:
     		CSXCAD -- Version: v0.6.3-4-g9257bf1
@@ -63,6 +65,64 @@ respective solution.
 * :ref:`unused_excite`
 * :ref:`voltage_integral_error`
 
+Solver Options
+----------------
+
+The solver takes a number of options, whether it is started as a program or
+through the scripting interface. In Matlab/Octave they are passed as a string
+to ``RunOpenEMS``, in Python as keyword arguments to
+:meth:`~openEMS.openEMS.Run` with the dashes replaced by underscores
+(``--debug-material`` becomes ``debug_material=True``). ``openEMS --help``
+lists what the installed version supports.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 34 66
+
+   * - Option
+     - Effect
+   * - ``--numThreads <n>``
+     - Number of threads; 0 (default) uses all cores.
+   * - ``--engine <name>``
+     - ``fastest`` (default), ``basic``, ``sse``, ``sse-compressed`` or
+       ``multithreaded``. Mainly for benchmarking and verification.
+   * - ``--verbose`` (``-v``, ``-vv``, ``-vvv``)
+     - Debug level 1 to 3.
+   * - ``--no-simulation``
+     - Preprocess only. Together with the debug dumps below, this checks a
+       setup without running it.
+   * - ``--disable-dumps``
+     - Ignore all field dump boxes, for a faster run.
+   * - ``--dump-statistics``
+     - Write ``openEMS_run_stats.txt`` and ``openEMS_stats.txt``.
+   * - ``--debug-material``, ``--debug-PEC``
+     - Write the material and metal distribution *as discretized* to VTK
+       files — the most direct way to see what the mesh actually made of the
+       model.
+   * - ``--debug-boxes``, ``--debug-operator``, ``--debug-CSX``
+     - Write probe/dump boxes, the operator, and the parsed geometry to file.
+   * - ``--showProbeDiscretization``
+     - Report where each probe ended up after snapping to the grid.
+   * - ``--legacyHDF5Dumps``
+     - Write HDF5 dumps with reversed axis order, see
+       :ref:`concept_dump_hdf5`.
+
+The Python interface adds two arguments of its own to
+:meth:`~openEMS.openEMS.Run`: ``setup_only``, which stops after the setup, and
+``cleanup``, which deletes openEMS output files from the simulation directory
+before starting, so results from an earlier run cannot be mistaken for new
+ones.
+
+.. tabs::
+
+   .. code-tab:: octave
+
+      RunOpenEMS(Sim_Path, 'simulation.xml', '--numThreads=4 --debug-PEC');
+
+   .. code-tab:: python
+
+      fdtd.Run(Sim_Path, cleanup=True, numThreads=4, debug_PEC=True)
+
 Convergence and Divergence (Blow-up)
 -------------------------------------
 
@@ -73,14 +133,32 @@ achieves convergence, meaning the transients in the system have
 dissipated, and the system has reached a steady-state. Thus, the
 simulation terminates.
 
-Conversely, incorrect or unphysical
-modeling or meshing may destabilize the simulation, causing
-*blow-ups*. The simulation domain's EM field strength diverges over
-time due to the accumulation of small numerical errors. The
-total energy may gradually increase unbounded, eventually
-reaching the floating-point infinity.
-If the energy shows signs of rapid increases, the simulation
-should be stopped early via :kbd:`Control-C` to avoid wasting time.
+The opposite outcome is a *blow-up*: the field strength diverges instead of
+decaying, the energy climbs without bound and eventually reaches floating-point
+infinity. If the energy starts rising quickly, stop the run with
+:kbd:`Control-C` rather than waiting for it.
+
+A blow-up is not caused by a poorly built model. The FDTD update itself is
+inherently stable as long as the timestep respects the CFL/Rennings2 limit,
+and openEMS derives that limit per cell from the local mesh *and* material
+properties — so a coarse mesh, a badly shaped structure or an unusual
+permittivity make the result inaccurate, not unstable. There are two real
+sources:
+
+* **The PML.** It is an artificial absorbing material rather than part of the
+  stability criterion, and fringe fields or evanescent waves reaching into it
+  can destabilize it. This is by far the common case, and it applies to
+  unintentional radiators — a stray open trace, an unterminated port — as
+  much as to antennas. See the :ref:`PML boundary <concept_bc_pml>`.
+* **A manually forced timestep.** :meth:`~openEMS.openEMS.SetTimeStep`
+  overrides the calculated value and can set one above the stability limit;
+  it exists for engine verification and should otherwise be left alone. To
+  tune a marginally stable simulation use
+  :meth:`~openEMS.openEMS.SetTimeStepFactor`, which only ever reduces it.
+
+.. seealso::
+   :ref:`concept_numerical_method` for why the update is stable, and the
+   :ref:`FAQ <faq>` for what to check when a simulation does diverge.
 
 Note that the displayed energy value is only a rough, indicative estimate.
 Factors such as material properties are ignored for simulation speed.
@@ -96,13 +174,15 @@ makes it difficult to dissipate the injected energy.
 
    The energy decay threshold for termination is adjustable
    via :meth:`~openEMS.openEMS.SetEndCriteria`, but 60 dB is a
-   good default. For advanced usage,
-   :meth:`~openEMS.openEMS.SetNumberOfTimeSteps`
-   and
-   :meth:`~openEMS.openEMS.SetMaxTime` can limit the total
-   number of timesteps (in iterations) or wall-clock time
-   (in seconds) to truncate the simulation earlier before
-   convergence.
+   good default. A run can also be cut short before it converges:
+   :meth:`~openEMS.openEMS.SetNumberOfTimeSteps` caps the number of
+   iterations, and :meth:`~openEMS.openEMS.SetMaxTime` caps the
+   *simulated* time — the physical time the wave is propagated for,
+   in seconds, which openEMS turns into a timestep count by dividing
+   by the timestep. It is not a wall-clock limit. Typical RF values
+   are in the nanosecond range, and since the simulated duration sets
+   the frequency resolution of the result, a run of duration
+   :math:`T` resolves :math:`\Delta f = 1/T`.
 
 Common Errors
 ----------------
@@ -172,49 +252,35 @@ If the openEMS output is flooded with the following error message::
 
     Engine_Interface_FDTD::CalcVoltageIntegral: Error, only a 1D/line integration is allowed
     Engine_Interface_FDTD::CalcVoltageIntegral: Error, only a 1D/line integration is allowed
-    Engine_Interface_FDTD::CalcVoltageIntegral: Error, only a 1D/line integration is allowed
-    Engine_Interface_FDTD::CalcVoltageIntegral: Error, only a 1D/line integration is allowed
-    Engine_Interface_FDTD::CalcVoltageIntegral: Error, only a 1D/line integration is allowed
-    Engine_Interface_FDTD::CalcVoltageIntegral: Error, only a 1D/line integration is allowed
 
-It means that openEMS is not able to calculate the voltage at a port
-because the port is located at an ill-defined position. This happens
-if the start and stop coordinates are different (i.e. not a 1D port),
-but the size is smaller than a single mesh cell (i.e. when the port
-is built from its start coordinate to its stop coordinate on each axis,
-it does not overlap with at least two mesh lines).
+openEMS cannot calculate the voltage at a port, because the port sits at an
+ill-defined position: its start and stop coordinates differ, so it is not a 1D
+port, but it is smaller than one mesh cell, so it is not a 2D port either.
 
-For example, the following port is functional because it's strictly
-a 1D port, with identical start and stop coordinates::
+With a mesh line at ``z = -8`` and the next one somewhere beyond ``z = 8``:
 
-    port[0] = fdtd.AddLumpedPort(1, z0, [any_x, any_y, -8], [any_x, any_y, -8], 'y', excite=1)
-    port[1] = fdtd.AddLumpedPort(2, z0, [any_x, any_y, -8], [any_x, any_y, -8], 'y', excite=0)
+.. list-table::
+   :header-rows: 1
+   :widths: 30 14 56
 
-The following port is also functional because the 2D port passes
-(overlaps with) at least two mesh lines when it's built from Z = -8
-to Z = 8::
+   * - ``start`` → ``stop`` in z
+     - Works?
+     - Why
+   * - ``-8`` → ``-8``
+     - yes
+     - A 1D port, exactly on a mesh line.
+   * - ``-8`` → ``8``
+     - yes
+     - A 2D port spanning two mesh lines, i.e. one full cell.
+   * - ``-8`` → ``8.1``
+     - yes
+     - Still spans a full cell; the stop coordinate need not be on a line.
+   * - ``-8`` → ``-7.9``
+     - **no**
+     - Neither 1D nor a full cell: there is no mesh line between the two.
 
-    port[0] = fdtd.AddLumpedPort(1, z0, [any_x, any_y, -8], [any_x, any_y, 8], 'z', excite=1)
-    port[1] = fdtd.AddLumpedPort(2, z0, [any_x, any_y, -8], [any_x, any_y, 8], 'z', excite=0)
-
-The following port is also functional, because although there
-is no mesh line at the stop position Z = 8.1, but the 2D port has
-already crossed at least one mesh cell (two mesh lines) when it's
-built from Z = -8 to its stop coordinate::
-
-    port[0] = fdtd.AddLumpedPort(1, z0, [any_x, any_y, -8], [any_x, any_y, 8.1], 'z', excite=1)
-    port[1] = fdtd.AddLumpedPort(2, z0, [any_x, any_y, -8], [any_x, any_y, 8.1], 'z', excite=0)
-
-But the following port is not functional, because the 2D port
-does not cross a single mesh cell (two mesh lines) when it's
-built from Z = -8 to Z = -7.9. Although there's a mesh line at Z = -8,
-there is no mesh line between Z = -8 and Z = -7.9::
-
-    port[0] = fdtd.AddLumpedPort(1, z0, [any_x, any_y, -8], [any_x, any_y, -7.9], 'z', excite=1)
-    port[1] = fdtd.AddLumpedPort(2, z0, [any_x, any_y, -8], [any_x, any_y, -7.9], 'z', excite=0)
-
-To fix the problem, either redefine the port with the correct
-coordinates, or to add additional mesh lines.
+To fix it, either give the port coordinates that satisfy one of the working
+cases, or add the mesh lines it needs.
 
 .. important::
    On each axis, a port must either be one-dimensional and aligned to a
