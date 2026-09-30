@@ -193,15 +193,15 @@ case "$PM" in
     PKGS_VTK=( vtk9 )
     PKGS_VTK_QT=()   # Qt for FreeBSD VTK comes via explicit qt5 packages below
     PKGS_GUI=( qt5-core qt5-gui qt5-opengl qt5-xml )
+    # patchelf: meson-python >= 0.22 runs it while building a wheel, and PyPI
+    # ships no FreeBSD wheels, so a venv build compiles numpy et al. from source.
+    PKGS_PYTHON=( python3 patchelf )
     if [[ -n "$_PYVER" ]]; then
-      PKGS_PYTHON=(
-        python3
+      PKGS_PYTHON+=(
         "${_PYVER}-pip" "${_PYVER}-setuptools" "${_PYVER}-wheel"
         "${_PYVER}-setuptools-scm"
         "${_PYVER}-numpy" "${_PYVER}-h5py" "${_PYVER}-matplotlib"
       )
-    else
-      PKGS_PYTHON=( python3 )
     fi
     PKGS_OCTAVE=( octave )
     ;;
