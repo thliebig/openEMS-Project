@@ -3,80 +3,20 @@
 Install Python Extensions Manually
 ===================================
 
-Instructions how to install the **CSXCAD & openEMS Python interface**.
+Installing the CSXCAD and openEMS Python extensions with ``pip``, without
+going through ``./update_openEMS.sh``. This is for development,
+troubleshooting, and systems where the script's assumptions do not hold —
+for the normal case use ``./update_openEMS.sh --python``, see
+:ref:`pyinstall_auto`, which also documents the ``--python-venv-mode``,
+``--python-venv-dir`` and ``--python-use-network`` options.
 
-Methods
---------
-
-CSXCAD and Python extensions can be installed using two methods:
-automatic install via ``./update_openEMS.sh`` using the ``--python``
-flag, or building each Python extension separately.
-
-
-
-Recommended: Install Python Extensions Automatically
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The section :ref:`Install from Source <install_src>` already contains the
-commands to build openEMS and its Python binding at the same time via
-``./update_openEMS.sh`` automatically, using the ``python`` flag.
-
-.. code-block:: bash
-
-    ./update_openEMS.sh ~/opt/openEMS --python
-
-See :ref:`install_requirements_src` and :ref:`clone_build_install_src` first
-for more details.
-
-Installation Strategies
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-In the past, the CSXCAD and openEMS Python extensions were installed
-directly into Python's default search paths (such as  ``~/.local`` in
-the home directory). However, this practice is now discouraged on most
-operating systems as a policy of `PEP 668 <https://peps.python.org/pep-0668/>`_.
-Due to the risk of dependency conflicts between a system-supplied and
-a user-installed Python package. Creating an isolated "virtual environment"
-is now recommended.
-
-In the latest openEMS development version (to be released as v0.0.37),
-``update_openEMS.sh`` automatically creates a Python venv under an
-installation subdirectory ``venv`` (i.e. ``~/opt/openEMS/venv``), and
-automatically installs all extensions to this location. The Python
-dependencies bypasses the operating system's own package management,
-and requires Internet access to PyPI.
-
-Advanced Install
-^^^^^^^^^^^^^^^^^^
-
-One can install Python packages using several different methods, controlled
-by the following options.
-
-- ``--python-venv-mode``
-
-  - ``auto``: create a Python venv if no venv is already activated,
-    otherwise use the existing venv (default)
-  - ``venv``: create a Python venv
-  - ``site``: create a Python venv with --system-site-packages
-  - ``disable``: don't change venv, install Python extension directly to
-    default path (usually in home directory (e.g. ``~/.local``)
-
-- ``--python-venv-dir``: override default Python venv creation path,
-  by default, use "venv" subdirectory of the installation path.
-
-- ``--python-use-network`` Download needed Python pip packages from Internet
-
-  - ``auto``: use Internet when needed (default)
-  - ``disable``: all dependencies must be manually installed, or installation
-    fails (create venv with ``--system-site-packages``, run pip with
-    ``--no-build-isolation``, disable pip self-update and setuptools_scm)
-
-Alternative: Install Python Extensions Manually
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This page contains information for installing CSXCAD and
-openEMS Python extensions via ``pip``, without using the
-monolithic ``./update_openEMS.sh``.
+.. note::
+   Installing Python extensions directly into the interpreter's default
+   search path (``~/.local`` and friends) is discouraged on most operating
+   systems today, and blocked outright by `PEP 668
+   <https://peps.python.org/pep-0668/>`_ on some, because of the dependency
+   conflicts it causes with system-supplied packages. Install into a virtual
+   environment instead; this page assumes you do.
 
 Requirements
 --------------
@@ -84,15 +24,9 @@ Requirements
 Python version
 ~~~~~~~~~~~~~~~
 
-Ensure the system's Python interpreter is officially supported by
-Python developers, such as Python 3.9. Use unsupported versions at your
-own risk.
-
-Installation is allowed using practically all Python versions (Python
-3.4+), but for testing purposes only. Use at your own risk. At the time of
-writing, Python 3.5 is known to partially work (i.e., run a trivial script),
-while Python 3.6 is likely the lowest fully-functional version.
-In Python 3.5 and lower versions, ``SyntaxError`` may be encountered.
+Use a Python version that still receives upstream support. Installation
+works down to Python 3.6; older interpreters raise ``SyntaxError`` in parts
+of the API.
 
 Other Dependencies
 ~~~~~~~~~~~~~~~~~~

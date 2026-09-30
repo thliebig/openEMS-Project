@@ -32,10 +32,6 @@ ARM, POWER, x86_64, RISC-V.
 In addition, x86 and x86_64 CPUs are
 supported on Windows via MSVC.
 
-In the past, a "supported CPU check" was used , but it has been removed.
-There's no hardcoded "CPU checks" to artificially limit the project to a
-particular CPU.
-
 The main simulation engine is known as the :program:`SSE` engine, but it's
 misnomer. The :program:`SSE` engine uses GCC's vector extension with 64-bit
 vectors, which compiles to *SSE* on x86 CPUs, *AltiVec* on IBM POWER, *NEON*
@@ -59,52 +55,49 @@ The following list shows the minimum dependency versions supported by openEMS
 * Boost 1.55
 * VTK 6.0
 * CGAL 4.0
-
-  * CGAL 4.14.3 is the last version supported by GCC 4.8.
-
 * Qt 4
 
   * VTK's Qt must be linked to the same Qt version as QCSXCAD/AppCSXCAD.
 
-Install Dependencies From Package Manager
---------------------------------------------
-
 .. _install_deps_script:
 
-.. tip::
-   **Automated dependency check/install.** ``scripts/install_deps.sh``,
-   included in the repository cloned in :ref:`clone_build_install_src`
-   (see below), detects the current OS and package manager (``apt``,
-   ``dnf``, ``apk``, ``pacman``, ``brew`` or ``pkg``) and checks or
-   installs the required packages directly, without having to look up the
-   right list below. Once the repository is cloned, run:
+Install Dependencies
+----------------------
 
-   .. code-block:: bash
+``scripts/install_deps.sh``, part of the repository cloned in
+:ref:`clone_build_install_src`, detects the operating system and its package
+manager (``apt``, ``dnf``, ``apk``, ``pacman``, ``brew`` or ``pkg``) and
+installs what openEMS needs. This is the recommended way: it is the same
+script ``update_openEMS.sh`` runs in ``--check`` mode before every build, and
+the one the project's CI uses to prepare each test runner.
 
-       # list what's missing, and the command to install it
-       ./scripts/install_deps.sh --check --python --with-ctb
+.. code-block:: bash
 
-       # install missing packages, after confirmation
-       ./scripts/install_deps.sh --install --python --with-ctb
+    # list what's missing, and the command to install it
+    ./scripts/install_deps.sh --check --python --with-ctb
 
-   Add ``--disable-gui`` for a headless build without :program:`AppCSXCAD`,
-   and use ``--auto`` instead of ``--install`` to install without
-   prompting. This is the same script that ``update_openEMS.sh`` runs
-   automatically (in ``--check`` mode) before every build, and that the
-   project's own CI uses (in ``--auto`` mode) to prepare each test runner
-   — see :ref:`clone_build_install_src`'s ``--skip-dep-check`` option.
+    # install missing packages, after confirmation
+    ./scripts/install_deps.sh --install --python --with-ctb
 
-   It also covers Arch, Manjaro, and other ``pacman``-based distributions,
-   which the manual per-distro instructions below don't include.
+Add ``--disable-gui`` for a headless build without :program:`AppCSXCAD`, and
+use ``--auto`` instead of ``--install`` to install without prompting. To skip
+the check that ``update_openEMS.sh`` performs, see its ``--skip-dep-check``
+option in :ref:`clone_build_install_src`.
 
-   Like the per-distro package lists below, the packages ``install_deps.sh``
-   installs can go out of date as distributions rename or reorganize
-   packages over time. If it reports a missing or wrong package on a
-   supported distribution, please report it or send a pull request.
+Then continue with :ref:`clone_build_install_src`.
 
-   The per-distro instructions below remain useful as a reference, for
-   distributions the script doesn't yet detect, or to see exactly which
-   packages are required and why.
+.. note::
+   Package names go out of date as distributions rename and reorganize them.
+   If ``install_deps.sh`` reports a missing or wrong package on a supported
+   distribution, please report it or send a pull request.
+
+Package Lists per Distribution
+--------------------------------
+
+The lists below are what ``install_deps.sh`` installs, spelled out. They are
+here for distributions the script does not detect, for packagers, and to see
+which packages are needed and why — on a supported distribution there is no
+need to work through them.
 
 Alpine
 ~~~~~~~
@@ -244,124 +237,6 @@ AlmaLinux
 
 - Skip to :ref:`clone_build_install_src` and continue installation.
 
-CentOS 7
-~~~~~~~~~~~
-
-openEMS continues to support legacy systems when it's practical, including
-CentOS 7, but additional steps are required.
-
-- CentOS repos are EOL and desupported. For a fresh installation, the following
-  steps are required to bring the package manager back into a functional state:
-
-  .. warning::
-     CentOS 7 no longer receives security updates. Use at your own risk.
-
-  .. code-block:: bash
-
-      # change all mentions of mirror.centos.org to vault.centos.org
-      sed -i 's|^mirrorlist|#mirrorlist|g; s|^#baseurl|baseurl|g; s|mirror.centos.org|vault.centos.org|g' \
-          /etc/yum.repos.d/CentOS-Base.repo
-
-- openEMS requires additional packages not included in the standard repository,
-  which can be enabled by the following command:
-
-  .. code-block:: bash
-
-      yum install centos-release-scl
-
-      # change all mentions of mirror.centos.org to vault.centos.org
-      sed -i 's|^mirrorlist|#mirrorlist|g; s|^#baseurl|baseurl|g;
-              s|^# baseurl|baseurl|g; s|mirror.centos.org|vault.centos.org|g' \
-          /etc/yum.repos.d/CentOS-SCLo-scl.repo \
-          /etc/yum.repos.d/CentOS-SCLo-scl-rh.repo
-
-      yum install epel-release
-
-- openEMS depends on the following packages for minimum functionality:
-
-  .. code-block:: bash
-
-      # install git first to avoid dependency graph conflicts
-      yum install git
-
-      yum install gcc gcc-c++ gmp-devel mpfr-devel \
-                  git tinyxml-devel hdf5-devel
-
-- CentOS 7 has CMake 2 by default, but we require CMake 3:
-
-  .. code-block:: bash
-
-      # use cmake3 instead of default cmake2
-      yum install cmake3
-      alternatives --install /usr/local/bin/cmake cmake /usr/bin/cmake3 99
-
-- ``boost-predef`` is only available on Boost 1.55 and later. Without it,
-  the error "fatal error: boost/predef.h: No such file or directory" occurs.
-  We can build the latest version of Boost from source. But as CentOS 7 is
-  already a frozen platform, we can try some non-standard tricks here
-  and get away from it. Here, we borrow a copy of Boost 1.58 from rh repo's
-  ``mariadb`` backport package.
-
-  .. code-block:: bash
-
-      yum install -y rh-mariadb101-boost-devel
-
-      # copy it into /usr/local, so it can be found in the standard system
-      # search path
-      ln -s /opt/rh/rh-mariadb101/root/usr/include/boost /usr/local/include/boost
-      mkdir /usr/local/lib64 && cd /usr/local/lib64
-      for i in /opt/rh/rh-mariadb101/root/usr/lib64/libboost*; do
-          ln -s $i /usr/local/lib64/
-      done
-
-- CentOS 7 uses GCC 4.8, which has only partial C++11 support, but it's currently
-  sufficient to build CSXCAD or openEMS.
-
-  .. warning::
-     Manual ``-std=`` options are no longer needed in ``CXXFLAGS``. Before
-     building CSXCAD or openEMS, one should remove all ``-std=`` options
-     from ``CXXFLAGS``. This flag is now managed by CMake. See
-     :ref:`remove_cxx11` for details.
-
-- Install CGAL:
-
-  .. important::
-
-     CGAL v4.14.3 must be built from source, see :ref:`build_deps_from_source`.
-
-- To use AppCSXCAD to visualize 3D models (recommended):
-
-  .. code-block:: bash
-
-      yum install vtk-qt
-
-- To use Octave scripting (recommended):
-
-  .. code-block:: bash
-
-     yum install octave
-
-- To use Python scripting (recommended):
-
-  .. code-block:: bash
-
-     yum install python3-devel python3-pip
-
-- By default, one doesn't need to install other Python packages here.
-  The ``update_openEMS.sh`` script installs them automatically via ``pip``
-  into an isolated virtual environment (``venv``). However, if one
-  wants to manage Python dependencies manually:
-
-  .. code-block:: bash
-
-      yum install python3-Cython
-
-      # system packages are incompatible, must be manually
-      # installed via pip
-      pip3 install numpy h5py matplotlib --user
-
-- Skip to :ref:`clone_build_install_src` and continue installation.
-
 Debian/Ubuntu
 ~~~~~~~~~~~~~~
 
@@ -422,93 +297,6 @@ Debian/Ubuntu
                            libhpdf-dev libtool
 
 - Skip to :ref:`clone_build_install_src` and continue installation.
-
-Legacy Debian/Ubuntu
-^^^^^^^^^^^^^^^^^^^^^^
-
-openEMS continues to support legacy systems when it's practical, currently
-down to Ubuntu 14.04. These additional steps are required.
-
-Debian/Ubuntu
-"""""""""""""""
-
-- Instead of ``libvtk9-dev``, on earlier versions of Debian/Ubuntu, you need to
-  choose an older version of vtk. Both ``libvtk7-dev`` and ``libvtk6-dev`` are
-  still supported.
-
-  .. code-block:: bash
-
-      # you can use VTK9
-      sudo apt-get install libvtk9-dev libvtk9-qt-dev
-
-      # or VTK7
-      sudo apt-get install libvtk7-dev libvtk7-qt-dev
-
-      # or VTK6
-      # note: libvtk6-qt-dev is not used on Ubuntu 14.04, only libvtk6-dev is required
-      sudo apt-get install libvtk6-dev
-
-Ubuntu 14.04 only
-""""""""""""""""""
-
-- Ubuntu 14.04 has CMake 2 by default, but we require CMake 3:
-
-  .. code-block:: bash
-
-      sudo apt-get install cmake3
-
-- Ubuntu 14.04 ships Boost 1.54 and is required by ``libcgal-dev``,
-  but we need Boost 1.55, so we install Boost 1.55 first, then
-  install CGAL from source.
-
-  .. code-block:: bash
-
-      sudo apt-get install boost1.55 boost1.55-dev
-
-- Ubuntu 14.04 uses GCC 4.8, which has only partial C++11 support, but it's currently
-  sufficient to build CSXCAD or openEMS.
-
-  .. warning::
-     Manual ``-std=`` options are no longer needed in ``CXXFLAGS``. Before
-     building CSXCAD or openEMS, one should remove all ``-std=`` options
-     from ``CXXFLAGS``. This flag is now managed by CMake. See
-     :ref:`remove_cxx11` for details.
-
-- Install CGAL:
-
-  .. important::
-
-     CGAL v4.14.3 must be built from source, see :ref:`build_deps_from_source`.
-
-- Ubuntu 14.04's Python packages are ancient. Python 3.4 frequently encounters
-  ``SyntaxError``. For a minimum viable setup, suggested to install Python 3.5
-  from ``apt-get``, and installing other packages via ``pip`` into an isolated
-  virtual environment (``venv``) instead. Here, we use ``$HOME/opt/openEMS`` as
-  an example. This directory must match the directory later used to install
-  openEMS.
-
-  .. code-block:: bash
-
-      apt-get install -y curl python3.5-dev
-
-      # create an isolated virtual environment, without pip
-      # (because Python 3.5 pip is broken on Ubuntu 14.04)
-      python3.5 -m venv $HOME/opt/openEMS --without-pip
-
-      # activate the venv, and manually bootstrap pip ourselves
-      curl -O https://bootstrap.pypa.io/pip/3.5/get-pip.py
-      source ~/venv/bin/activate
-      python3.5 get-pip.py
-
-  .. warning::
-
-      Python 3.5 is not fully supported, use at your own risk.
-      This setup is intended for testing purposes.
-      From limited testing, one can run a trivial openEMS script,
-      but ``SyntaxError`` may still be encountered in some APIs.
-      If possible, it's strongly recommended to install a
-      custom Python interpreter, either from a third-party repository
-      (PPA), or building from source.
 
 Fedora
 ~~~~~~~~~~~~~~
@@ -820,30 +608,6 @@ from source is required.
              -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
     make -j$(nproc)
     make install
-
-CGAL v4.14.3
-~~~~~~~~~~~~~~~
-
-.. important::
-
-   For Ubuntu 14.04 and CentOS 7 only.
-
-On legacy systems such as Ubuntu 14.04 and CentOS 7, CGAL relies on an
-obsolete Boost version which is in conflict with openEMS's requirements.
-To use openEMS, CGAL must be built from source.
-
-.. code-block:: bash
-
-    git clone https://github.com/CGAL/cgal.git --depth=1 --branch=v4.14.3
-    cd cgal && mkdir build && cd build
-
-    cmake ../ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/opt/openEMS
-    make && make install
-
-CGAL v4.14.3 is the last version compatible with GCC 4.8. In newer
-CGAL versions, the following errors occur: ``The compiler feature
-"cxx_decltype_auto" is not known to CXX compiler "GNU" version
-4.8.5.``
 
 .. _hyp2mat: https://github.com/koendv/hyp2mat
 .. _MSYS2: https://www.msys2.org/

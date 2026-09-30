@@ -3,24 +3,15 @@
 Install Python Extensions Automatically
 ========================================
 
-Instructions how to install the **CSXCAD & openEMS Python interface**.
-
-Methods
---------
-
-CSXCAD and Python extensions can be installed using two methods:
-automatic install via ``./update_openEMS.sh`` using the ``--python``
-flag, or building each Python extension separately.
-
-This page exclusively deals with the recommended script-assisted
-auto-installation process.
+Installing the **CSXCAD & openEMS Python interface** with
+``./update_openEMS.sh --python``, which is the recommended way.
 
 .. seealso::
 
    * For context, see :ref:`install_requirements_src` and
      :ref:`clone_build_install_src`.
 
-   * For manual installation, see :ref:`pyinstall_manual`.
+   * To build the extensions by hand instead, see :ref:`pyinstall_manual`.
 
 Quick Start
 ------------
@@ -34,9 +25,8 @@ run:
 
     ./update_openEMS.sh ~/opt/openEMS --python
 
-In the latest openEMS development version (to be released as v0.0.37),
-Python extensions and their dependencies are installed into
-an isolated "virtual environment" in the ``venv`` subdirectory (e.g.
+Since openEMS 0.37, Python extensions and their dependencies are installed
+into an isolated "virtual environment" in the ``venv`` subdirectory (e.g.
 ``~/opt/openEMS/venv``). This environment *must be activated* before
 using Python with CSXCAD or openEMS.
 
@@ -214,123 +204,37 @@ Use the ``--python-use-network disable`` argument, see
 Q: I have Internet access, but behind a proxy.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Your have three possible solutions, pick one of them.
-
-1. **Use** ``--python-use-network disable``: If you're using the system
-   on a regular basis, you probably already have a solution for downloading
-   new packages using the OS package manager via a proxy. In this case,
-   treat the system as a special case of an "offline system" or "system with
-   manual package management".
-
-   Therefore, use the ``--python-use-network disable`` argument, see
-   :ref:`pyinstall_qa_offline_system`
-
-2. **Use an HTTP Proxy**: See :ref:`pyinstall_qa_http_proxy`
-
-3. **Use a SOCKS Proxy**: See :ref:`pyinstall_qa_socks_proxy`
-
-.. _pyinstall_qa_http_proxy:
-
-Q: I have Internet access, but behind an HTTP proxy.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-If you want to use ``pip3`` to manage packages (rather than manage
-it manually), but behind a proxy, it's possible to set a global
-proxy using the standard environment variable ``https_proxy``
-with the format ``[protocol://]<host>[:port]``:
+For an HTTP proxy, set the standard environment variables in the format
+``[protocol://]<host>[:port]`` and build as usual:
 
 .. code-block:: bash
 
-   # HTTP proxy server for HTTP/HTTPS URLs
    export http_proxy="http://proxy.example.com:8080"
    export https_proxy="http://proxy.example.com:8080"
 
-   # build and install openEMS as usual
    ./update_openEMS.sh ~/opt/openEMS --python
 
-.. _pyinstall_qa_socks_proxy:
+A SOCKS proxy (``socks5h://proxy.example.com:8080``) additionally needs
+``pysocks``, an optional ``pip3`` dependency, otherwise pip fails with
+``ERROR: Could not install packages due to an OSError: Missing dependencies
+for SOCKS support``. The package is usually called ``pysocks`` or
+``python3-socks``, but installing it from the system package manager is not
+enough on its own: a fresh ``venv`` cannot see system packages. Either expose
+them with ``--python-venv-mode site``
+(:ref:`pyinstall_qa_use_system_packages`), or prepare a ``venv`` that has
+``pysocks`` installed and activate it before running the script
+(:ref:`pyinstall_qa_use_existing_venv`).
 
-Q: I have Internet access, but behind a SOCKS proxy.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. tip::
+   If you already have a working way to fetch packages through the proxy —
+   the OS package manager, or a tool such as ``proxychains`` — it is simpler
+   to treat the machine as an offline system and pass
+   ``--python-use-network disable``, see :ref:`pyinstall_qa_offline_system`.
 
-A SOCKS proxy has an additional complication.
-
-.. code-block:: bash
-
-   # SOCKS5 proxy server (with remote DNS) for HTTP/HTTPS URLs
-   export http_proxy="socks5h://proxy.example.com:8080"
-   export https_proxy="socks5h://proxy.example.com:8080"
-
-By default, ``pip3`` is not
-compatible with a proxy, due to a missing optional dependency named
-``pysocks``. The error ``ERROR: Could not install packages due to an
-OSError: Missing dependencies for SOCKS support`` is raised if the
-package is not installed. This forces one to ``unset http_proxy && unset
-https_porxy``, making the proxy unusable.
-
-.. important::
-
-   To use a SOCKS proxy with ``pip3``, an optional dependency ``pysocks``
-   must be installed. This package is usually named ``pysocks``,
-   ``python3-socks``, or a similar name. Check your package manager.
-
-However, this brings us to the next problem: a standard ``venv`` is
-isolated from all system packages by default. If ``pysocks`` is installed
-via the system's package manager, it's still invisible and unusable,
-even if it has already been installed!
-
-To solve this sub-problem, there are three sub-solutions, pick one of them.
-
-1. Treat the system as a special case of an "offline system" or "system with
-   manual package management". Use the ``--python-use-network disable`` argument.
-
-   See :ref:`pyinstall_qa_offline_system`
-
-2. Expose system packages via ``--python-venv-mode site``.
-
-   See :ref:`pyinstall_qa_use_system_packages`
-
-3. Prepare a "good" venv with ``pysocks`` preinstalled, and active your ``venv``
-   before calling ``./update_openEMS.sh``. This is a special case of
-   :ref:`pyinstall_qa_use_existing_venv`
-
-   .. code-block:: bash
-
-      # create and activate your own venv
-      python3 -m venv ~/venvs/snake/
-      source ~/venvs/snake/bin/activate
-
-      # Install pysocks manually while you still have Internet access,
-      # pip3 install pysocks
-
-      # or if you have an alternative proxy solution without using
-      # Python, such as proxychains.
-      # proxychains pip3 install pysocks
-
-      # SOCKS5 proxy server (with remote DNS) for HTTP/HTTPS URLs
-      export http_proxy="socks5h://proxy.example.com:8080"
-      export https_proxy="socks5h://proxy.example.com:8080"
-
-      # build and install openEMS as usual
-      ./update_openEMS.sh ~/opt/openEMS --python
-
-
-   The third solution is exceedingly difficult on a fully offline system.
-   In a fresh ``venv``, there's no ``setuptools`` or ``pysocks``, making it
-   difficult to bootstrap the ``venv`` to a usable state. It is practical,
-   only if the ``venv`` has already been prepared while direct Internet access
-   is still available, or if an external tool such as ``proxychains`` can
-   be used to enable the proxy without relying on ``pip3``. Otherwise, the
-   bootstrapping process would be a long battle. Make sure to make a backup
-   copy of the ``venv`` directory to save your work after completion.
-
-   .. tip::
-
-    If using ``proxychains-ng``, you may have to uncomment the last line
-    of ``/etc/proxychains.conf``, and replace it with the parameters of the
-    SOCKS proxy, such as::
-
-      socks5 127.0.0.1 8080
+   Bootstrapping a ``venv`` behind a SOCKS proxy from nothing is a long
+   battle: the fresh ``venv`` has neither ``setuptools`` nor ``pysocks``.
+   Prepare it while direct Internet access is available, and keep a backup
+   copy of the directory.
 
 Q: I don't want to use a Python ``venv`` at all, I want to install Python extensions to the default paths, which is the legacy behavior in previous openEMS versions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

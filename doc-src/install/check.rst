@@ -182,13 +182,16 @@ output:
     <CSXCAD.CSXCAD.ContinuousStructure object at 0x7f5957943fd0>
 
     $ cd / && python3 -c "import CSXCAD; print(CSXCAD.__version__)"
-    0.6.4.dev76+gccb4c218e
+    0.7.0
 
     $ cd / && python3 -c "import openEMS; print(openEMS.openEMS())"
     <openEMS.openEMS.openEMS object at 0x7f47f8dffb20>
 
     $ cd / && python3 -c "import openEMS; print(openEMS.__version__)"
-    '0.0.36.post1.dev115+gfbb03a107.d20251112'
+    0.37.0
+
+(A build from git reports a longer version derived from ``git describe``,
+such as ``0.37.0.dev12+g5b1ecb1``.)
 
 If the expected outputs are shown without errors (such as a ``ModuleNotFoundError``),
 it means Python can successfully find and import the required modules.

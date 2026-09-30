@@ -1,7 +1,7 @@
 .. _octave_install:
 
-Install
-=======
+Octave/Matlab Interface
+=======================
 
 Instructions how to install the **CSXCAD & openEMS Octave/Matlab interface**.
 
