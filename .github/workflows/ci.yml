@@ -5,9 +5,12 @@ on:
     branches:
         - master
         - CI_testing
+        # maintenance branches for patch releases, e.g. v0.37
+        - 'v[0-9]+.[0-9]+'
   pull_request:
     branches:
         - master
+        - 'v[0-9]+.[0-9]+'
 
 jobs:
   Linux:
