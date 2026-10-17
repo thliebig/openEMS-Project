@@ -108,7 +108,7 @@ cd openEMS/.github/smoketests/python && python3 MSL_NotchFilter.py
 Deeper suites live in the submodules (`openEMS/TESTSUITE/`,
 `CSXCAD/python/tests/`) and are described in their own `AGENTS.md`.
 
-CI (`.github/workflows/ci.yml`) covers Linux from CentOS 7 to Alpine, macOS on
+CI (`.github/workflows/ci.yml`) covers Linux from AlmaLinux 8 to Alpine, macOS on
 ARM and FreeBSD, each with both `--python-venv-mode=disable` and a venv install.
 A change to `update_openEMS.sh` or to dependency handling affects all of them —
 assume nothing about the host's package manager, compiler version or Python.

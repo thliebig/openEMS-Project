@@ -29,68 +29,42 @@ jobs:
           # name: OS name (only a name for humans to read).
           # libc: userland libc, "GNU" or "musl"
           #       (only a name for humans to read)
-          # ancient: true or false.
-          #          true: incompatible with GitHub's actions/checkout due to
-          #                node.js compatibility problem. Manual git checkout
-          #                required. Full dependency install done inline before
-          #                checkout (scripts/install_deps.sh not yet available).
-          #          false: use standard GitHub's actions/checkout and
-          #                 scripts/install_deps.sh for dependency installation.
           # docker-image: string, image on DockerHub to use
-          - name: "CentOS 7"
-            libc: "GNU"
-            ancient: true
-            docker-image: "centos:7"
-
-          - name: "Ubuntu 14.04"
-            libc: "GNU"
-            ancient: true
-            docker-image: "ubuntu:14.04"
-
           - name: "Debian oldstable"
             libc: "GNU"
-            ancient: false
             docker-image: "debian:oldstable"
 
           - name: "Debian"
             libc: "GNU"
-            ancient: false
             docker-image: "debian:latest"
 
           - name: "Ubuntu 22.04"
             libc: "GNU"
-            ancient: false
             docker-image: "ubuntu:22.04"
 
           - name: "Ubuntu 24.04"
             libc: "GNU"
-            ancient: false
             docker-image: "ubuntu:24.04"
 
           - name: "Ubuntu"
             libc: "GNU"
-            ancient: false
             docker-image: "ubuntu:latest"
 
           - name: "Fedora"
             libc: "GNU"
-            ancient: false
             docker-image: "fedora:latest"
 
           - name: "AlmaLinux 8"
             libc: "GNU"
-            ancient: false
             docker-image: "almalinux:8"
 
           - name: "AlmaLinux 9"
             libc: "GNU"
-            ancient: false
             docker-image: "almalinux:9"
 
           # AlmaLinux 10: vtk-devel, vtk-qt and octave not yet packaged for el10.
           #- name: "AlmaLinux 10"
           #  libc: "GNU"
-          #  ancient: false
           #  docker-image: "almalinux:10"
 
           # Waiting for upstream packages:
@@ -99,13 +73,11 @@ jobs:
           #
           #- name: "AlmaLinux Latest"
           #  libc: "GNU"
-          #  ancient: false
           #  docker-image: "almalinux:latest"
 
           # GUI is not supported on Alpine as VTK is built without Qt
           - name: "Alpine, No GUI"
             libc: "musl"
-            ancient: false
             docker-image: "alpine:latest"
 
     container:
@@ -121,158 +93,9 @@ jobs:
         shell: sh
         run: (ls /.dockerenv && echo Found dockerenv) || exit 1
 
-      # ── EOL / ancient distros (CentOS 7, Ubuntu 14.04) ───────────────────
-      # These cannot use actions/checkout (node.js incompatibility) and require
-      # special package versions not handled by scripts/install_deps.sh. Keep
-      # the full inline install here; a manual git clone follows below.
-
-      - if: ${{ matrix.os.ancient }}
-        name: Install dependencies (EOL distros)
-        shell: sh
-        run: |
-          cat /etc/os-release
-
-          touch ~/.bash_profile  # set environment variables here
-
-          # Use a strict shell, stop the interpreter on various errors,
-          # so errors such as undefined variables are caught by CI/CD
-          # instead of ignored. Use printf because it contains options,
-          # which can be difficult to escape.
-          printf "%s\n" "set -euo pipefail" >> ~/.bash_profile
-
-          # For non-interactive shells such as "bash script.sh"
-          # Use a special ~/.bash_env file because ~/.bash_profile
-          # may contain commands that reset environment variables
-          # such as PATH.
-          printf "%s\n" "set -euo pipefail" >> ~/.bash_env
-          echo 'export BASH_ENV="$HOME/.bash_env"' >> ~/.bash_profile
-          echo 'export CXXFLAGS="-Wall -Wextra -Wno-error"' >> ~/.bash_profile
-
-          if grep -q "ID=debian" /etc/os-release || grep -q "ID=ubuntu" /etc/os-release; then
-            export DEBIAN_FRONTEND=noninteractive
-            # retry failed downloads 3 times
-            echo 'Acquire::Retries "3";' > /etc/apt/apt.conf.d/80-retries
-            apt-get update
-
-            # Ubuntu 14.04: install base packages available on the old repo
-            apt-get install -y build-essential git \
-                               libhdf5-dev libtinyxml-dev \
-                               qtbase5-dev \
-                               octave \
-                               python3-pip \
-                               python3-setuptools python3-numpy python3-matplotlib python3-h5py
-
-            apt-get install -y libvtk6-dev
-
-            # only for CI/CD test builds without networks.
-            apt-get install -y iproute2
-
-            # Ubuntu 14.04 has CMake 2 by default, but we require CMake 3
-            apt-get install -y cmake3
-
-            # Ubuntu 14.04 ships Boost 1.54 and is required by libcgal-dev,
-            # but we need Boost 1.55, so we install Boost 1.55 first, then
-            # install CGAL from source.
-            apt-get install -y boost1.55 boost1.55-dev
-
-            # CGAL v4.14.3 was old enough to be compatible with GCC 4.8. Otherwise,
-            # you get: The compiler feature "cxx_decltype_auto" is not known
-            # to CXX compiler "GNU" version 4.8.5.
-            apt-get install -y libgmp-dev libmpfr-dev
-            git clone $GITHUB_SERVER_URL/CGAL/cgal.git --depth=1 --branch=v4.14.3
-            cd cgal && mkdir build && cd build
-            cmake ../ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/opt
-            make -j`nproc` && make install
-
-            # Must use Cython 3.0 or lower, since 3.1 uses f-string which is
-            # incompatible with Python 3.4.
-            pip3 install "cython<3.1"
-
-            # Ubuntu 14.04's matplotlib package is ancient, install the
-            # minimum version and its dependencies via pip. Note that the
-            # native build uses Python 3.4 while the venv build (tested
-            # later) uses Python 3.5 without these problems.
-            #
-            # pip's pyparsing is incompatible with Python 3.4
-            apt-get install -y python3-pyparsing
-
-            # same, newer cycler has incompatible type annotation
-            pip3 install "cycler==0.10.0"
-            pip3 install "matplotlib==2.1.0"
-          elif [ -f /etc/centos-release ]; then
-            # IPv6 on GitHub Actions is broken, causing random network failures
-            # if a CDN rosolves to IPv6.
-            echo "ip_resolve=4" >> /etc/yum.conf
-
-            # CentOS repos are EOL and desupported
-            sed -i 's|^mirrorlist|#mirrorlist|g; s|^#baseurl|baseurl|g; s|mirror.centos.org|vault.centos.org|g' \
-                /etc/yum.repos.d/CentOS-Base.repo
-
-            yum install -y centos-release-scl || true
-            sed -i 's|^mirrorlist|#mirrorlist|g; s|^#baseurl|baseurl|g;
-                    s|^# baseurl|baseurl|g; s|mirror.centos.org|vault.centos.org|g' \
-                /etc/yum.repos.d/CentOS-SCLo-scl.repo \
-                /etc/yum.repos.d/CentOS-SCLo-scl-rh.repo
-
-            yum install -y epel-release
-            yum install -y gcc gcc-c++ gmp-devel mpfr-devel \
-                           cmake3 git tinyxml-devel vtk-devel hdf5-devel octave \
-                           python3-devel python3-pip \
-                           python3-setuptools python3-setuptools_scm python3-Cython
-
-            # only for CI/CD test builds without networks.
-            yum install -y iproute
-
-            # use cmake3 instead of default cmake2
-            alternatives --install /usr/local/bin/cmake cmake /usr/bin/cmake3 99
-
-            # To upgrade GCC, one can use GCC 7 from centos-release-scl, required by CGAL.
-            # Even GCC 10+ is provided.
-            # Not used for now, since openEMS is still compatible with GCC 4.8! But we may
-            # need it in the future.
-            # yum install -y devtoolset-7-gcc devtoolset-7-gcc-c++
-            # alternatives --install /usr/local/bin/gcc gcc /opt/rh/devtoolset-7/root/usr/bin/gcc 99
-            # alternatives --install /usr/local/bin/g++ g++ /opt/rh/devtoolset-7/root/usr/bin/g++ 99
-
-            # boost-predef is only available on Boost 1.55 and later.
-            #   /usr/local/include/CGAL/config.h:210:10: fatal error: boost/predef.h:
-            #   No such file or directory
-            # We borrow a copy of Boost 1.58 from rh repo's mariadb backport package.
-            yum install -y rh-mariadb101-boost-devel
-
-            # copy rh repo's Boost to /usr/local because CMake doesn't support CPATH
-            ln -s /opt/rh/rh-mariadb101/root/usr/include/boost /usr/local/include/boost
-            mkdir /usr/local/lib64 && cd /usr/local/lib64
-            for i in /opt/rh/rh-mariadb101/root/usr/lib64/libboost*; do
-                ln -s $i /usr/local/lib64/
-            done
-
-            # setup.py is broken on CentOS 7, installing openEMS shows:
-            # error: Couldn't find a setup script in /tmp/easy_install-8fl5smm_/numpy-2.2.0.tar.gz
-            # Error: Process completed with exit code 1.
-            pip3 install numpy h5py matplotlib --user
-
-            # not package on CentOS
-            # CGAL v4.14.3 was old enough to be compatible with GCC 4.8. Otherwise,
-            # you get: The compiler feature "cxx_decltype_auto" is not known
-            # to CXX compiler "GNU" version 4.8.5.
-            git clone $GITHUB_SERVER_URL/CGAL/cgal.git --depth=1 --branch=v4.14.3
-            cd cgal && mkdir build && cd build
-            cmake ../ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/opt
-            make -j`nproc` && make install
-          else
-            echo "Unknown EOL system!"
-            exit 1
-          fi
-
-          ip netns add no-network
-
-      # ── Modern distros: bootstrap before checkout ─────────────────────────
-      # Only git (and bash on Alpine) are needed at this stage. Everything else
-      # is installed via scripts/install_deps.sh after the repo is available.
-
-      - if: ${{ ! matrix.os.ancient }}
-        name: Set up environment and install git
+      # Only git (and bash on Alpine) are needed before the checkout. Everything
+      # else is installed via scripts/install_deps.sh after the repo is available.
+      - name: Set up environment and install git
         # Must use sh: bash is not installed on Alpine yet
         shell: sh
         run: |
@@ -299,8 +122,7 @@ jobs:
             exit 1
           fi
 
-      - if: ${{ ! matrix.os.ancient }}
-        name: Checkout openEMS-Project.git
+      - name: Checkout openEMS-Project.git
         uses: actions/checkout@v4
         with:
           path: openEMS-Project
@@ -310,25 +132,7 @@ jobs:
           # We need tags for "git describe", otherwise build fails.
           fetch-depth: 0
 
-      - if: ${{ matrix.os.ancient }}
-        name: Checkout openEMS-Project.git (legacy system only)
-        run: |
-          echo "Clone $GITHUB_SHA from $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
-          git clone --recursive $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git openEMS-Project
-          cd $GITHUB_WORKSPACE/openEMS-Project
-
-          # force git to fetch all trees, otherwise "git checkout $GITHUB_SHA"
-          # fails with "fatal: reference is not a tree" for Pull Requests
-          git fetch --force $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git "+refs/heads/*:refs/remotes/origin/*"
-          git fetch --force $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git "+refs/pull/*/merge:refs/remotes/origin/pr/*"
-          git checkout $GITHUB_SHA
-
-          # update git submodules, because the Pull Request may change it
-          git submodule init
-          git submodule update
-
-      - if: ${{ ! matrix.os.ancient }}
-        name: Install build dependencies
+      - name: Install build dependencies
         run: |
           source ~/.bash_profile
           cd $GITHUB_WORKSPACE/openEMS-Project
@@ -363,19 +167,10 @@ jobs:
             gui_opt=""
           fi
 
-          # Ancient systems install their dependencies from the inline
-          # package lists above; scripts/install_deps.sh does not support
-          # them, so its check would only produce a spurious warning.
-          if [ "${{ matrix.os.ancient }}" = "true" ]; then
-            dep_opt="--skip-dep-check"
-          else
-            dep_opt=""
-          fi
-
           run_without_network="ip netns exec no-network"
 
           if $run_without_network \
-             ./update_openEMS.sh ~/opt --python $gui_opt $dep_opt \
+             ./update_openEMS.sh ~/opt --python $gui_opt \
              --python-venv-mode=disable --python-use-network=disable
           then
             cat build_*.log
@@ -409,35 +204,10 @@ jobs:
             gui_opt=""
           fi
 
-          # see the note on --skip-dep-check in the previous build step
-          if [ "${{ matrix.os.ancient }}" = "true" ]; then
-            dep_opt="--skip-dep-check"
-          else
-            dep_opt=""
-          fi
-
-          if grep -q "ID=ubuntu" /etc/os-release && \
-            grep -q 'VERSION_ID="14.04"' /etc/os-release; then
-              # Use Python 3.5 instead of the default Python 3.4 because
-              # 3.5 is the latest available version on Ubuntu 14.04, and
-              # also because Python 3.5 is the first Python that supported
-              # type annotation, while Python 3.4 is locked out from most
-              # modern packages.
-              apt-get install -y curl python3.5-dev
-
-              # Ubuntu 14.04 is ancient, and the python3.5-venv package is
-              # broken. So the best approach is to install a bare Python 3.5
-              # interpreter from apt, and bootstrapping pip ourselves.
-              python3.5 -m venv ~/opt/venv --without-pip
-              curl -O https://bootstrap.pypa.io/pip/3.5/get-pip.py
-              source ~/opt/venv/bin/activate
-              python3.5 get-pip.py
-          fi
-
           # set it here because "source ~/venv/bin/activate" is
           # incompatible with set -euo pipefail
           source ~/.bash_profile
-          if ./update_openEMS.sh ~/opt --python $gui_opt $dep_opt; then
+          if ./update_openEMS.sh ~/opt --python $gui_opt; then
             cat build_*.log
           else
             cat build_*.log

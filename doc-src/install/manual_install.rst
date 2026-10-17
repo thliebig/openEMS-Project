@@ -758,9 +758,8 @@ It means the auto-CSXCAD detection result is ambiguous. You can choose
 
    If the system's Python interpreter is older than Python 3.6,
    pip 21.3 cannot be installed. Upgrade your system to Python 3.6,
-   or try an alternative solution above. Note that the openEMS
-   extension is not fully-functional under Python 3.5 and below,
-   ``SyntaxError`` may occur.
+   or try an alternative solution above. openEMS needs Python 3.6
+   or newer.
 
 ModuleNotFoundError: No module named 'CSXCAD.CSXCAD'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
