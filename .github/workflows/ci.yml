@@ -310,6 +310,8 @@ jobs:
         run: |
           # remove Python dependencies to see if venv really works
           pip3 uninstall -y CSXCAD openEMS --break-system-packages
+          # brew's numpy serves 3.14 too, so pip skipped it and cannot remove it
+          brew remove python-setuptools cython numpy python-matplotlib
           pip3 uninstall -y cython numpy matplotlib h5py --break-system-packages
 
           source ~/.zprofile
