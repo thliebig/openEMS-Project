@@ -270,6 +270,15 @@ jobs:
           cd $GITHUB_WORKSPACE/openEMS-Project
           ./scripts/install_deps.sh --auto --python --with-ctb
 
+          # Homebrew's default Python is 3.15, for which h5py has no wheels yet
+          # (pip would build it from source and fail): use 3.14 in every
+          # following step, with the Python packages installed by its pip.
+          brew install python@3.14
+          PYBIN="$(brew --prefix python@3.14)/libexec/bin"
+          echo "$PYBIN" >> $GITHUB_PATH
+          "$PYBIN/pip3" install --break-system-packages \
+                        setuptools setuptools_scm cython numpy matplotlib h5py
+
       - name: Build and install openEMS with --python-use-network=disable
         run: |
           source ~/.zprofile
@@ -301,7 +310,7 @@ jobs:
         run: |
           # remove Python dependencies to see if venv really works
           pip3 uninstall -y CSXCAD openEMS --break-system-packages
-          brew remove python-setuptools cython numpy python-matplotlib
+          pip3 uninstall -y cython numpy matplotlib h5py --break-system-packages
 
           source ~/.zprofile
           cd $GITHUB_WORKSPACE/openEMS-Project
