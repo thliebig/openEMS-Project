@@ -1,0 +1,39 @@
+openEMS GPU engine -- test build
+================================
+
+This package carries the GPU engine as two plugins in openEMS\plugins:
+
+  openEMS_gpu_hip_nvidia.dll   NVIDIA GPUs, Maxwell (GTX 900) and newer;
+                               needs only the NVIDIA driver (527.41 or newer)
+  openEMS_gpu_hip_amd.dll      AMD GPUs: RDNA 1 to 4 (RX 5000 to RX 9000,
+                               Radeon 780M/890M/8060S), CDNA (Instinct);
+                               the HIP runtime of the build comes along in
+                               openEMS\plugins, the AMD driver is needed
+
+openEMS itself does not need either: without a usable GPU only the GPU engine
+is unavailable.
+
+Running
+-------
+
+  openEMS.exe model.xml --engine=gpu -v
+
+or from Python
+
+  FDTD.Run(sim_path, engine='gpu', verbose=1)
+
+With -v (verbose=1) openEMS lists the GPU devices it found and, for every
+plugin that could not be used, the reason. With more than one GPU the
+discrete one with the most memory is taken; --engine=gpu --gpu-device=N
+(Python: gpu_device=N) picks another one from the list.
+
+What to report
+--------------
+
+Please report at https://github.com/thliebig/openEMS/issues or the forum:
+
+  - GPU, driver version, Windows version
+  - the output of a run with -v, especially the "GPU devices:" list and any
+    "GPU_Backend::New" lines
+  - for a simulation that runs: the speed (MCells/s) of the GPU engine and of
+    the default engine, and whether the results agree

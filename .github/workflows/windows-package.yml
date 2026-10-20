@@ -16,7 +16,9 @@ on:
 jobs:
   package:
     name: Build and package (Windows MSVC)
-    runs-on: windows-latest
+    # VS 2022 for the GPU plugins: CUDA 12.9 knows MSVC up to VS 2022, and the
+    # HIP headers of ROCm's clang 23 collide with the STL of VS 2026
+    runs-on: windows-2022
 
     env:
       CC: "cl"
@@ -61,9 +63,9 @@ jobs:
         uses: actions/cache/restore@v5
         with:
           path: ${{ env.VCPKG_CACHE_PATH }}
-          key: "Windows-package-MSVC-${{ github.sha }}"
+          key: "Windows-package-gpu-2022-${{ github.sha }}"
           restore-keys: |
-            Windows-package-MSVC
+            Windows-package-gpu-2022
 
       # ── C++ builds ────────────────────────────────────────────────────────────
 
@@ -107,9 +109,61 @@ jobs:
           }
           Write-Host "OK: vcpkg built HDF5 as a static library"
 
+      # ── GPU toolchains: CUDA for the NVIDIA plugin, ROCm for the AMD plugin ──
+
+      - name: Install CUDA and the HIP headers for NVIDIA
+        run: |
+          # the compiler and the runtime only, no driver; the HIP headers for
+          # NVIDIA include cuda_profiler_api.h
+          $installer = "$env:RUNNER_TEMP\cuda.exe"
+          Invoke-WebRequest -Uri "https://developer.download.nvidia.com/compute/cuda/12.9.1/network_installers/cuda_12.9.1_windows_network.exe" -OutFile $installer
+          Start-Process -FilePath $installer -ArgumentList "-s", "nvcc_12.9", "cudart_12.9", "cuda_profiler_api_12.9" -Wait
+          $cuda = "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9"
+          & "$cuda\bin\nvcc.exe" --version
+          if ($LASTEXITCODE -ne 0) { throw "nvcc not installed" }
+          echo "CUDA_PATH=$cuda" >> $env:GITHUB_ENV
+          echo "CUDACXX=$cuda\bin\nvcc.exe" >> $env:GITHUB_ENV
+
+          # the HIP headers of one ROCm release from AMD's apt repository; the
+          # headers are the same for Windows, and tar unpacks a .deb
+          $repo = "https://repo.radeon.com/rocm/apt/7.2.4"
+          Invoke-WebRequest -Uri "$repo/dists/noble/main/binary-amd64/Packages" -OutFile "$env:RUNNER_TEMP\Packages"
+          $index = Get-Content -Raw "$env:RUNNER_TEMP\Packages"
+          $hip = "C:\hip"
+          New-Item -ItemType Directory -Force -Path $hip, "$env:RUNNER_TEMP\hipdeb" | Out-Null
+          foreach ($pkg in @("hip-dev", "hip-runtime-nvidia")) {
+            $file = [regex]::Match($index, "(?m)^Package: $pkg\r?\n(?:[^\n]+\n)*?Filename: (\S+)").Groups[1].Value
+            if (-not $file) { throw "$pkg not in the repository" }
+            $deb = "$env:RUNNER_TEMP\hipdeb\$pkg.deb"
+            Invoke-WebRequest -Uri "$repo/$file" -OutFile $deb
+            cd "$env:RUNNER_TEMP\hipdeb"
+            tar -xf $deb
+            $data = Get-ChildItem -Filter "data.tar*" | Select-Object -First 1
+            tar -xf $data.FullName -C $hip
+            Remove-Item data.tar*, control.tar*, debian-binary
+          }
+          $root = (Get-ChildItem "$hip\opt" -Directory -Filter "rocm-*" | Select-Object -First 1).FullName
+          foreach ($h in @("hip_runtime.h", "hip_version.h", "nvidia_detail\nvidia_hip_runtime.h")) {
+            if (-not (Test-Path "$root\include\hip\$h")) { throw "$h missing" }
+          }
+          Write-Host "HIP headers: $root"
+          echo "HIP_NVIDIA_ROOT=$root" >> $env:GITHUB_ENV
+
+      - name: Install ROCm (AMD's Python wheels)
+        run: |
+          python -m venv C:\rocm
+          C:\rocm\Scripts\pip install --index-url https://stable.repo.amd.com/rocm/whl-next/ "rocm[devel]==10.0.0"
+          C:\rocm\Scripts\rocm-sdk init
+          if ($LASTEXITCODE -ne 0) { throw "rocm-sdk init failed" }
+          $root = (C:\rocm\Scripts\rocm-sdk path --root).Trim()
+          Write-Host "ROCm: $root"
+          echo "HIP_PATH=$root" >> $env:GITHUB_ENV
+          echo "HIP_DEVICE_LIB_PATH=$root\lib\llvm\amdgcn\bitcode" >> $env:GITHUB_ENV
+
       - name: Build and install openEMS
         run: |
           & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+          # openEMS and the NVIDIA plugin with MSVC (nvcc)
           cd "$env:GITHUB_WORKSPACE/openEMS"
           mkdir build && cd build
           cmake ../ -GNinja `
@@ -121,9 +175,55 @@ jobs:
                     -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
                     -DVCPKG_OVERLAY_TRIPLETS="$env:GITHUB_WORKSPACE/.github/vcpkg-triplets" `
                     -DVCPKG_HOST_TRIPLET="x64-windows-openems" `
-                    -DVCPKG_TARGET_TRIPLET="x64-windows-openems"
+                    -DVCPKG_TARGET_TRIPLET="x64-windows-openems" `
+                    -DENABLE_HIP=ON -DOPENEMS_HIP_AS_CUDA=ON `
+                    -DROCM_PATH="$($env:HIP_NVIDIA_ROOT -replace '\\', '/')"
+          if ($LASTEXITCODE -ne 0) { throw "cmake failed" }
           cmake --build ./ --parallel
+          if ($LASTEXITCODE -ne 0) { throw "build failed" }
           cmake --install ./
+          $id = (Select-String -Path CMakeCache.txt -Pattern "^OPENEMS_GPU_BUILD_ID:INTERNAL=(.+)$").Matches[0].Groups[1].Value
+          echo "OPENEMS_GPU_BUILD_ID=$id" >> $env:GITHUB_ENV
+
+      - name: Build the AMD GPU plugin
+        run: |
+          & "$env:VS_ROOT_DIR/Common7/Tools/Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+          # A second build with ROCm's clang (CMake does not mix it with MSVC),
+          # of the plugin only, with the build id of the MSVC build: the plugin
+          # loads into that openEMS.dll, the same sources and exports.
+          Write-Host "build id: $env:OPENEMS_GPU_BUILD_ID"
+          $rocm = $env:HIP_PATH -replace '\\', '/'
+          $env:ROCM_PATH = $env:HIP_PATH
+          $env:CFLAGS = "-D_WIN32_WINNT=0x0601"
+          $env:CXXFLAGS = "-D_WIN32_WINNT=0x0601"
+          cd "$env:GITHUB_WORKSPACE/openEMS"
+          mkdir build-amd && cd build-amd
+          cmake ../ -GNinja `
+                    -DCMAKE_BUILD_TYPE=Release `
+                    -DFPARSER_ROOT_DIR="$HOME/opt" `
+                    -DCSXCAD_ROOT_DIR="$HOME/opt" `
+                    -DVCPKG_INSTALLED_DIR="D:/vi-amd" `
+                    -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
+                    -DVCPKG_OVERLAY_TRIPLETS="$env:GITHUB_WORKSPACE/.github/vcpkg-triplets" `
+                    -DVCPKG_HOST_TRIPLET="x64-windows-openems" `
+                    -DVCPKG_TARGET_TRIPLET="x64-windows-openems" `
+                    -DOPENEMS_GPU_BUILD_ID="$env:OPENEMS_GPU_BUILD_ID" `
+                    -DENABLE_HIP=ON -DOPENEMS_HIP_AS_CUDA=OFF -DROCM_PATH="$rocm" `
+                    -DCMAKE_C_COMPILER="$rocm/lib/llvm/bin/clang.exe" `
+                    -DCMAKE_CXX_COMPILER="$rocm/lib/llvm/bin/clang++.exe" `
+                    -DCMAKE_HIP_COMPILER="$rocm/lib/llvm/bin/clang++.exe" `
+                    -DCMAKE_HIP_COMPILER_ROCM_ROOT="$rocm"
+          if ($LASTEXITCODE -ne 0) { throw "cmake (AMD plugin) failed" }
+          cmake --build ./ --parallel --target openEMS_gpu_hip_amd
+          if ($LASTEXITCODE -ne 0) { throw "build (AMD plugin) failed" }
+          $plugins = "$HOME/opt/bin/openEMS/plugins"
+          Copy-Item plugins/openEMS_gpu_hip_amd.dll $plugins
+          # the HIP runtime of the build next to the plugin, which the loader
+          # prefers over an older one of the AMD driver in System32
+          foreach ($p in @("amdhip64_7.dll", "rocm_kpack.dll", "amd_comgr*.dll")) {
+            Get-ChildItem "$env:HIP_PATH/bin" -Filter $p | Copy-Item -Destination $plugins
+          }
+          Get-ChildItem $plugins | Format-Table Name, Length
 
       - name: Preserve vcpkg DLLs
         run: |
@@ -466,6 +566,10 @@ jobs:
           Get-ChildItem "$HOME/opt" -Recurse -Filter "*.lib" -ErrorAction SilentlyContinue |
             Copy-Item -Destination "$pkg/lib/"
 
+          # ── GPU test notes ────────────────────────────────────────────────────
+          Get-Content "$env:GITHUB_WORKSPACE/.github/windows-package/GPU_TESTING.txt" |
+            Set-Content "$pkg/GPU_TESTING.txt" -Encoding UTF8
+
           # ── README ────────────────────────────────────────────────────────────
           Get-Content "$env:GITHUB_WORKSPACE/.github/windows-package/README.txt" |
             ForEach-Object { $_ -replace '@PACKAGE_NAME@', $stem } |
@@ -510,6 +614,25 @@ jobs:
           }
           # openEMS exits -1 when called with no arguments (usage page) — that is normal.
           # Reset so the non-zero LASTEXITCODE does not fail the step.
+          $global:LASTEXITCODE = 0
+
+          # The GPU plugins on a runner without a GPU: both load from
+          # openEMS\plugins and find no device, the GPU engine fails cleanly.
+          foreach ($p in @("openEMS_gpu_hip_amd.dll", "openEMS_gpu_hip_nvidia.dll", "amdhip64_7.dll")) {
+            if (-not (Test-Path "$pkg\openEMS\plugins\$p")) {
+              Write-Error "openEMS\plugins\$p is missing from the package"
+              exit 1
+            }
+          }
+          cd $env:RUNNER_TEMP
+          $out = & "$pkg\openEMS.exe" "$env:GITHUB_WORKSPACE\openEMS\.github\smoketests\gpu\gpu_engine.xml" --engine=gpu -v 2>&1 | Out-String
+          Write-Host $out
+          foreach ($m in @("no hip-amd device", "no hip-nvidia device", "no GPU backend with a usable device")) {
+            if ($out -notmatch $m) {
+              Write-Error "GPU engine: expected '$m'"
+              exit 1
+            }
+          }
           $global:LASTEXITCODE = 0
 
       - name: Test Python wheels
@@ -558,7 +681,7 @@ jobs:
         uses: actions/cache/save@v5
         with:
           path: ${{ env.VCPKG_CACHE_PATH }}
-          key: "Windows-package-MSVC-${{ github.sha }}"
+          key: "Windows-package-gpu-2022-${{ github.sha }}"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
