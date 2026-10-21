@@ -37,8 +37,8 @@ If everything works as expected, the following screen appears::
     		tinyxml -- compiled against: 2.6.2
     		fparser
     		boost  -- compiled against: 1_76
-    		vtk -- Version: 9.1.0
-    		       compiled against: 9.1.0
+    		zlib   -- Version: 1.3.1
+    		          compiled against: 1.3.1
 
     Create FDTD operator (compressed SSE + multi-threading)
     FDTD simulation size: 70x70x37 --> 181300 FDTD cells

@@ -37,7 +37,7 @@ Modes (pick one; default: --check):
 
 Options:
   --python      Include Python binding deps (Cython, numpy, h5py, matplotlib)
-  --disable-gui Exclude Qt and VTK-Qt deps (headless / server builds)
+  --disable-gui Exclude Qt and VTK deps (headless / server builds)
   --with-ctb    Include Octave (Circuit Toolbox / Matlab interface)
   -h, --help    Show this help
 EOF
@@ -97,7 +97,7 @@ detect_system
 
 # ── Package lists ─────────────────────────────────────────────────────────────
 # Elements may be "pkg1|pkg2|pkg3" — any one alternative satisfies the dep.
-# PKGS_VTK    : VTK base library (always included, even without GUI)
+# PKGS_VTK    : VTK base library (only with GUI, CSXCAD and openEMS don't need it)
 # PKGS_VTK_QT : VTK Qt rendering module (only with GUI)
 # PKGS_GUI    : Other GUI deps (Qt headers, etc.)
 
@@ -112,7 +112,7 @@ case "$PM" in
   apt)
     PKGS_CORE=(
       build-essential git cmake
-      libhdf5-dev libtinyxml-dev libboost-all-dev libcgal-dev
+      libhdf5-dev libtinyxml-dev libboost-all-dev zlib1g-dev
     )
     PKGS_VTK=( "libvtk9-dev|libvtk7-dev|libvtk6-dev" )
     PKGS_VTK_QT=( "libvtk9-qt-dev|libvtk7-qt-dev" )
@@ -121,7 +121,7 @@ case "$PM" in
     # the package are not penalised.
     PKGS_GUI=( qtbase5-dev "?qt6-5compat-dev" )
     PKGS_PYTHON=(
-      python3-pip python3-setuptools python3-setuptools-scm
+      python3-dev python3-pip python3-setuptools python3-setuptools-scm
       cython3 python3-numpy python3-h5py python3-matplotlib python3-venv
     )
     PKGS_OCTAVE=( octave )
@@ -130,12 +130,16 @@ case "$PM" in
   dnf)
     PKGS_CORE=(
       gcc gcc-c++ cmake git
-      boost-devel tinyxml-devel hdf5-devel CGAL-devel
+      boost-devel tinyxml-devel hdf5-devel zlib-devel
     )
     PKGS_VTK=( vtk-devel )
     PKGS_VTK_QT=( vtk-qt )
     PKGS_GUI=()   # Qt headers are pulled in via vtk-qt on Fedora/AlmaLinux
+    # python3-devel: Python.h for the Cython bindings; redhat-rpm-config: the
+    # hardened linker flags Python's build settings refer to on AlmaLinux 9.
+    # Both used to come along with vtk-devel.
     PKGS_PYTHON=(
+      python3-devel redhat-rpm-config
       python3-pip python3-setuptools python3-wheel python3-setuptools_scm
       python3-Cython python3-numpy python3-h5py python3-matplotlib
     )
@@ -145,7 +149,7 @@ case "$PM" in
   apk)
     PKGS_CORE=(
       bash build-base git cmake
-      hdf5-dev tinyxml-dev boost-dev cgal-dev gmp-dev mpfr-dev
+      hdf5-dev tinyxml-dev boost-dev zlib-dev
     )
     PKGS_VTK=( vtk-dev )
     PKGS_VTK_QT=()   # Alpine VTK is built without Qt
@@ -161,8 +165,8 @@ case "$PM" in
     # NOTE: Arch/Manjaro support is best-effort and has not been tested on a
     # clean install. Package names and transitive deps (especially for vtk)
     # may need adjustment. Please report issues or send a PR if you hit problems.
-    PKGS_CORE=( gcc make pkgconf git cmake hdf5 tinyxml boost cgal vtk )
-    PKGS_VTK=()     # vtk is already in CORE; Arch's vtk includes Qt rendering
+    PKGS_CORE=( gcc make pkgconf git cmake hdf5 tinyxml boost zlib )
+    PKGS_VTK=( vtk )  # Arch's vtk includes Qt rendering
     PKGS_VTK_QT=()
     PKGS_GUI=( qt5-base )
     PKGS_PYTHON=(
@@ -173,9 +177,9 @@ case "$PM" in
     ;;
 
   brew)
-    PKGS_CORE=( cmake boost hdf5 cgal vtk )
+    PKGS_CORE=( cmake boost hdf5 )
     # tinyxml is not in Homebrew — update_openEMS.sh --with-tinyxml is auto-enabled on macOS
-    PKGS_VTK=()     # vtk is already in CORE; Homebrew vtk includes Qt support
+    PKGS_VTK=( vtk )  # Homebrew vtk includes Qt support
     PKGS_VTK_QT=()
     PKGS_GUI=( qt5compat )
     PKGS_PYTHON=( python3 python-setuptools cython numpy python-matplotlib )
@@ -189,13 +193,14 @@ case "$PM" in
     if command -v python3 &>/dev/null; then
       _PYVER=$(python3 -c "import sys; print('py{}{}'.format(*sys.version_info[:2]))" 2>/dev/null || true)
     fi
-    PKGS_CORE=( bash cmake git boost-libs tinyxml hdf5 cgal python3 )
+    PKGS_CORE=( bash cmake git boost-libs tinyxml hdf5 python3 )
     PKGS_VTK=( vtk9 )
     PKGS_VTK_QT=()   # Qt for FreeBSD VTK comes via explicit qt5 packages below
     PKGS_GUI=( qt5-core qt5-gui qt5-opengl qt5-xml )
     # patchelf: meson-python >= 0.22 runs it while building a wheel, and PyPI
     # ships no FreeBSD wheels, so a venv build compiles numpy et al. from source.
-    PKGS_PYTHON=( python3 patchelf )
+    # pkgconf: h5py finds HDF5 with pkg-config when built from source.
+    PKGS_PYTHON=( python3 patchelf pkgconf )
     if [[ -n "$_PYVER" ]]; then
       PKGS_PYTHON+=(
         "${_PYVER}-pip" "${_PYVER}-setuptools" "${_PYVER}-wheel"
@@ -216,8 +221,8 @@ fi
 # ── Assemble the final package list ───────────────────────────────────────────
 declare -a ALL_PKGS=()
 ALL_PKGS+=( "${PKGS_CORE[@]}" )
-[[ ${#PKGS_VTK[@]}     -gt 0 ]] && ALL_PKGS+=( "${PKGS_VTK[@]}" )
 if [[ "$WITH_GUI" == true ]]; then
+  [[ ${#PKGS_VTK[@]}    -gt 0 ]] && ALL_PKGS+=( "${PKGS_VTK[@]}" )
   [[ ${#PKGS_VTK_QT[@]} -gt 0 ]] && ALL_PKGS+=( "${PKGS_VTK_QT[@]}" )
   [[ ${#PKGS_GUI[@]}    -gt 0 ]] && ALL_PKGS+=( "${PKGS_GUI[@]}" )
 fi

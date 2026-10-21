@@ -252,7 +252,7 @@ function dependency_check {
   # submodule configure run.
   #
   # This is advisory only and never aborts: dependencies may be satisfied
-  # outside the system package manager (locally built VTK/CGAL, paths set
+  # outside the system package manager (locally built VTK, paths set
   # via localConfig.cmake, ...), and install_deps.sh does not know every
   # distribution.
   if [ "$SKIP_DEP_CHECK" -eq 1 ]; then

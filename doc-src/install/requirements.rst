@@ -51,12 +51,12 @@ Minimum Dependency Versions
 The following list shows the minimum dependency versions supported by openEMS
 
 * CMake 3.0
-* GCC 4.8
+* A C++17 compiler, e.g. GCC 8
 * Boost 1.55
-* VTK 6.0
-* CGAL 4.0
-* Qt 4
+* For :program:`AppCSXCAD` only:
 
+  * VTK 6.0
+  * Qt 4
   * VTK's Qt must be linked to the same Qt version as QCSXCAD/AppCSXCAD.
 
 .. _install_deps_script:
@@ -107,16 +107,12 @@ Alpine
   .. code-block:: bash
 
       doas apk add bash \
-                   build-base gmp-dev mpfr-dev git cmake \
-                   boost-dev tinyxml-dev hdf5-dev cgal-dev vtk-dev
+                   build-base git cmake \
+                   boost-dev tinyxml-dev hdf5-dev zlib-dev
 
 - AppCSXCAD is used to visualize 3D models (recommended, but optional):
 
   .. code-block:: bash
-
-      # To build a custom VTK, first remove the system package's
-      # development files
-      doas apk del vtk-dev
 
       # Install VTK build-time dependencies, prepare to build it from source!
       doas apk add qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtdeclarative-private-dev \
@@ -188,12 +184,13 @@ AlmaLinux
       sudo dnf install git
 
       sudo dnf install git gcc gcc-c++ cmake \
-                       boost-devel tinyxml-devel hdf5-devel vtk-devel CGAL-devel
+                       boost-devel tinyxml-devel hdf5-devel zlib-devel
 
   .. warning::
 
      On AlmaLinux 10, at the time of writing, packages ``vtk-devel``, ``vtk-qt``
-     and ``octave`` doesn't exist, openEMS cannot be installed on AlmaLinux 10.
+     and ``octave`` don't exist, so neither AppCSXCAD nor the Octave interface
+     can be installed on AlmaLinux 10.
      See:
 
      * https://bugzilla.redhat.com/show_bug.cgi?id=2374130
@@ -203,7 +200,7 @@ AlmaLinux
 
   .. code-block:: bash
 
-      sudo dnf install vtk-qt
+      sudo dnf install vtk-devel vtk-qt
 
 - To use Octave scripting (recommended):
 
@@ -244,14 +241,14 @@ Debian/Ubuntu
 
   .. code-block:: bash
 
-      sudo apt-get install build-essential cmake git libhdf5-dev libvtk9-dev \
-                           libboost-all-dev libcgal-dev libtinyxml-dev
+      sudo apt-get install build-essential cmake git libhdf5-dev \
+                           libboost-all-dev libtinyxml-dev zlib1g-dev
 
 - To use AppCSXCAD to visualize 3D models (recommended):
 
   .. code-block:: bash
 
-      sudo apt-get install qtbase5-dev libvtk9-qt-dev
+      sudo apt-get install qtbase5-dev libvtk9-dev libvtk9-qt-dev
 
   On distributions where VTK is built against Qt6 (Ubuntu 26.04 and newer),
   QCSXCAD needs the Qt6 Core5Compat module in addition:
@@ -306,14 +303,13 @@ Fedora
   .. code-block:: bash
 
       sudo dnf install gcc gcc-c++ cmake git \
-                       boost-devel tinyxml-devel vtk-devel hdf5-devel \
-                       CGAL-devel
+                       boost-devel tinyxml-devel hdf5-devel zlib-devel
 
 - To use AppCSXCAD to visualize 3D models (recommended):
 
   .. code-block:: bash
 
-      sudo dnf install vtk-qt
+      sudo dnf install vtk-devel vtk-qt
 
 - To use Octave scripting (recommended):
 
@@ -361,15 +357,11 @@ Void Linux
   .. code-block:: bash
 
       sudo xbps-install -S base-devel cmake git hdf5-devel boost-devel \
-                           cgal-devel tinyxml-devel vtk-devel
+                           tinyxml-devel zlib-devel
 
 - To use AppCSXCAD to visualize 3D models (recommended, but optional):
 
   .. code-block:: bash
-
-      # To build a custom VTK, first remove the system package's
-      # development files
-      sudo xbps-remove vtk-devel
 
       # Install VTK build-time dependencies, prepare to build it from source!
       sudo xbps-install -S qt6-base-devel qt6-declarative-devel qt6-qt5compat-devel
@@ -435,14 +427,13 @@ so, follow this guide.
 
   .. code-block:: bash
 
-      sudo pkg install bash cmake git boost-libs tinyxml \
-                       vtk9 hdf5 cgal
+      sudo pkg install bash cmake git boost-libs tinyxml hdf5
 
 - To use AppCSXCAD to visualize 3D models (recommended):
 
   .. code-block:: bash
 
-      sudo pkg install qt5
+      sudo pkg install vtk9 qt5
 
 - For Octave scripting (recommended):
 
@@ -504,13 +495,13 @@ macOS
 
   .. code-block:: bash
 
-      brew install cmake boost hdf5 cgal vtk
+      brew install cmake boost hdf5
 
 - To use AppCSXCAD to visualize 3D models (recommended):
 
   .. code-block:: bash
 
-      brew install qt5compat
+      brew install vtk qt5compat
 
 - openEMS also depends on TinyXML, which is unmaintained since 2011 and has
   been removed from Homebrew (TinyXML2 is not API-compatible). As a workaround,

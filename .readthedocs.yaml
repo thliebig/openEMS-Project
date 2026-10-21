@@ -22,9 +22,8 @@ build:
     - git
     - libhdf5-dev
     - libtinyxml-dev
-    - libvtk9-dev
     - libboost-all-dev
-    - libcgal-dev
+    - zlib1g-dev
     - cmake
 
   jobs:
