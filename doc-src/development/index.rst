@@ -10,4 +10,5 @@ including its dependencies and documentation.
 .. toctree::
    cpp
    doc
+   benchmark
    python_todo
