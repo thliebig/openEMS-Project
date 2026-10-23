@@ -217,10 +217,8 @@ The first argument is its center frequency, the second argument is its
 -20 dB bandwidth, defining the signal's spectral "spread". For example
 with both arguments set to 1/2 of the simulation's upper frequency target:
 
-.. image:: images/port1_vt_input.svg
-   :width: 49%
-.. image:: images/port1_vt_fft.svg
-   :width: 49%
+.. image:: images/gauss_pulse.svg
+   :width: 100%
 
 .. tabs::
 
