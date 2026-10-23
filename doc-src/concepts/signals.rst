@@ -246,6 +246,60 @@ with both arguments set to 1/2 of the simulation's upper frequency target:
       fdtd = openEMS.openEMS()
       fdtd.SetGaussExcite(f0, f0_bw)
 
+DC-free Gaussian Pulse
+"""""""""""""""""""""""
+
+The spectrum of the Gaussian pulse consists of two Gaussian lobes, one at
+:math:`+f_0` and one at :math:`-f_0`. At :math:`f = 0` their tails add up, so
+the pulse has a DC part wherever its lower sideband reaches down to DC:
+
+.. math::
+
+   \frac{|E(0)|}{|E(f_0)|} \approx 2 \exp{\left[-\left(\frac{1.5 f_0}{f_c}\right)^2\right]}
+
+That is 21 % (-13.5 dB) of the peak at :math:`f_0 = f_c`, and the full
+amplitude for an unmodulated pulse with :math:`f_0 = 0`.
+
+Usually this is harmless. A soft excitation leaves a net charge proportional
+to the time integral of its signal, i.e. to its DC part, and that charge is
+normally carried away by ports, lumped resistors or the absorbing boundaries.
+In a structure closed by PEC without such a path, it remains as a static field:
+the field dumps show it after the pulse is long gone, and the energy never
+decays to the end criterion.
+
+With ``dc_free`` the carrier is a sine instead of a cosine. The pulse is odd
+about its center, its time integral is zero, and the two lobes cancel at DC.
+Above about :math:`f_0 - f_c` the spectrum is the same; below it, it falls to
+zero at DC. With :math:`f_0 = 0` there is no carrier to change, and the pulse
+is the time derivative of the Gaussian (a monocycle) instead, with its peak
+at about :math:`0.47 f_c` and its -20 dB edge at about :math:`1.3 f_c`.
+openEMS takes that higher edge into account for the sampling rate.
+
+.. image:: images/gauss_dcfree.svg
+   :width: 100%
+
+Note that the time signal of the sine carrier peaks below 1 when :math:`f_0`
+is close to :math:`f_c`, as its maximum no longer coincides with the center
+of the envelope; the spectrum at :math:`f_0` is the same.
+
+.. warning::
+   A DC-free pulse carries almost no energy close to DC. Results that are
+   normalized to the incident signal, such as S-parameters or the port
+   impedance, become inaccurate there. Keep the default pulse when the
+   results down to DC matter.
+
+.. tabs::
+
+   .. code-tab:: octave
+
+      fdtd = InitFDTD();
+      fdtd = SetGaussExcite(fdtd, 1.5e9, 1.5e9, 'DCFree', 1);
+
+   .. code-tab:: python
+
+      fdtd = openEMS.openEMS()
+      fdtd.SetGaussExcite(1.5e9, 1.5e9, dc_free=True)
+
 Custom Signal
 ---------------
 

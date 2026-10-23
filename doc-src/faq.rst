@@ -125,11 +125,15 @@ more timesteps than the default to reach the end criterion. Options:
   not too close to the structure, as this can cause reflections that
   prevent the energy from decaying.
 
-A less obvious cause is using an **unmodulated Gaussian pulse** (centre
-frequency ``f0 = 0``). Such a pulse has a strong DC component that
-excites a static charge in the structure. In a lossless simulation this
-charge has nowhere to dissipate — the stored energy never reaches zero
-regardless of how many timesteps are run. The fix is to use a modulated Gaussian pulse with ``f0 > 0``.
+A less obvious cause is the **DC part of the Gaussian pulse**. An
+unmodulated pulse (centre frequency ``f0 = 0``) is mostly DC, but a
+modulated one has a DC part as well wherever its lower sideband reaches
+down to DC, e.g. 21 % of the peak at ``f0 = fc``. It leaves a static
+charge in the structure, and in a structure closed by PEC without ports
+or lumped resistors this charge has nowhere to go — the stored energy
+never reaches zero regardless of how many timesteps are run. The fix is
+a DC-free Gaussian pulse, ``SetGaussExcite(f0, fc, dc_free=True)``
+(Octave: ``'DCFree', 1``), see :ref:`signal_concept`.
 
 Small oscillations in the energy after the excitation ends are normal
 (see above); a steady plateau or slow rise usually points to a boundary
