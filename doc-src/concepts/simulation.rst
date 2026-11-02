@@ -84,8 +84,10 @@ lists what the installed version supports.
    * - ``--numThreads <n>``
      - Number of threads; 0 (default) uses all cores.
    * - ``--engine <name>``
-     - ``fastest`` (default), ``basic``, ``sse``, ``sse-compressed`` or
-       ``multithreaded``. Mainly for benchmarking and verification.
+     - ``fastest`` (default) or ``multithreaded``: the compressed SSE engine
+       (``sse`` and ``sse-compressed`` are other names of it); ``basic``: the
+       plain engine, mainly for benchmarking and verification. Both run on
+       all threads (``--numThreads``) and on every mesh.
    * - ``--verbose`` (``-v``, ``-vv``, ``-vvv``)
      - Debug level 1 to 3.
    * - ``--no-simulation``
