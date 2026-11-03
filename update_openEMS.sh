@@ -240,8 +240,8 @@ function parse_args {
     exit $EINVAL
   fi
 
-  if [ "$BUILD_PY_EXT" -eq 0 ] && [ -n "${PYTHON_ARGS[*]}" ]; then
-    printf "%s\n" "--python must be enabled for ${PYTHON_ARGS[*]}"
+  if [ "$BUILD_PY_EXT" -eq 0 ] && [ -n "${PYTHON_ARGS[*]-}" ]; then
+    printf "%s\n" "--python must be enabled for ${PYTHON_ARGS[*]-}"
     exit $EINVAL
   fi
 }
