@@ -11,4 +11,5 @@ including its dependencies and documentation.
    cpp
    doc
    benchmark
+   engine_cpu
    python_todo

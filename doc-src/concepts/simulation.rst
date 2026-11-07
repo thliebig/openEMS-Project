@@ -87,7 +87,9 @@ lists what the installed version supports.
      - ``fastest`` (default) or ``multithreaded``: the compressed SSE engine
        (``sse`` and ``sse-compressed`` are other names of it); ``basic``: the
        plain engine, mainly for benchmarking and verification. Both run on
-       all threads (``--numThreads``) and on every mesh.
+       all threads (``--numThreads``) and on every mesh. ``cpu``: the
+       experimental CPU engine, several times faster, see
+       :ref:`concept_engine_cpu`.
    * - ``--verbose`` (``-v``, ``-vv``, ``-vvv``)
      - Debug level 1 to 3.
    * - ``--no-simulation``
@@ -124,6 +126,25 @@ ones.
    .. code-tab:: python
 
       fdtd.Run(Sim_Path, cleanup=True, numThreads=4, debug_PEC=True)
+
+.. _concept_engine_cpu:
+
+CPU Engine
+----------
+
+``--engine=cpu`` (``engine='cpu'`` in Python) selects the CPU engine. It is
+still experimental, but on typical models it runs 3-6x faster than the
+default engine, with dispersive materials up to 10x, and it needs less memory.
+Every mesh, boundary, material and port works with it, and it needs no
+settings: it chooses its memory layout and how it uses the cache per model,
+and tries a few variants during the first seconds of the run. Its results
+agree with the other engines to float rounding, not bit for bit.
+
+By default it runs a thread per physical core. On a cylindrical multi-grid
+mesh and with local absorbing boundaries along different axes it gains less,
+as it cannot use the cache as well; ``--verbose=1`` shows what it chose for a
+model. How it works is described in
+:ref:`engine_cpu_internals`.
 
 Convergence and Divergence (Blow-up)
 -------------------------------------

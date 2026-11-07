@@ -40,3 +40,6 @@ A pull request that claims a speed-up includes this comparison of master
 against the branch. The options, the columns of the table and the cases
 are described in
 `benchmark/README.md <https://github.com/thliebig/openEMS/blob/master/benchmark/README.md>`_.
+
+What the CPU engine does with a model, and the speed-up of each of its
+steps on one of these cases, is described in :ref:`engine_cpu_internals`.
