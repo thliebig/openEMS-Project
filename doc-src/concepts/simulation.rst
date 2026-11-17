@@ -47,12 +47,12 @@ If everything works as expected, the following screen appears::
     Max. number of timesteps: 1000000000 ( --> 9.25926e+06 * Excitation signal length)
     Create FDTD engine (compressed SSE + multi-threading)
     Running FDTD engine... this may take a while... grab a cup of coffee?!?
-    [@        4s] Timestep:         1602 || Speed:   72.5 MC/s (2.499e-03 s/TS) || Energy: ~2.70e-19 (-41.66dB)
-    [@        8s] Timestep:         3820 || Speed:  100.5 MC/s (1.805e-03 s/TS) || Energy: ~5.35e-20 (-48.70dB)
-    [@       12s] Timestep:         6510 || Speed:  121.9 MC/s (1.488e-03 s/TS) || Energy: ~1.86e-20 (-53.30dB)
-    [@       16s] Timestep:         9320 || Speed:  127.3 MC/s (1.424e-03 s/TS) || Energy: ~1.09e-20 (-55.59dB)
-    [@       20s] Timestep:        12136 || Speed:  127.6 MC/s (1.421e-03 s/TS) || Energy: ~5.33e-21 (-58.72dB)
-    [@       24s] Timestep:        14748 || Speed:  118.4 MC/s (1.532e-03 s/TS) || Energy: ~3.62e-21 (-60.39dB)
+    [@        4s] Timestep:         1602 || Speed:   72.5 MC/s (  400 TS/s) || Energy: ~2.70e-19 (-41.66dB)
+    [@        8s] Timestep:         3820 || Speed:  100.5 MC/s (  554 TS/s) || Energy: ~5.35e-20 (-48.70dB)
+    [@       12s] Timestep:         6510 || Speed:  121.9 MC/s (  672 TS/s) || Energy: ~1.86e-20 (-53.30dB)
+    [@       16s] Timestep:         9320 || Speed:  127.3 MC/s (  702 TS/s) || Energy: ~1.09e-20 (-55.59dB)
+    [@       20s] Timestep:        12136 || Speed:  127.6 MC/s (  704 TS/s) || Energy: ~5.33e-21 (-58.72dB)
+    [@       24s] Timestep:        14748 || Speed:  118.4 MC/s (  653 TS/s) || Energy: ~3.62e-21 (-60.39dB)
     Multithreaded Engine: Best performance found using 5 threads.
     Time for 14748 iterations with 181300.00 cells : 24.01 sec
     Speed: 111.35 MCells/s
@@ -221,7 +221,7 @@ If you see the following warnings in the simulation::
     Warning: Unused primitive (type: Box) detected in property: plate!
     Warning: Unused primitive (type: Box) detected in property: plate!
     Running FDTD engine... this may take a while... grab a cup of coffee?!?
-    [@        4s] Timestep:         1666 || Speed:   71.4 MC/s (2.401e-03 s/TS) || Energy: ~6.79e-22 (-68.99dB)
+    [@        4s] Timestep:         1666 || Speed:   71.4 MC/s (  416 TS/s) || Energy: ~6.79e-22 (-68.99dB)
     Time for 1666 iterations with 171500.00 cells : 4.00 sec
     Speed: 71.42 MCells/s
 
@@ -251,8 +251,8 @@ If you see the following warnings in the simulation::
     Create FDTD engine (compressed SSE + multi-threading)
     Warning: Unused primitive (type: Box) detected in property: port_excite_1!
     Running FDTD engine... this may take a while... grab a cup of coffee?!?
-    [@        4s] Timestep:         1588 || Speed:   72.0 MC/s (2.519e-03 s/TS) || Energy: ~0.00e+00 (- 0.00dB)
-    [@        8s] Timestep:         3882 || Speed:  104.0 MC/s (1.744e-03 s/TS) || Energy: ~0.00e+00 (- 0.00dB)
+    [@        4s] Timestep:         1588 || Speed:   72.0 MC/s (  397 TS/s) || Energy: ~0.00e+00 (- 0.00dB)
+    [@        8s] Timestep:         3882 || Speed:  104.0 MC/s (  573 TS/s) || Energy: ~0.00e+00 (- 0.00dB)
 
 It indicates the excitation port is not actually used in the simulation, this
 is further confirmed by the energy of ``~0.00e+00``: it means the port is disabled
