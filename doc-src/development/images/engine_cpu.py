@@ -2,9 +2,9 @@
 """Draw the figures of development/engine_cpu.rst.
 
 Writes engine_cpu_runs.svg, engine_cpu_blocking.svg and engine_cpu_tiles.svg
-next to this script. The trapezoids are the phases of
-Engine_BlockedPlan::Trapezoids() in openEMS (FDTD/engine_plan.cpp), the rest
-is a sketch: python3 engine_cpu.py
+next to this script. The trapezoids are the phases of one axis of
+Engine_BlockedPlan::Tiles() in openEMS (FDTD/engine_plan.cpp), the tiles its
+four phases in a plane, the rest is a sketch: python3 engine_cpu.py
 """
 import os
 import numpy as np
@@ -188,13 +188,14 @@ def blocking_figure():
 
 
 # ---------------------------------------------------------------------------
-# 3) the work of the threads: slabs of the flat sweep, strips of one tile
+# 3) the work of the threads: slabs of the flat sweep, tiles of temporal blocking
 def tiles_figure():
-    NS, NM, T = 36, 24, 8
-    W = 12
+    NS, NM, T = 36, 27, 8
+    W, k, t = 9, 4, 2   # tiles of 9 lines, 4 timesteps per block, drawn at timestep 2
     thr = plt.get_cmap('tab10')
+    phase = {'core': '#8fbde6', 'wedge S': '#f0a04b', 'wedge M': '#b9dfae', 'corner': '#d98a8a'}
 
-    fig, (ax0, ax1) = plt.subplots(1, 2, figsize=(10, 3.9), gridspec_kw={'wspace': 0.12})
+    fig, (ax0, ax1) = plt.subplots(1, 2, figsize=(10, 4.4), gridspec_kw={'wspace': 0.12})
     # flat: the split axis cut into a slab per thread
     edges = np.linspace(0, NS, T+1)
     for n in range(T):
@@ -203,21 +204,32 @@ def tiles_figure():
         ax0.text((edges[n]+edges[n+1])/2, NM/2, f'T{n+1}', ha='center', va='center', fontsize=9, color=INK)
     ax0.set_title('flat sweep: a slab per thread,\nthe whole model per half step', fontsize=10)
 
-    # blocked: all threads on one tile, cut along the other slow axis
-    tiles = [(0, W), (W, 2*W), (2*W, NS)]
-    ax1.add_patch(Rectangle((0, 0), W, NM, facecolor='#d9d9d9', edgecolor='white', linewidth=1.0))
-    ax1.text(W/2, NM/2, 'done:\nk timesteps\nahead', ha='center', va='center', fontsize=9, color=INK)
-    a, b = tiles[1]
-    medges = np.linspace(0, NM, T+1)
-    for n in range(T):
-        ax1.add_patch(Rectangle((a, medges[n]), b-a, medges[n+1]-medges[n], facecolor=thr(n), alpha=0.55,
-                                edgecolor='white', linewidth=1.0))
-        ax1.text((a+b)/2, (medges[n]+medges[n+1])/2, f'T{n+1}', ha='center', va='center', fontsize=8.5,
-                 color=INK)
-    ax1.add_patch(Rectangle((a, 0), b-a, NM, fill=False, edgecolor=INK, linewidth=1.8))
-    ax1.add_patch(Rectangle((2*W, 0), NS-2*W, NM, facecolor='#f2f2f2', edgecolor='white', linewidth=1.0))
-    ax1.text((2*W+NS)/2, NM/2, 'next', ha='center', va='center', fontsize=9, color=INK)
-    ax1.set_title('temporal blocking: all threads on one tile,\nwhich stays in the cache for k timesteps',
+    # blocked: per axis the cores [a+t, b-t) (not shrinking at the model's edges) and the wedges
+    # [c-t, c+t) at the inner borders c, their products the four phases (Engine_BlockedPlan::Tiles())
+    def pieces(N):
+        border = list(range(0, max(N - W, 0) + 1, W)) + [N]   # TileBorders(): a short last tile folded in
+        cores = [((a + t) if a > 0 else 0, (b - t) if b < N else N) for a, b in zip(border[:-1], border[1:])]
+        wedges = [(c - t, c + t) for c in border[1:-1]]
+        return cores, wedges
+    cS, wS = pieces(NS)
+    cM, wM = pieces(NM)
+    for name, xs, ys in (('core', cS, cM), ('wedge S', wS, cM), ('wedge M', cS, wM), ('corner', wS, wM)):
+        for x0, x1 in xs:
+            for y0, y1 in ys:
+                ax1.add_patch(Rectangle((x0, y0), x1-x0, y1-y0, facecolor=phase[name], edgecolor='white', linewidth=1.0))
+    # the cores dealt to the threads in order, about the same cells each
+    n = 0
+    for i, (x0, x1) in enumerate(cS):
+        for j, (y0, y1) in enumerate(cM):
+            ax1.text((x0+x1)/2, (y0+y1)/2, f'T{n*T//(len(cS)*len(cM))+1}', ha='center', va='center',
+                     fontsize=8.5, color=INK)
+            n += 1
+    ax1.legend(handles=[Patch(facecolor=phase['core'], label='1: cores'),
+                        Patch(facecolor=phase['wedge S'], label='2: wedges along the split axis'),
+                        Patch(facecolor=phase['wedge M'], label='3: wedges along the other axis'),
+                        Patch(facecolor=phase['corner'], label='4: corners')],
+               loc='upper center', bbox_to_anchor=(0.5, -0.11), ncol=2, fontsize=8.5, frameon=False)
+    ax1.set_title(f'temporal blocking: each thread its own tiles,\nhere at timestep {t} of {k} of a block',
                   fontsize=10)
 
     for ax in (ax0, ax1):
@@ -230,7 +242,7 @@ def tiles_figure():
         ax.set_yticks([])
         for s in ('top', 'right'):
             ax.spines[s].set_visible(False)
-    fig.text(0.5, 0.05, 'the fast axis points into the page: each point of these planes is a line of cells, contiguous in memory',
+    fig.text(0.5, -0.03, 'the fast axis points into the page: each point of these planes is a line of cells, contiguous in memory',
              ha='center', fontsize=9, color=INK)
     save(fig, 'engine_cpu_tiles.svg')
 

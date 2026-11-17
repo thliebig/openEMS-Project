@@ -28,8 +28,8 @@ So there are two ways to be faster: fewer bytes per cell, and each byte loaded
 from memory used for more than one timestep. The CPU engine does both. The
 table shows how far each step goes on the ``antenna`` case of the
 :ref:`speed benchmark <benchmark>` (size M, 7.9 million cells: a patch with a
-lumped port, a Debye material, an 8-cell PML and field dumps) on the 8 cores
-of a Ryzen 7 5800X:
+lumped port, a Debye material, an 8-cell PML and field dumps) on an 8-core
+desktop CPU with dual-channel DDR4-3200:
 
 .. list-table::
    :header-rows: 1
@@ -42,18 +42,18 @@ of a Ryzen 7 5800X:
      - 167
      - 1.0
    * - CPU engine, without temporal blocking (``OPENEMS_CPU_TBLOCK=0``)
-     - 397
-     - 2.4
+     - 392
+     - 2.3
    * - CPU engine, temporal blocking, generic kernels (``OPENEMS_CPU_ISA=generic``)
-     - 1192
+     - 1189
      - 7.1
    * - CPU engine, temporal blocking, AVX2 kernels (the default)
-     - 1344
-     - 8.0
+     - 1294
+     - 7.7
 
-The last line is more than the main memory can deliver: 1344 million cells
-per second with 48 bytes of fields each are 64 GB/s, more than the 51 GB/s
-of dual-channel DDR4-3200. Most of these bytes come from the cache.
+The last line is more than the main memory can deliver: 1294 million cells
+per second with 48 bytes of fields each are 62 GB/s, more than the 51 GB/s
+its memory can deliver. Most of these bytes come from the cache.
 
 .. _engine_cpu_runs:
 
@@ -160,22 +160,26 @@ neighbours on both sides are complete, so they can be filled in. Each tile is
 loaded from memory once for its four timesteps, and the wedges are small. The
 memory traffic drops by almost the factor *k*.
 
-The engine uses up to 8 timesteps per block. The tiles are cut along the
-*split axis*, the slow axis with more mesh lines. Each tile spans the full
-model along the other two axes, and the tile width, in mesh lines along the
-split axis, is what makes it fit into the cache.
+The engine uses up to 8 timesteps per block. A model has three axes, and the
+tiles are cut along the two slow ones, the *split axis* (the slow axis with
+more mesh lines) and the other; along the fast axis a tile spans the whole
+model. The picture above then holds for each of the two axes, and their
+products make four *phases* per block: first the cores of the tiles, which
+shrink on all four sides, then the wedges along the split axis, the wedges
+along the other axis, and last the corners where two wedges cross.
 
-All threads work on the same tile. Each takes a strip of it along the other
-slow axis and keeps it in its share of the cache through the timesteps of the
-block:
+Within a phase the pieces do not touch each other. So each thread takes
+pieces of its own, one after the other, and advances each through all
+timesteps of the block while it sits in the thread's share of the cache:
 
 .. image:: images/engine_cpu_tiles.svg
    :width: 100%
 
-Each half step of a trapezoid or a wedge is a *phase*. The threads finish a
-phase together before the next starts, as the next one reads the strips of
-their neighbours. In the example below that is several thousand times per
-second; the section on threads shows how it stays cheap.
+The threads finish a phase together before the next starts, as the next one
+reads the pieces the others left: four times per block. A tile's size no
+longer depends on the size of the model, only on the length of its lines
+along the fast axis, so large models block as well as small ones and run
+about as fast.
 
 Every cell is updated exactly once per half step, with its neighbours at the
 right time, just in a different order; the result does not depend on whether
@@ -189,22 +193,26 @@ a block ends there, and they read the fields between two blocks.
 
 The engine falls back to the flat sweep, and says why at ``--verbose=1``, if
 
-- the model fits into the cache anyway, or a single plane of it does not;
+- the model fits into the cache anyway (up to about 1.25 times its size);
+- even the smallest tile, 5 by 5 lines for 2 timesteps, does not fit into a
+  thread's share of the cache (very long lines along the fast axis), or the
+  model is too narrow for two of them per thread;
 - the mesh is a cylindrical multi-grid (see :ref:`concept_cylindrical_fdtd`);
 - local absorbing boundaries are oriented along different axes.
 
 Choosing the tile
 -----------------
 
-A tile should fill most of the last-level cache that the threads share, but
-not all of it: the rest of the program needs some too, and a tile that fills
-the whole cache is evicted and much slower. The engine estimates the bytes of
-a mesh plane, fields, PML and material state together, and the cache the
-threads span. From that it takes the number of timesteps and a tile width of
-3/4 of what fits.
+A tile should fit into its thread's share of the last-level cache: the cache
+divided by the threads that share it. The engine estimates the bytes of a line
+of cells along the fast axis, fields, PML and material state together, and
+takes the largest square tile of 2*k*+1 lines, up to 8 timesteps, that fits
+into that share, and a smaller one where a narrow model would leave a thread
+fewer than two tiles. 2*k*+1 lines are the narrowest tile for *k* timesteps:
+its core shrinks to a single line, and the wedges are as thin as they get.
 
-Caches are not that simple, so the engine also tries other widths: four and two
-times as wide, half and a quarter. During the first seconds of the run it
+Caches are not that simple, so the engine also tries the tiles of up to two
+timesteps more and fewer. During the first seconds of the run it
 times each for 0.5 s, from the estimate in the direction that gets faster,
 then the flat sweep, and keeps the fastest. The trials are timesteps of the
 simulation like any other, so they cost only the difference in speed. With ``--verbose=1``
@@ -214,13 +222,13 @@ the engine shows all of it, here for the ``antenna`` case above:
 
     Engine_CPU: fast axis y, layout NKIJ
     Engine_CPU: kernels for avx2
-    Engine_CPU: cache 32 MiB, L3 (sysconf), 1 of 1 such caches for 8 threads
-    Engine_CPU: temporal blocking, up to 8 timesteps per block, tiles of 18 lines along z, 326 phases
-    Engine_CPU: tiles to try (timesteps:lines) 1) 8:72 2) 8:36 3) 8:18 4) 4:9, and the flat sweep, 0.5 s each
-    Multithreaded engine: tried tile 2 800.6 MC/s tile 3 1339.3 MC/s tile 4 1017.8 MC/s, flat 396.4 MC/s; running tile 3
+    Engine_CPU: cache 32 MiB, L3 (sysconf), 1 of 1 such caches for 8 threads; the model 254.784 MiB
+    Engine_CPU: temporal blocking, up to 8 timesteps per block, tiles of 17 lines along z and x, 11x11 tiles
+    Engine_CPU: tiles to try (timesteps:lines) 1) 10:21 2) 9:19 3) 8:17 4) 7:15 5) 6:13, and the flat sweep, 0.5 s each
+    Multithreaded engine: tried tile 1 1351.6 MC/s tile 2 1404.9 MC/s tile 3 1310.8 MC/s tile 4 1226.0 MC/s, flat 392.3 MC/s; running tile 2
 
-The estimate (tile 3, 8 timesteps on 18 lines) was the fastest; half as wide
-loses a quarter, twice as wide 40 %.
+From the estimate (tile 3) the search went to fewer timesteps, which was
+slower, then to more until it got slower again, and kept tile 2.
 
 Threads
 -------
@@ -250,7 +258,8 @@ Checking what the engine does
 -----------------------------
 
 - ``--verbose=1`` shows the layout, the kernels, the tiles and the trials, as
-  above, or why there is no temporal blocking.
+  above, or why there is no temporal blocking; at the end of the run also
+  the speed after the trials, of the tile the engine kept.
 - ``--debug-operator`` writes the cell model, see
   :ref:`engine_cpu_runs`.
 - The :ref:`speed benchmark <benchmark>` compares engines and builds, also
