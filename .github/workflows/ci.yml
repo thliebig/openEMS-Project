@@ -473,6 +473,15 @@ jobs:
             -property installationPath
           if (-not $vsPath) { throw "Visual Studio with VC tools not found via vswhere" }
           echo "VS_ROOT_DIR=$vsPath" >> $env:GITHUB_ENV
+          # clang-cl: the one of Visual Studio, which matches its STL; the LLVM
+          # of the runner image can lag behind (STL1000: MSVC 14.52 needs Clang
+          # 22, the image had LLVM 20)
+          if ($env:CC -eq "clang-cl") {
+            $llvm = "$vsPath\VC\Tools\Llvm\x64\bin"
+            if (-not (Test-Path "$llvm\clang-cl.exe")) { throw "clang-cl of Visual Studio not found in $llvm" }
+            & "$llvm\clang-cl.exe" --version
+            echo "$llvm" >> $env:GITHUB_PATH
+          }
 
       - name: Checkout openEMS-Project.git
         uses: actions/checkout@v4
