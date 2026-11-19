@@ -4,7 +4,7 @@ CPU Engine Internals
 ====================
 
 The CPU engine (``--engine=cpu``, see :ref:`concept_engine_cpu`) computes the
-same FDTD update as the default engine, but it is built around the one thing
+same FDTD update as the other engines, but it is built around the one thing
 that limits an FDTD solver on a CPU: moving the fields between the memory and
 the cores. This page explains how: what it stores per cell, how it advances
 several timesteps while the data is in the cache, and how it keeps the cores
@@ -38,7 +38,7 @@ desktop CPU with dual-channel DDR4-3200:
    * - Engine
      - MC/s
      - Speed-up
-   * - default engine (``multithreaded``)
+   * - ``sse-compressed`` engine
      - 167
      - 1.0
    * - CPU engine, without temporal blocking (``OPENEMS_CPU_TBLOCK=0``)
@@ -60,9 +60,9 @@ its memory can deliver. Most of these bytes come from the cache.
 Cell runs
 ---------
 
-The default engine stores the update coefficients of every cell and reads
-them along with the fields, in its compressed form as an index per cell into
-a table of the distinct coefficients. On a graded mesh almost every cell is
+The ``sse-compressed`` engine stores the update coefficients of every cell
+and reads them along with the fields, as an index per cell into a table of
+the distinct coefficients. On a graded mesh almost every cell is
 distinct, because the coefficients contain the cell size, so the table grows
 large.
 
@@ -91,10 +91,11 @@ LOSSY
    A conductivity, e.g. a lumped resistor: the old field is scaled first.
 UPML, UPML_PROFILE
    The PML, see the :ref:`PML boundary <concept_bc_pml>`. In a PML the update keeps a second
-   value per cell, the flux. The default engine updates it in a separate pass
-   before and after the main update; here it is part of the same pass. A PML
-   normal to the line has coefficients that change from cell to cell; such a
-   run reads them from a short profile, which all lines through the PML share.
+   value per cell, the flux. The ``sse-compressed`` and ``basic`` engines
+   update it in a separate pass before and after the main update; here it is
+   part of the same pass. A PML normal to the line has coefficients that
+   change from cell to cell; such a run reads them from a short profile,
+   which all lines through the PML share.
 DISP
    A Drude, Lorentz or Debye material, see :ref:`dispersive_materials`. Its
    auxiliary currents and states are updated in the same pass as the field as

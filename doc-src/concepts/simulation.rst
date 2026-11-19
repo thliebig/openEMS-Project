@@ -95,6 +95,11 @@ lists what the installed version supports.
    * - ``--no-simulation``
      - Preprocess only. Together with the debug dumps below, this checks a
        setup without running it.
+   * - ``--no-memory-check``
+     - Set up even if the free memory cannot hold what the engine needs at
+       least for the mesh. Without it, the setup stops right away in that
+       case instead of failing after a long build, e.g. on a mesh far finer
+       than intended.
    * - ``--disable-dumps``
      - Ignore all field dump boxes, for a faster run.
    * - ``--dump-statistics``
@@ -134,7 +139,8 @@ CPU Engine
 
 ``--engine=cpu`` (``engine='cpu'`` in Python) selects the CPU engine. It is
 still experimental, but on typical models it runs 3-6x faster than the
-default engine, with dispersive materials up to 10x, and it needs less memory.
+``sse-compressed`` engine, with dispersive materials up to 10x, at about half
+its memory (26 MiB per million cells, setup included).
 Every mesh, boundary, material and port works with it, and it needs no
 settings: it chooses its memory layout and how it uses the cache per model,
 and tries a few variants during the first seconds of the run. Its results
