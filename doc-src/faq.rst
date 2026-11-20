@@ -204,3 +204,17 @@ When running via the **Python interface**, pressing :kbd:`Ctrl+C` once
 sends a clean stop signal equivalent to the ``ABORT`` file — the
 simulation finishes the current interval and exits gracefully. Pressing
 :kbd:`Ctrl+C` a second time kills the process immediately.
+
+.. rubric:: Can I look at frequency domain results before a long simulation ends?
+
+Create an empty file named ``DUMP_FD`` inside the simulation folder.
+openEMS then writes all frequency domain field dumps, e.g. those of an
+NF2FF box, with the results summed so far, and removes the file once they
+are written. A far field calculated from them shows the pattern so far,
+not yet converged. The dumps are written again, to the same files, at
+the end of the simulation.
+
+From Python, ``FDTD.RequestFDDump()`` does the same from another thread
+while ``FDTD.Run()`` runs, and ``FDTD.FDDumpPending()`` tells when the
+dumps are written. Read them in another process: HDF5 is not
+thread-safe.
